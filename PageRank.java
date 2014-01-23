@@ -22,7 +22,8 @@ class PageRank {
 		rank();
 	}
 
-	/** initialize data
+	/** initialize data from input file
+	 *  and construct a matrix
 	*/
 	void init() {
 		
