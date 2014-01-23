@@ -26,7 +26,8 @@ class PageRank {
 	 *  and construct a matrix
 	*/
 	void init() {
-		
+		// read data from input file
+		//
 	}
 
 	void parse() {
