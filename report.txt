@@ -1,0 +1,12 @@
+Description
+
+1. The steps we took to develop the code:
+ 
+2. Difficulties we faced:
+  
+3. How we solved the problems:
+   
+4. What we learned
+ 
+5. Optimizations
+

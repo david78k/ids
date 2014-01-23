@@ -1,4 +1,4 @@
-// import Matrix
+import no.uib.cipr.matrix.*;
 import java.util.*;
 
 class PageRank {
@@ -28,6 +28,9 @@ class PageRank {
 	void init() {
 		// read data from input file
 		//
+
+		//DenseMatrix result = new DenseMatrix(matA.numRows(),matB.numColumns());
+		//matA.mult(matB,result);
 	}
 
 	void parse() {
