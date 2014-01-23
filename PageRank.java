@@ -3,6 +3,9 @@ import java.util.*;
 
 class PageRank {
 
+	double d = 0.85;
+	int N = 0;
+
 	// Matrix mat
 	//
 	PageRank() {
@@ -28,7 +31,9 @@ class PageRank {
 	void init() {
 		// read data from input file
 		//
-
+		Matrix mat = new DenseMatrix(2,2);
+		System.out.println(mat);
+		
 		//DenseMatrix result = new DenseMatrix(matA.numRows(),matB.numColumns());
 		//matA.mult(matB,result);
 	}
@@ -38,7 +43,8 @@ class PageRank {
 	}
 	
 	void rank() {
-
+		//PR(pi) = (1 - d)/N + d*(sum(PR(pj)/L(pj)));
+		//R = R0 + d*A*R;
 	}
 
 	void mapreduce() {
