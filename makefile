@@ -1,4 +1,5 @@
 all:	compile run upload
+
 compile:
 	javac PageRank.java
 
