@@ -1,4 +1,4 @@
-all: compile run upload
+all: run upload
 
 compile:
 	javac -classpath mtj-1.0.1.jar:hadoop-core-1.0.3.jar PageRank.java
@@ -12,7 +12,7 @@ compemr:
 	#3. run in local:
 	hadoop jar PageRank.jar {main-class PageRank.PageRank input output
 
-run:
+run: compile
 	java -classpath .:mtj-1.0.1.jar:hadoop-core-1.0.3.jar PageRank
 	#java PageRank
 

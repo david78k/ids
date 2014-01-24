@@ -55,13 +55,11 @@ class PageRank {
 	
 	class PlainFormatter extends java.util.logging.Formatter {
 		public String format(LogRecord record) {
-			return record.getMessage();
+			return record.getMessage() + System.getProperty("line.separator");
 		}
 	}
 
 	void rank() {
-
-		//logger.setUseParentHandlers(false);
 
 		for (int i = 1; i <= MAX_ITER; i ++) {
 			//PR(pi) = (1 - d)/N + d*(sum(PR(pj)/L(pj)));
@@ -73,12 +71,11 @@ class PageRank {
 					FileHandler fhandler = new FileHandler(filename);
 					fhandler.setFormatter(new PlainFormatter());
 					logger.addHandler(fhandler);
-					//logger.info("page ranks");
-					logger.log(Level.INFO, "page ranks " + i);
+					logger.info(filename);
+					//logger.log(Level.INFO, filename);
 					logger.removeHandler(fhandler);
 				} catch (IOException e) {
 					e.printStackTrace();
-					//logger.severe(e.printStackTrace());
 				}
 			}
 			//normalize R
