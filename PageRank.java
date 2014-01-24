@@ -63,7 +63,8 @@ class PageRank {
 					//System.out.println(i);	
 					String filename = "PageRank.iter" + i + ".out";
 					logger.addHandler(new FileHandler(filename));
-					logger.info("page ranks");
+					//logger.info("page ranks");
+					logger.log(Level.INFO, "page ranks");
 				} catch (IOException e) {
 					e.printStackTrace();
 					//logger.severe(e.printStackTrace());

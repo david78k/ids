@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2014-01-24T00:53:11</date>
-  <millis>1390542791285</millis>
+  <date>2014-01-24T00:57:05</date>
+  <millis>1390543025110</millis>
   <sequence>0</sequence>
   <logger>PageRank</logger>
   <level>INFO</level>
@@ -13,8 +13,8 @@
   <message>page ranks</message>
 </record>
 <record>
-  <date>2014-01-24T00:53:11</date>
-  <millis>1390542791305</millis>
+  <date>2014-01-24T00:57:05</date>
+  <millis>1390543025130</millis>
   <sequence>1</sequence>
   <logger>PageRank</logger>
   <level>INFO</level>
