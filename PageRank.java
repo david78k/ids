@@ -4,6 +4,7 @@ import java.util.*;
 //import java.util.logging.Logger;
 import java.util.logging.*;
 import org.apache.hadoop.*;
+import org.apache.hadoop.mapreduce.*;
 
 class PageRank {
 
@@ -16,6 +17,7 @@ class PageRank {
 	Matrix A;
 
 	Logger logger = Logger.getLogger(PageRank.class.getName());
+	Mapper<String, String, String, String> mapper;
 
 	// Matrix mat
 	//
