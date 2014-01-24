@@ -47,16 +47,23 @@ class PageRank {
 	*/
 	void init() {
 		// read data from input file
-		File input = new File("data/100.xml");
+		File input = new File("data/1000.xml");
 		try {
 			Document doc = Jsoup.parse(input, "UTF-8");
 			String title = doc.title();
 			System.out.println("title: " + title);
 	
+			int nlinks = 0;
 			Elements titles = doc.select("title");
 			for (Element elem: titles) {
-				System.out.println("title: " + elem);
+				// write the results to PageRank.inlink.out
+				System.out.println(elem.text() + " ");
+				//System.out.println("title: " + elem.text() + " " + elem);
+				//for (Object link: links) 
+				//	System.out.println(elem.text() + " ");
 			}
+			// write the total number of pages N
+			// N=?
 
 		} catch (IOException e) {}
 
