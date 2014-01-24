@@ -1,7 +1,8 @@
 import no.uib.cipr.matrix.*;
+import java.io.*;
 import java.util.*;
-import java.util.logging.Logger;
-//import org.apache.log4j.Logger;
+//import java.util.logging.Logger;
+import java.util.logging.*;
 import org.apache.hadoop.*;
 
 class PageRank {
@@ -58,8 +59,15 @@ class PageRank {
 			//PR(pi) = (1 - d)/N + d*(sum(PR(pj)/L(pj)));
 			//R = R0 + d*A*R;
 			if (i == 1 || i == MAX_ITER) {
-				//System.out.println(i);	
-				logger.info("PageRank.iter" + i + ".out");
+				try {
+					//System.out.println(i);	
+					String filename = "PageRank.iter" + i + ".out";
+					logger.addHandler(new FileHandler(filename));
+					logger.info("page ranks");
+				} catch (IOException e) {
+					e.printStackTrace();
+					//logger.severe(e.printStackTrace());
+				}
 			}
 			//normalize R
 		}
