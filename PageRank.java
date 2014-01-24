@@ -62,9 +62,12 @@ class PageRank {
 				try {
 					//System.out.println(i);	
 					String filename = "PageRank.iter" + i + ".out";
-					logger.addHandler(new FileHandler(filename));
+					FileHandler fhandler = new FileHandler(filename);
+					fhandler.setFormatter(new SimpleFormatter());
+					logger.addHandler(fhandler);
 					//logger.info("page ranks");
 					logger.log(Level.INFO, "page ranks");
+					logger.removeHandler(fhandler);
 				} catch (IOException e) {
 					e.printStackTrace();
 					//logger.severe(e.printStackTrace());

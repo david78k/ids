@@ -1,15 +1,2 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE log SYSTEM "logger.dtd">
-<log>
-<record>
-  <date>2014-01-24T00:57:05</date>
-  <millis>1390543025130</millis>
-  <sequence>1</sequence>
-  <logger>PageRank</logger>
-  <level>INFO</level>
-  <class>PageRank</class>
-  <method>rank</method>
-  <thread>1</thread>
-  <message>page ranks</message>
-</record>
-</log>
+Jan 24, 2014 1:04:21 AM PageRank rank
+INFO: page ranks
