@@ -66,7 +66,7 @@ class PageRank {
 					fhandler.setFormatter(new SimpleFormatter());
 					logger.addHandler(fhandler);
 					//logger.info("page ranks");
-					logger.log(Level.INFO, "page ranks");
+					logger.log(Level.INFO, "page ranks " + i);
 					logger.removeHandler(fhandler);
 				} catch (IOException e) {
 					e.printStackTrace();
