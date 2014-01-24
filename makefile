@@ -1,7 +1,7 @@
 all: run upload
 
 compile:
-	javac -classpath mtj-1.0.1.jar:hadoop-core-1.0.3.jar PageRank.java
+	javac -classpath mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank.java
 	#javac -classpath mtj-1.0.1.jar hadoop-core-1.0.3.jar PageRank.java
 	#javac PageRank.java
 
@@ -13,8 +13,11 @@ compemr:
 	hadoop jar PageRank.jar {main-class PageRank.PageRank input output
 
 run: compile
-	java -classpath .:mtj-1.0.1.jar:hadoop-core-1.0.3.jar PageRank
+	java -classpath .:mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank
 	#java PageRank
+
+jar:
+	jar -cvf PageRank.jar .
 
 emr:
 	elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \

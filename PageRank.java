@@ -5,6 +5,8 @@ import java.util.*;
 import java.util.logging.*;
 import org.apache.hadoop.*;
 import org.apache.hadoop.mapreduce.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 class PageRank {
 
@@ -43,7 +45,15 @@ class PageRank {
 	*/
 	void init() {
 		// read data from input file
-		//
+		File input = new File("data/100.xml");
+		try {
+			Document doc = Jsoup.parse(input, "UTF-8");
+			String title = doc.title();
+			System.out.println("title: " + title);
+			title = doc.title();
+			System.out.println("title: " + title);
+		} catch (IOException e) {}
+
 		Matrix mat = new DenseMatrix(2,2);
 		System.out.println(mat);
 		
