@@ -37,18 +37,22 @@ class PageRank {
 	}
 	
 	void start() {
-		init();
-		parse();
+		extract();
 		rank();
 	}
 
 	/** initialize data from input file
 	 *  and construct a matrix
 	*/
-	void init() {
+	void extract() {
 		// read data from input file
 		File input = new File("data/1000.xml");
 		try {
+			String filename = "PageRank.inlink.out";
+			FileHandler fhandler = new FileHandler(filename);
+			fhandler.setFormatter(new PlainFormatter());
+			logger.addHandler(fhandler);
+
 			Document doc = Jsoup.parse(input, "UTF-8");
 			String title = doc.title();
 			System.out.println("title: " + title);
@@ -58,13 +62,22 @@ class PageRank {
 			for (Element elem: titles) {
 				// write the results to PageRank.inlink.out
 				System.out.println(elem.text() + " ");
+					logger.info(elem.text());
 				//System.out.println("title: " + elem.text() + " " + elem);
 				//for (Object link: links) 
 				//	System.out.println(elem.text() + " ");
+				nlinks ++;
 			}
+			logger.removeHandler(fhandler);
+
 			// write the total number of pages N
 			// N=?
-
+			filename = "PageRank.n.out";
+			fhandler = new FileHandler(filename);
+			fhandler.setFormatter(new PlainFormatter());
+			logger.addHandler(fhandler);
+			logger.info("N=" + nlinks);
+			logger.removeHandler(fhandler);
 		} catch (IOException e) {}
 
 		Matrix mat = new DenseMatrix(2,2);
@@ -74,10 +87,6 @@ class PageRank {
 		//matA.mult(matB,result);
 	}
 
-	void parse() {
-
-	}
-	
 	class PlainFormatter extends java.util.logging.Formatter {
 		public String format(LogRecord record) {
 			return record.getMessage() + System.getProperty("line.separator");
