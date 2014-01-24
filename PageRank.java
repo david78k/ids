@@ -7,6 +7,8 @@ import org.apache.hadoop.*;
 import org.apache.hadoop.mapreduce.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 class PageRank {
 
@@ -50,8 +52,12 @@ class PageRank {
 			Document doc = Jsoup.parse(input, "UTF-8");
 			String title = doc.title();
 			System.out.println("title: " + title);
-			title = doc.title();
-			System.out.println("title: " + title);
+	
+			Elements titles = doc.select("title");
+			for (Element elem: titles) {
+				System.out.println("title: " + elem);
+			}
+
 		} catch (IOException e) {}
 
 		Matrix mat = new DenseMatrix(2,2);
