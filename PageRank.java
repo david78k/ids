@@ -1,5 +1,8 @@
 import no.uib.cipr.matrix.*;
 import java.util.*;
+import java.util.logging.Logger;
+//import org.apache.log4j.Logger;
+import org.apache.hadoop.*;
 
 class PageRank {
 
@@ -7,9 +10,11 @@ class PageRank {
 	int N = 0;
 	int MAX_ITER = 8;
 
-	Matrix R0;
+	Matrix R0; // initially 1
 	Matrix R;
 	Matrix A;
+
+	Logger logger = Logger.getLogger(PageRank.class.getName());
 
 	// Matrix mat
 	//
@@ -49,9 +54,14 @@ class PageRank {
 	
 	void rank() {
 
-		for (int i = 0; i < MAX_ITER; i ++) {
+		for (int i = 1; i <= MAX_ITER; i ++) {
 			//PR(pi) = (1 - d)/N + d*(sum(PR(pj)/L(pj)));
 			//R = R0 + d*A*R;
+			if (i == 1 || i == MAX_ITER) {
+				//System.out.println(i);	
+				logger.info("PageRank.iter" + i + ".out");
+			}
+			//normalize R
 		}
 	}
 
