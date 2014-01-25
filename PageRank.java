@@ -1,10 +1,14 @@
-import no.uib.cipr.matrix.*;
 import java.io.*;
 import java.util.*;
 //import java.util.logging.Logger;
 import java.util.logging.*;
+import java.util.regex.*;
+
+import no.uib.cipr.matrix.*;
+
 import org.apache.hadoop.*;
 import org.apache.hadoop.mapreduce.*;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -54,20 +58,50 @@ class PageRank {
 			logger.addHandler(fhandler);
 
 			Document doc = Jsoup.parse(input, "UTF-8");
-			String title = doc.title();
-			System.out.println("title: " + title);
 	
 			int nlinks = 0;
+
+			Elements pages = doc.select("page");
+			for (Element page: pages) {
+				String content = page.text();
+				//System.out.println(content);
+				//logger.info(content);
+
+				String[] contents = content.split(" ");
+				String title = contents[0];
+				//System.out.println("title: " + title);
+				logger.info(title);
+					
+				doc = Jsoup.parse(content);
+				//Pattern pattern = Pattern.compile("[[.]]");
+				Pattern pattern = Pattern.compile("\\b\\b\\w+\\b\\b");
+				//Pattern pattern = Pattern.compile("\\[\\[.\\]\\]");
+				Matcher matcher = pattern.matcher(content);
+				matcher.find();
+				//while(matcher.find()) {
+					System.out.print("Start index: " + matcher.start());
+					System.out.print(" End index: " + matcher.end() + " ");
+					System.out.println(matcher.group());
+					//System.out.println(matcher.group(0));
+				//}
+				
+				Elements links = doc.select("[[");
+				
+			}
+	
+			/*	
 			Elements titles = doc.select("title");
 			for (Element elem: titles) {
 				// write the results to PageRank.inlink.out
 				System.out.println(elem.text() + " ");
-					logger.info(elem.text());
+				logger.info(elem.text());
 				//System.out.println("title: " + elem.text() + " " + elem);
 				//for (Object link: links) 
 				//	System.out.println(elem.text() + " ");
 				nlinks ++;
 			}
+			*/
+
 			logger.removeHandler(fhandler);
 
 			// write the total number of pages N
