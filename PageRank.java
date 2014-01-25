@@ -70,20 +70,22 @@ class PageRank {
 				String[] contents = content.split(" ");
 				String title = contents[0];
 				//System.out.println("title: " + title);
-				logger.info(title);
+				logger.info(title + " ");
 					
 				doc = Jsoup.parse(content);
-				//Pattern pattern = Pattern.compile("[[.]]");
-				Pattern pattern = Pattern.compile("\\b\\b\\w+\\b\\b");
-				//Pattern pattern = Pattern.compile("\\[\\[.\\]\\]");
+				Pattern pattern = Pattern.compile("\\[\\[([A-Za-z0-9.]+)\\]\\]");
+				//Pattern pattern = Pattern.compile("\\[\\[(.+?)\\]\\]");
+				//Pattern pattern = Pattern.compile("\\[\\[(.+)\\]\\]");
+				//Pattern pattern = Pattern.compile("\\[\\[\\w+\\]\\]");
 				Matcher matcher = pattern.matcher(content);
-				matcher.find();
-				//while(matcher.find()) {
-					System.out.print("Start index: " + matcher.start());
-					System.out.print(" End index: " + matcher.end() + " ");
-					System.out.println(matcher.group());
+				//matcher.find();
+				while(matcher.find()) {
+					//System.out.print("Start index: " + matcher.start());
+					//System.out.print(" End index: " + matcher.end() + " ");
+					//System.out.println(matcher.group());
 					//System.out.println(matcher.group(0));
-				//}
+					logger.info(matcher.group() + "\n");
+				}
 				
 				Elements links = doc.select("[[");
 				
@@ -123,7 +125,8 @@ class PageRank {
 
 	class PlainFormatter extends java.util.logging.Formatter {
 		public String format(LogRecord record) {
-			return record.getMessage() + System.getProperty("line.separator");
+			return record.getMessage(); 
+			//return record.getMessage() + System.getProperty("line.separator");
 		}
 	}
 
