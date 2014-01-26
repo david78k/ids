@@ -50,8 +50,8 @@ class PageRank {
 	*/
 	void extract() {
 		// read data from input file
-		File input = new File("data/100.xml");
-		//File input = new File("data/1000.xml");
+		//File input = new File("data/100.xml");
+		File input = new File("data/1000.xml");
 		try {
 			String filename = "PageRank.inlink.out";
 			FileHandler fhandler = new FileHandler(filename);
@@ -94,7 +94,11 @@ class PageRank {
 							i ++;
 							while(i < len && (c = content.charAt(i ++)) != '|') {
 								if (c == ']') {
-
+									if(i < len && (c = content.charAt(i ++)) != ']' && c != '|') {
+										sb.append(c); 
+									} else {
+										break;
+									}	
 								} else {
 									sb.append(c); 
 									if (i < len && (c = content.charAt(i ++)) != ']' && c != '|') {
@@ -104,7 +108,8 @@ class PageRank {
 							} 
 							
 							String link = sb.toString();
-							System.out.println("link " + nlinks + ": " + link);
+							//System.out.println("link " + nlinks + ": " + link);
+							logger.info(link + "\t");
 							nlinks ++;
 							sb = new StringBuffer();
 						}
