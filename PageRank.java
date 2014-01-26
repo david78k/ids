@@ -50,8 +50,12 @@ class PageRank {
 	*/
 	void extract() {
 		// read data from input file
-		//File input = new File("data/100.xml");
-		File input = new File("data/1000.xml");
+		File input = new File("data/100.xml");
+		//File input = new File("data/1000.xml");
+		//File input = new File("data/10000.xml");
+
+		int nlinks = 0;
+
 		try {
 			String filename = "PageRank.inlink.out";
 			FileHandler fhandler = new FileHandler(filename);
@@ -60,8 +64,6 @@ class PageRank {
 
 			Document doc = Jsoup.parse(input, "UTF-8");
 	
-			int nlinks = 0;
-
 			Elements pages = doc.select("page");
 			for (Element page: pages) {
 				String content = page.text();
@@ -70,8 +72,7 @@ class PageRank {
 
 				String[] contents = content.split(" ");
 				String title = contents[0];
-				//System.out.println("title: " + title);
-				logger.info(title + " ");
+				logger.info(title.replaceAll(" ", "_") + " ");
 					
 				//nlinks = 0;
 				int i = 0;
@@ -86,7 +87,6 @@ class PageRank {
 				while (i < len) {
 					c = content.charAt(i ++);	
 					if (c == '[') {
-						//System.out.println(c);
 						if (i >= len) break;
 
 						c = content.charAt(i);
@@ -109,7 +109,7 @@ class PageRank {
 							
 							String link = sb.toString();
 							//System.out.println("link " + nlinks + ": " + link);
-							logger.info(link + "\t");
+							logger.info(link.replaceAll(" ", "_") + "\t");
 							nlinks ++;
 							sb = new StringBuffer();
 						}
@@ -144,23 +144,9 @@ class PageRank {
 					nlinks ++;
 				}
 */				
-				//Elements links = doc.select("[[");
 				logger.info("\n");	
 			}
 	
-			/*	
-			Elements titles = doc.select("title");
-			for (Element elem: titles) {
-				// write the results to PageRank.inlink.out
-				System.out.println(elem.text() + " ");
-				logger.info(elem.text());
-				//System.out.println("title: " + elem.text() + " " + elem);
-				//for (Object link: links) 
-				//	System.out.println(elem.text() + " ");
-				nlinks ++;
-			}
-			*/
-
 			logger.removeHandler(fhandler);
 
 			// write the total number of pages N
@@ -173,9 +159,22 @@ class PageRank {
 			logger.removeHandler(fhandler);
 		} catch (IOException e) {}
 
-		Matrix mat = new DenseMatrix(2,2);
-		System.out.println(mat);
+		//Matrix mat = new DenseMatrix(2,2);
+		//System.out.println(mat);
+		R0 = new DenseMatrix(nlinks, 1);
+		R = new DenseMatrix(nlinks, 1);
+		A = new DenseMatrix(nlinks, nlinks);
+		System.out.println(A);
 		
+		Matrix R1 = new DenseMatrix(nlinks, 1);
+		R = R0;
+		
+		// 1st iteration
+		//R = (1 - d) + A.mult(R, R1);
+		R = A.mult(R, R1);
+		//R1 = (1 - d) + A.mult(R, R1);
+		R1 = R;
+
 		//DenseMatrix result = new DenseMatrix(matA.numRows(),matB.numColumns());
 		//matA.mult(matB,result);
 	}
