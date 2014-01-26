@@ -84,16 +84,14 @@ class PageRank {
 				int len = content.length();
 
 				while (i < len) {
-					c = content.charAt(i);	
+					c = content.charAt(i ++);	
 					if (c == '[') {
 						//System.out.println(c);
-						i ++;
 						if (i >= len) break;
 
 						c = content.charAt(i);
 						if (c == '[') {
 							i ++;
-					//		/*
 							while(i < len && (c = content.charAt(i ++)) != '|') {
 								sb.append(c); 
 								if (i < len && (c = content.charAt(i ++)) != ']' && c != '|') {
@@ -101,14 +99,12 @@ class PageRank {
 								} else break;
 							} 
 							
-					//		*/
 							String link = sb.toString();
 							System.out.println("link " + nlinks + ": " + link);
 							nlinks ++;
 							sb = new StringBuffer();
 						}
 					}				
-					i ++;
 				}
 
 /*
