@@ -93,10 +93,14 @@ class PageRank {
 						if (c == '[') {
 							i ++;
 							while(i < len && (c = content.charAt(i ++)) != '|') {
-								sb.append(c); 
-								if (i < len && (c = content.charAt(i ++)) != ']' && c != '|') {
+								if (c == ']') {
+
+								} else {
 									sb.append(c); 
-								} else break;
+									if (i < len && (c = content.charAt(i ++)) != ']' && c != '|') {
+										sb.append(c); 
+									} else break;
+								}
 							} 
 							
 							String link = sb.toString();
