@@ -77,8 +77,9 @@ class PageRank {
 				//logger.info(content);
 
 				String[] contents = content.split(" ");
-				String title = contents[0];
-				logger.info(title.replaceAll(" ", "_") + " ");
+				String title = contents[0].replaceAll(" ", "_");
+				//logger.info(title.replaceAll(" ", "_") + " ");
+				logger.info(title + " ");
 					
 				//N = 0;
 				int i = 0;
@@ -114,11 +115,11 @@ class PageRank {
 								}
 							} 
 							
-							String link = sb.toString();
+							String link = sb.toString().replaceAll(" ", "_");
 							links.add(link);
 							plist.put(link, new ArrayList());
 							//System.out.println("link " + N + ": " + link);
-							logger.info(link.replaceAll(" ", "_") + "\t");
+							logger.info(link + "\t");
 							N ++;
 							sb = new StringBuffer();
 						}
