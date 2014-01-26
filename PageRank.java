@@ -73,10 +73,21 @@ class PageRank {
 				logger.info(title + " ");
 					
 				doc = Jsoup.parse(content);
+				String forbiddenCharacters = "`~!@#$%^&*{}[\"':;,.<>?/|\\";
+				String patternToMatch = "[\\\\!\"#$%&()*+,./:;<=>?@\\[\\^_{|}~]+";
+				patternToMatch = "#$%&()*+,./:;<=>?@\\[\\^_{|}~";
 				Pattern pattern = Pattern.compile("\\[\\[([A-Za-z0-9.]+)\\]\\]");
+				//pattern = Pattern.compile("\\[\\[[\\w\\s\\|\\:\\/" + Pattern.quote(forbiddenCharacters) + ".]+\\]\\]");
+				pattern = Pattern.compile("\\[\\[[\\w\\s\\|\\:\\/" + Pattern.quote(forbiddenCharacters) + Pattern.quote(patternToMatch) + ".]+\\]\\]");
+				//Pattern pattern = Pattern.compile("\\[\\[(\\w.)+\\]\\]");
 				//Pattern pattern = Pattern.compile("\\[\\[(.+?)\\]\\]");
 				//Pattern pattern = Pattern.compile("\\[\\[(.+)\\]\\]");
-				//Pattern pattern = Pattern.compile("\\[\\[\\w+\\]\\]");
+				pattern = Pattern.compile("\\[\\["); // 1244
+				pattern = Pattern.compile("\\[\\[[^].]+\\]\\]");
+				pattern = Pattern.compile("\\[\\[[^]]+\\]\\]");
+				//pattern = Pattern.compile("\\[\\[.+\\]\\]");
+				//pattern = Pattern.compile("\\[\\[(^" + Pattern.quote("]") + ")+\\]\\]");
+				//pattern = Pattern.compile("\\[\\[(" + Pattern.quote("^]") + ")+\\]\\]");
 				Matcher matcher = pattern.matcher(content);
 				//matcher.find();
 				while(matcher.find()) {
@@ -84,11 +95,12 @@ class PageRank {
 					//System.out.print(" End index: " + matcher.end() + " ");
 					//System.out.println(matcher.group());
 					//System.out.println(matcher.group(0));
-					logger.info(matcher.group() + "\n");
+					//logger.info(matcher.group() + "\t");
+					nlinks ++;
 				}
 				
-				Elements links = doc.select("[[");
-				
+				//Elements links = doc.select("[[");
+				logger.info("\n");	
 			}
 	
 			/*	
@@ -112,7 +124,7 @@ class PageRank {
 			fhandler = new FileHandler(filename);
 			fhandler.setFormatter(new PlainFormatter());
 			logger.addHandler(fhandler);
-			logger.info("N=" + nlinks);
+			logger.info("N=" + nlinks + "\n");
 			logger.removeHandler(fhandler);
 		} catch (IOException e) {}
 
