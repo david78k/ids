@@ -4,8 +4,6 @@ import java.util.*;
 import java.util.logging.*;
 import java.util.regex.*;
 
-import no.uib.cipr.matrix.*;
-
 import org.apache.hadoop.*;
 import org.apache.hadoop.mapreduce.*;
 
@@ -14,15 +12,20 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import no.uib.cipr.matrix.*;
+
+import org.apache.commons.math3.linear.*;
+
 class PageRank {
 
 	double d = 0.85;
 	int N = 0;
 	int MAX_ITER = 8;
 
-	Matrix R0; // initially 1
-	Matrix R;
-	Matrix A;
+	//RealMatrix R0; // initially 1
+	RealVector R0; // initially 1
+	RealVector R;
+	RealMatrix A;
 
 	Logger logger = Logger.getLogger(PageRank.class.getName());
 	Mapper<String, String, String, String> mapper;
@@ -54,7 +57,8 @@ class PageRank {
 		//File input = new File("data/1000.xml");
 		//File input = new File("data/10000.xml");
 
-		int nlinks = 0;
+		double[][] matdata;
+		ArrayList pagelist = new ArrayList();
 
 		try {
 			String filename = "PageRank.inlink.out";
@@ -74,14 +78,14 @@ class PageRank {
 				String title = contents[0];
 				logger.info(title.replaceAll(" ", "_") + " ");
 					
-				//nlinks = 0;
+				//N = 0;
 				int i = 0;
 				char c = content.charAt(i);
 				StringBuffer sb = new StringBuffer();
 				String[] links = content.split("\\[\\[");
 				//logger.info(links.length + " ");
 				//logger.info(links[0] + " ");
-				//nlinks += links.length;
+				//N += links.length;
 				int len = content.length();
 
 				while (i < len) {
@@ -108,14 +112,13 @@ class PageRank {
 							} 
 							
 							String link = sb.toString();
-							//System.out.println("link " + nlinks + ": " + link);
+							//System.out.println("link " + N + ": " + link);
 							logger.info(link.replaceAll(" ", "_") + "\t");
-							nlinks ++;
+							N ++;
 							sb = new StringBuffer();
 						}
 					}				
 				}
-
 /*
 				doc = Jsoup.parse(content);
 				String forbiddenCharacters = "`~!@#$%^&*{}[\"':;,.<>?/|\\";
@@ -141,7 +144,7 @@ class PageRank {
 					//System.out.println(matcher.group());
 					//System.out.println(matcher.group(0));
 					//logger.info(matcher.group() + "\t");
-					nlinks ++;
+					N ++;
 				}
 */				
 				logger.info("\n");	
@@ -155,25 +158,27 @@ class PageRank {
 			fhandler = new FileHandler(filename);
 			fhandler.setFormatter(new PlainFormatter());
 			logger.addHandler(fhandler);
-			logger.info("N=" + nlinks + "\n");
+			logger.info("N=" + N + "\n");
 			logger.removeHandler(fhandler);
 		} catch (IOException e) {}
 
 		//Matrix mat = new DenseMatrix(2,2);
 		//System.out.println(mat);
-		R0 = new DenseMatrix(nlinks, 1);
-		R = new DenseMatrix(nlinks, 1);
-		A = new DenseMatrix(nlinks, nlinks);
-		System.out.println(A);
+		//A = MatrixUtils.createRealMatrix(matdata);
+		A = new Array2DRowRealMatrix(N, N);
+		R0 = new ArrayRealVector(N);
+	//	A = new RealMatrix(N, N);
+	//	System.out.println(A);
 		
-		Matrix R1 = new DenseMatrix(nlinks, 1);
-		R = R0;
+		//Matrix R1 = new RealMatrix(N, 1);
+		
+	//	R = R0;
 		
 		// 1st iteration
 		//R = (1 - d) + A.mult(R, R1);
-		R = A.mult(R, R1);
+	//	R = A.mult(R, R1);
 		//R1 = (1 - d) + A.mult(R, R1);
-		R1 = R;
+	//	R1 = R;
 
 		//DenseMatrix result = new DenseMatrix(matA.numRows(),matB.numColumns());
 		//matA.mult(matB,result);
