@@ -50,7 +50,8 @@ class PageRank {
 	*/
 	void extract() {
 		// read data from input file
-		File input = new File("data/1000.xml");
+		File input = new File("data/100.xml");
+		//File input = new File("data/1000.xml");
 		try {
 			String filename = "PageRank.inlink.out";
 			FileHandler fhandler = new FileHandler(filename);
@@ -72,6 +73,45 @@ class PageRank {
 				//System.out.println("title: " + title);
 				logger.info(title + " ");
 					
+				//nlinks = 0;
+				int i = 0;
+				char c = content.charAt(i);
+				StringBuffer sb = new StringBuffer();
+				String[] links = content.split("\\[\\[");
+				//logger.info(links.length + " ");
+				//logger.info(links[0] + " ");
+				//nlinks += links.length;
+				int len = content.length();
+
+				while (i < len) {
+					c = content.charAt(i);	
+					if (c == '[') {
+						//System.out.println(c);
+						i ++;
+						if (i >= len) break;
+
+						c = content.charAt(i);
+						if (c == '[') {
+							i ++;
+					//		/*
+							while(i < len && (c = content.charAt(i ++)) != '|') {
+								sb.append(c); 
+								if (i < len && (c = content.charAt(i ++)) != ']' && c != '|') {
+									sb.append(c); 
+								} else break;
+							} 
+							
+					//		*/
+							String link = sb.toString();
+							System.out.println("link " + nlinks + ": " + link);
+							nlinks ++;
+							sb = new StringBuffer();
+						}
+					}				
+					i ++;
+				}
+
+/*
 				doc = Jsoup.parse(content);
 				String forbiddenCharacters = "`~!@#$%^&*{}[\"':;,.<>?/|\\";
 				String patternToMatch = "[\\\\!\"#$%&()*+,./:;<=>?@\\[\\^_{|}~]+";
@@ -98,7 +138,7 @@ class PageRank {
 					//logger.info(matcher.group() + "\t");
 					nlinks ++;
 				}
-				
+*/				
 				//Elements links = doc.select("[[");
 				logger.info("\n");	
 			}
