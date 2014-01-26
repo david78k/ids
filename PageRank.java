@@ -58,7 +58,9 @@ class PageRank {
 		//File input = new File("data/10000.xml");
 
 		double[][] matdata;
-		ArrayList pagelist = new ArrayList();
+		//ArrayList plist = new ArrayList(); // pagerank list for vector R
+		Hashtable plist = new Hashtable(); // pagerank list for vector R
+		ArrayList alist = new ArrayList(); // adjacency list for matrix A
 
 		try {
 			String filename = "PageRank.inlink.out";
@@ -82,7 +84,8 @@ class PageRank {
 				int i = 0;
 				char c = content.charAt(i);
 				StringBuffer sb = new StringBuffer();
-				String[] links = content.split("\\[\\[");
+				ArrayList links = new ArrayList();
+				//String[] links = content.split("\\[\\[");
 				//logger.info(links.length + " ");
 				//logger.info(links[0] + " ");
 				//N += links.length;
@@ -112,6 +115,8 @@ class PageRank {
 							} 
 							
 							String link = sb.toString();
+							links.add(link);
+							plist.put(link, new ArrayList());
 							//System.out.println("link " + N + ": " + link);
 							logger.info(link.replaceAll(" ", "_") + "\t");
 							N ++;
@@ -119,6 +124,7 @@ class PageRank {
 						}
 					}				
 				}
+				plist.put(title, links);
 /*
 				doc = Jsoup.parse(content);
 				String forbiddenCharacters = "`~!@#$%^&*{}[\"':;,.<>?/|\\";
@@ -160,6 +166,12 @@ class PageRank {
 			logger.addHandler(fhandler);
 			logger.info("N=" + N + "\n");
 			logger.removeHandler(fhandler);
+
+			//System.out.println(plist);
+			for (Map.Entry entry: (Set<Map.Entry>)plist.entrySet()) {
+				System.out.println(entry);
+			}
+			System.out.println(plist.size());
 		} catch (IOException e) {}
 
 		//Matrix mat = new DenseMatrix(2,2);

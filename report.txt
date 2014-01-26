@@ -3,6 +3,9 @@ Description
 1. The steps we took to develop the code:
  
 2. Difficulties we faced:
+parsing xml page was not easy. at first, we were trying to use a parser
+library, but we couldn't get it right. After all, we parsed manually to get
+what we want.
   
 3. How we solved the problems:
    
