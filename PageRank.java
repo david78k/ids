@@ -189,10 +189,11 @@ public class PageRank {
 				logger.info("\n");
 			}
 
-			for (int row = 0; row < N; row ++) {
-				for(int col = 0; col < N; col ++)
-					A.setEntry(row, col, A.getEntry(row, col)/colsum[col]);
-			}
+			// normalize for column stochastic
+			for(int col = 0; col < N; col ++)
+				for (int row = 0; row < N; row ++) 
+					if(colsum[col] != 0)
+						A.setEntry(row, col, A.getEntry(row, col)/colsum[col]);
 
 			//System.out.println(A);
 			//System.out.println(index);
