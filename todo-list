@@ -1,5 +1,9 @@
 input output directory as arguments
 
-distingush titles in upper case and lower case?
+adjacency matrix: combine titles and inlinks or only inlinks?
+- When creating the adjacency matrix, should we combine titles and inlinks or consider only inlinks? 
+  I'm asking this because the inlinks may also be titles (nodes). 
+- Should we distingush titles in upper case and lower case?
+- should the titles be unique?
 
-are the directories already created in S3 or should they be created while running?
+Are the directories such as results in output directory layout assumed to be already created in S3 in the grading test environment or should they be created at runtime?
