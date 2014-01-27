@@ -18,7 +18,7 @@ import org.jsoup.select.Elements;
 
 import org.apache.commons.math3.linear.*;
 
-class PageRank {
+public class PageRank {
 
 	double d = 0.85;
 	int N = 0;
