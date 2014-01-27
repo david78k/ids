@@ -26,6 +26,7 @@ class PageRank {
 	RealVector R0; // initially 1
 	RealVector R;
 	RealMatrix A;
+	Hashtable index = new Hashtable(); // page index for matrix and vector
 
 	Logger logger = Logger.getLogger(PageRank.class.getName());
 	Mapper<String, String, String, String> mapper;
@@ -59,7 +60,6 @@ class PageRank {
 		double[][] matdata;
 		Hashtable plist = new Hashtable(); // pagerank list for vector R
 		ArrayList alist = new ArrayList(); // adjacency list for matrix A
-		Hashtable index = new Hashtable(); // page index
 
 		int ind = 0;
 		int nlinks = 0;
@@ -215,14 +215,6 @@ class PageRank {
 
 		} catch (IOException e) {}
 
-	//	R = R0;
-		
-		// 1st iteration
-		//R = (1 - d) + A.mult(R, R1);
-	//	R = A.mult(R, R1);
-		//R1 = (1 - d) + A.mult(R, R1);
-	//	R1 = R;
-
 		//DenseMatrix result = new DenseMatrix(matA.numRows(),matB.numColumns());
 		//matA.mult(matB,result);
 	}
@@ -234,22 +226,45 @@ class PageRank {
 		}
 	}
 
-	void rank() {
+	class ScoreComparator implements Comparator<Map.Entry> {
+		public int compare(Map.Entry e1, Map.Entry e2) {
+			double v1 = (Double)e1.getValue(); 
+			double v2 = (Double)e2.getValue();
+			return v1 > v2 ? 1: v1 == v2 ? 0:-1;
+		}
+	}
 
+	void rank() {
+		R = R0;
 		for (int i = 1; i <= MAX_ITER; i ++) {
 			//PR(pi) = (1 - d)/N + d*(sum(PR(pj)/L(pj)));
-			//R = R0 + d*A*R;
-			R = R0.add(A.operate(R).mapMultiply(d)).mapAdd((1 - d)/N);
+			//R = (1 - d)/N + d*A*R;
+			//  = A*R*d + (1 - d)/N;
+			R = A.operate(R).mapMultiply(d).mapAdd((1 - d)/N);
 			if (i == 1 || i == MAX_ITER) {
 				try {
-					//System.out.println(i);	
+					double[] scores = R.toArray();
+					//sort R by page rank score
+					TreeMap rank = new TreeMap();	
+					for (Map.Entry e: (Set<Map.Entry>)index.entrySet()) {
+						String title = (String)e.getKey();
+						int ind = (Integer)e.getValue();
+						// show pages only with score >= 5/N 
+						double score = scores[ind];
+						if (score >= 5/N)
+							rank.put(title, score);
+					}
+					
 					String filename = "PageRank.iter" + i + ".out";
 					FileHandler fhandler = new FileHandler(filename);
 					fhandler.setFormatter(new PlainFormatter());
 					logger.addHandler(fhandler);
-					logger.info(R.toString());
-					//logger.info(filename);
+
+					//logger.info(rank.toString());
+					for (Map.Entry e: (Set<Map.Entry>)rank.entrySet()) 
+						logger.info(e.getKey() + "\t" + e.getValue() + "\n");
 					//logger.log(Level.INFO, filename);
+					
 					logger.removeHandler(fhandler);
 				} catch (IOException e) {
 					e.printStackTrace();

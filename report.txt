@@ -9,6 +9,10 @@ Description
 parsing xml page was not easy. at first, we were trying to use a parser
 library, but we couldn't get it right. After all, we parsed manually to get
 what we want.
+
+too many specifications to follow
+
+data manipulation: sort, order, key-valye mapping, indexing,
   
 3. How we solved the problems:
    
