@@ -234,6 +234,16 @@ class PageRank {
 		}
 	}
 
+	Iterator valueIterator(TreeMap map) {
+		Set set = new TreeSet(new Comparator<Map.Entry<String, Double>>() {
+			public int compare(Map.Entry<String, Double> e1, Map.Entry<String, Double> e2) {
+				return e1.getValue().compareTo(e2.getValue()) > 0 ? -1 : 1;
+			}
+		});
+		set.addAll(map.entrySet());
+		return set.iterator();
+	}
+
 	void rank() {
 		R = R0;
 		for (int i = 1; i <= MAX_ITER; i ++) {
@@ -254,15 +264,30 @@ class PageRank {
 						if (score >= 5/N)
 							rank.put(title, score);
 					}
-					
+					/*
+					Iterator i = valueIterator(rank);
+					while(i.hasNext()) {
+							
+					}
+
+					/*
+					TreeMap rank = new TreeMap();	
+					for (Map.Entry e: (Set<Map.Entry>)rank0.entrySet()) {
+						rank.put(e.getValue(), e.getKey());	
+					}
+					*/
 					String filename = "PageRank.iter" + i + ".out";
 					FileHandler fhandler = new FileHandler(filename);
 					fhandler.setFormatter(new PlainFormatter());
 					logger.addHandler(fhandler);
 
 					//logger.info(rank.toString());
-					for (Map.Entry e: (Set<Map.Entry>)rank.entrySet()) 
+					//for (Map.Entry e: (Set<Map.Entry>)rank.entrySet()) 
+					Iterator iter = valueIterator(rank);
+					while(iter.hasNext())  {
+						Map.Entry e = (Map.Entry)iter.next();
 						logger.info(e.getKey() + "\t" + e.getValue() + "\n");
+					}
 					//logger.log(Level.INFO, filename);
 					
 					logger.removeHandler(fhandler);
