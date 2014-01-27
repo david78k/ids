@@ -1,6 +1,9 @@
 Description
 
 1. The steps we took to develop the code:
+- 1) non-MR on local machine
+- 2) MR with Hadoop on local machine
+- 3) EMR on AWS
  
 2. Difficulties we faced:
 parsing xml page was not easy. at first, we were trying to use a parser

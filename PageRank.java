@@ -31,7 +31,6 @@ class PageRank {
 	Mapper<String, String, String, String> mapper;
 
 	// Matrix mat
-	//
 	PageRank() {
 
 	}
@@ -58,9 +57,12 @@ class PageRank {
 		//File input = new File("data/10000.xml");
 
 		double[][] matdata;
-		//ArrayList plist = new ArrayList(); // pagerank list for vector R
 		Hashtable plist = new Hashtable(); // pagerank list for vector R
 		ArrayList alist = new ArrayList(); // adjacency list for matrix A
+		Hashtable index = new Hashtable(); // page index
+
+		int ind = 0;
+		int nlinks = 0;
 
 		try {
 			String filename = "PageRank.inlink.out";
@@ -73,23 +75,15 @@ class PageRank {
 			Elements pages = doc.select("page");
 			for (Element page: pages) {
 				String content = page.text();
-				//System.out.println(content);
-				//logger.info(content);
 
 				String[] contents = content.split(" ");
 				String title = contents[0].replaceAll(" ", "_");
-				//logger.info(title.replaceAll(" ", "_") + " ");
 				logger.info(title + " ");
 					
-				//N = 0;
 				int i = 0;
 				char c = content.charAt(i);
 				StringBuffer sb = new StringBuffer();
 				ArrayList links = new ArrayList();
-				//String[] links = content.split("\\[\\[");
-				//logger.info(links.length + " ");
-				//logger.info(links[0] + " ");
-				//N += links.length;
 				int len = content.length();
 
 				while (i < len) {
@@ -104,9 +98,7 @@ class PageRank {
 								if (c == ']') {
 									if(i < len && (c = content.charAt(i ++)) != ']' && c != '|') {
 										sb.append(c); 
-									} else {
-										break;
-									}	
+									} else break;
 								} else {
 									sb.append(c); 
 									if (i < len && (c = content.charAt(i ++)) != ']' && c != '|') {
@@ -117,22 +109,36 @@ class PageRank {
 							
 							String link = sb.toString().replaceAll(" ", "_");
 							links.add(link);
-							plist.put(link, new ArrayList());
+							//ArrayList linklist = (ArrayList)(plist.get(link));
+							//if(linklist == null)
+							if((ArrayList)plist.get(link) == null) {
+								plist.put(link, new ArrayList<String>());
+								index.put(link, ind ++);
+							} else {
+								System.out.println("redundant: " + link);
+							} 
 							//System.out.println("link " + N + ": " + link);
-							logger.info(link + "\t");
+						//	logger.info(link + "\t");
 							N ++;
 							sb = new StringBuffer();
 						}
 					}				
 				}
-				plist.put(title, links);
+				
+				ArrayList linklist = (ArrayList)plist.get(title);
+				if(linklist != null) {
+					linklist.addAll(links);
+					plist.put(title, linklist);
+				} else {
+					plist.put(title, links);
+				}
+				index.put(title, ind ++);
 /*
 				doc = Jsoup.parse(content);
 				String forbiddenCharacters = "`~!@#$%^&*{}[\"':;,.<>?/|\\";
 				String patternToMatch = "[\\\\!\"#$%&()*+,./:;<=>?@\\[\\^_{|}~]+";
 				patternToMatch = "#$%&()*+,./:;<=>?@\\[\\^_{|}~";
 				Pattern pattern = Pattern.compile("\\[\\[([A-Za-z0-9.]+)\\]\\]");
-				//pattern = Pattern.compile("\\[\\[[\\w\\s\\|\\:\\/" + Pattern.quote(forbiddenCharacters) + ".]+\\]\\]");
 				pattern = Pattern.compile("\\[\\[[\\w\\s\\|\\:\\/" + Pattern.quote(forbiddenCharacters) + Pattern.quote(patternToMatch) + ".]+\\]\\]");
 				//Pattern pattern = Pattern.compile("\\[\\[(\\w.)+\\]\\]");
 				//Pattern pattern = Pattern.compile("\\[\\[(.+?)\\]\\]");
@@ -144,20 +150,58 @@ class PageRank {
 				//pattern = Pattern.compile("\\[\\[(^" + Pattern.quote("]") + ")+\\]\\]");
 				//pattern = Pattern.compile("\\[\\[(" + Pattern.quote("^]") + ")+\\]\\]");
 				Matcher matcher = pattern.matcher(content);
-				//matcher.find();
 				while(matcher.find()) {
 					//System.out.print("Start index: " + matcher.start());
 					//System.out.print(" End index: " + matcher.end() + " ");
-					//System.out.println(matcher.group());
 					//System.out.println(matcher.group(0));
 					//logger.info(matcher.group() + "\t");
 					N ++;
 				}
 */				
-				logger.info("\n");	
 			}
 	
+			nlinks = N;
+			N = plist.size();
+
+			A = new Array2DRowRealMatrix(N, N);
+			R0 = new ArrayRealVector(N);
+			R = new ArrayRealVector(N, 1);
+
+			// output inliks and create adjacency matrix
+			for (Map.Entry entry: (Set<Map.Entry>)plist.entrySet()) {
+				String title = entry.getKey().toString();
+				logger.info(title + "\t");
+				ArrayList values = (ArrayList)entry.getValue();
+								
+				int row = (Integer)index.get(title);				
+
+				for (String link: (ArrayList<String>)values) {
+					logger.info(link + "\t");
+					int col = (Integer)index.get(link);
+					A.setEntry(row, col, 1);
+				}
+				logger.info("\n");
+				// create page index for adjacency matrix
+				//index.put(entry.getKey().toString(), ind ++);
+				// create adjacency matrix
+			}
+
+			//System.out.println(A);
+			System.out.println(index);
+			System.out.println(index.size());
+			//System.out.println(index.get());
+
 			logger.removeHandler(fhandler);
+			
+			/*
+			for (Map.Entry entry: (Set<Map.Entry>)plist.entrySet()) {
+						
+				ArrayList values = (ArrayList)entry.getValue();
+				for (String link: (ArrayList<String>)values) {
+					logger.info(link + "\t");
+				}
+			}
+			*/
 
 			// write the total number of pages N
 			// N=?
@@ -165,26 +209,12 @@ class PageRank {
 			fhandler = new FileHandler(filename);
 			fhandler.setFormatter(new PlainFormatter());
 			logger.addHandler(fhandler);
+			logger.info("N=" + nlinks + "\n");
 			logger.info("N=" + N + "\n");
 			logger.removeHandler(fhandler);
 
-			//System.out.println(plist);
-			for (Map.Entry entry: (Set<Map.Entry>)plist.entrySet()) {
-				System.out.println(entry);
-			}
-			System.out.println(plist.size());
 		} catch (IOException e) {}
 
-		//Matrix mat = new DenseMatrix(2,2);
-		//System.out.println(mat);
-		//A = MatrixUtils.createRealMatrix(matdata);
-		A = new Array2DRowRealMatrix(N, N);
-		R0 = new ArrayRealVector(N);
-	//	A = new RealMatrix(N, N);
-	//	System.out.println(A);
-		
-		//Matrix R1 = new RealMatrix(N, 1);
-		
 	//	R = R0;
 		
 		// 1st iteration
@@ -209,6 +239,7 @@ class PageRank {
 		for (int i = 1; i <= MAX_ITER; i ++) {
 			//PR(pi) = (1 - d)/N + d*(sum(PR(pj)/L(pj)));
 			//R = R0 + d*A*R;
+			R = R0.add(A.operate(R).mapMultiply(d)).mapAdd((1 - d)/N);
 			if (i == 1 || i == MAX_ITER) {
 				try {
 					//System.out.println(i);	
@@ -216,7 +247,8 @@ class PageRank {
 					FileHandler fhandler = new FileHandler(filename);
 					fhandler.setFormatter(new PlainFormatter());
 					logger.addHandler(fhandler);
-					logger.info(filename);
+					logger.info(R.toString());
+					//logger.info(filename);
 					//logger.log(Level.INFO, filename);
 					logger.removeHandler(fhandler);
 				} catch (IOException e) {
