@@ -8,19 +8,21 @@ Q: distingush titles in upper case and lower case?
 - 3) EMR on AWS
  
 2. Difficulties we faced:
-parsing xml page was not easy. at first, we were trying to use a parser
+- parsing xml page was not easy. at first, we were trying to use a parser
 library, but we couldn't get it right. After all, we parsed manually to get
 what we want.
 
-too many specifications to follow
+- too many specifications to follow
 
-data manipulation: sort, order, key-valye mapping, indexing,
+- data manipulation: sort, order, key-valye mapping, indexing,
   
-creating a jar file: combine separate files (external jars) into one was hard
+- creating a jar file: combine separate files (external jars) into one was hard
+
+- normalizing matrices
 
 3. How we solved the problems:
    
 4. What we learned
  
 5. Optimizations
-
+- sparse matrix (deprecated) for the adjacency matrix A as most of the entries are zero

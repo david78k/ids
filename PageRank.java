@@ -20,27 +20,26 @@ import org.apache.commons.math3.linear.*;
 
 public class PageRank {
 
+	String bucketname;
+	String basedir = ".";
+
 	double d = 0.85;
 	int N = 0;
 	int MAX_ITER = 8;
 
-	//RealMatrix R0; // initially 1
 	RealVector R0; // initially 1
 	RealVector R;
+	//SparseRealMatrix A;
 	RealMatrix A;
 	Hashtable index = new Hashtable(); // page index for matrix and vector
 
 	Logger logger = Logger.getLogger(PageRank.class.getName());
 	Mapper<String, String, String, String> mapper;
 
-	// Matrix mat
-	PageRank() {
-
-	}
-
+	PageRank() {}
 
 	public static void main (String[] args) {
-		System.out.println("PageRank");
+		//System.out.println("PageRank");
 		PageRank pr = new PageRank();
 		pr.start();
 	}
@@ -51,13 +50,14 @@ public class PageRank {
 	}
 
 	/** initialize data from input file
-	 *  and construct a matrix
+	 *  and construct the adjacency matrix A
 	*/
 	void extract() {
 		// read data from input file
+		//File input = new File("s3://spring-2014-ds/data/enwiki-latest-pages-articles.xml");
 		File input = new File("data/100.xml");
-		input = new File("data/1000.xml");
-		input = new File("data/10000.xml");
+		//input = new File("data/1000.xml");
+		//input = new File("data/10000.xml");
 
 		double[][] matdata;
 		Hashtable plist = new Hashtable(); // pagerank list for vector R
@@ -68,7 +68,8 @@ public class PageRank {
 
 		try {
 			String filename = "PageRank.inlink.out";
-			FileHandler fhandler = new FileHandler(filename);
+			String filepath = basedir + "/" + filename;
+			FileHandler fhandler = new FileHandler(filepath);
 			fhandler.setFormatter(new PlainFormatter());
 			logger.addHandler(fhandler);
 
@@ -162,10 +163,11 @@ public class PageRank {
 	
 			nlinks = N;
 			N = plist.size();
+			//System.out.println("plist.size() = " + N);
 
 			A = new Array2DRowRealMatrix(N, N);
-			R0 = new ArrayRealVector(N);
-			R = new ArrayRealVector(N, 1);
+			R0 = new ArrayRealVector(N, 1.0/N);
+			R = new ArrayRealVector(N);
 
 			// output inliks and create adjacency matrix
 			for (Map.Entry entry: (Set<Map.Entry>)plist.entrySet()) {
@@ -182,8 +184,6 @@ public class PageRank {
 					A.setEntry(row, col, 1);
 				}
 				logger.info("\n");
-				// create page index for adjacency matrix
-				//index.put(entry.getKey().toString(), ind ++);
 			}
 
 			//System.out.println(A);
@@ -196,10 +196,11 @@ public class PageRank {
 			// write the total number of pages N
 			// N=?
 			filename = "PageRank.n.out";
-			fhandler = new FileHandler(filename);
+			filepath = basedir + "/" + filename;
+			fhandler = new FileHandler(filepath);
 			fhandler.setFormatter(new PlainFormatter());
 			logger.addHandler(fhandler);
-			logger.info("N=" + nlinks + "\n");
+			//logger.info("N=" + nlinks + "\n");
 			logger.info("N=" + N + "\n");
 			logger.removeHandler(fhandler);
 
@@ -233,11 +234,16 @@ public class PageRank {
 
 	void rank() {
 		R = R0;
+		if(R == null) System.out.println("R = null");
+		if(R0 == null) System.out.println("R0 = null");
+		if(A == null) System.out.println("A = null");
+		//System.out.println("N = " + N);
+
 		for (int i = 1; i <= MAX_ITER; i ++) {
 			//PR(pi) = (1 - d)/N + d*(sum(PR(pj)/L(pj)));
 			//R = (1 - d)/N + d*A*R;
 			//  = A*R*d + (1 - d)/N;
-			R = A.operate(R).mapMultiply(d).mapAdd((1 - d)/N);
+			R = A.operate(R).mapMultiply(d).mapAdd((1.0 - d)/N);
 			if (i == 1 || i == MAX_ITER) {
 				try {
 					double[] scores = R.toArray();
@@ -271,7 +277,14 @@ public class PageRank {
 					e.printStackTrace();
 				}
 			}
-			//normalize R
+			//normalize R: column stochastic. e.g., column sum = 1
+			// compute the total column sum
+			// for each column 
+			// 	for each row
+			// 		divide each entry by the column sum	
+		//	for(A.getRows()) {
+
+		//	}
 		}
 	}
 
