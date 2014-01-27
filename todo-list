@@ -7,3 +7,12 @@ adjacency matrix: combine titles and inlinks or only inlinks?
 - should the titles be unique?
 
 Are the directories such as results in output directory layout assumed to be already created in S3 in the grading test environment or should they be created at runtime?
+
+total number of pages N
+"You should produce a inlink graph le named PageRank.inlink.out as described below: 
+pageTitle inlink1 inlink2 inlink3 ... inlinkn.
+
+Suppose that we have two pages with five links like below.
+pageTitle1 inlink1 inlink2 inlink3.
+pageTitle2 inlink4 inlink5.
+In this case, is N 5?
