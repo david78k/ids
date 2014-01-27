@@ -261,7 +261,7 @@ class PageRank {
 						int ind = (Integer)e.getValue();
 						// show pages only with score >= 5/N 
 						double score = scores[ind];
-						if (score >= 5/N)
+						if (score >= 5.0/N)
 							rank.put(title, score);
 					}
 					/*
