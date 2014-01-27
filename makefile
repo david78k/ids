@@ -24,7 +24,8 @@ hadoop:
 	#hadoop-1.0.3/bin/hadoop jar PageRank.jar --main-class PageRank.PageRank input output
 
 jar:
-	jar -cf PageRank.jar -C PageRank/ . -C commons-math/commons-math3-3.2/commons-math3-3.2/ .
+	jar -cf PageRank.jar -C PageRank/ . 
+	#jar -cf PageRank.jar -C PageRank/ . -C commons-math/commons-math3-3.2/commons-math3-3.2/ .
 	#jar -cvf PageRank.jar -C PageRank/ . -C commons-math/commons-math3-3.2/commons-math3-3.2/ .
 	#jar -cvf PageRank.jar -C PageRank/ . -C commons-math/commons-math3-3.2/commons-math3-3.2/ . -C jsoup/ .
 	#jar -cvf PageRank.jar PageRank commons-math3-3.2.jar
