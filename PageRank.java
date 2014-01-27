@@ -169,6 +169,8 @@ public class PageRank {
 			R0 = new ArrayRealVector(N, 1.0/N);
 			R = new ArrayRealVector(N);
 
+			int[] colsum = new int[N];
+
 			// output inliks and create adjacency matrix
 			for (Map.Entry entry: (Set<Map.Entry>)plist.entrySet()) {
 				String title = entry.getKey().toString();
@@ -182,12 +184,18 @@ public class PageRank {
 					logger.info(link + "\t");
 					int col = (Integer)index.get(link);
 					A.setEntry(row, col, 1);
+					colsum[col] += 1;
 				}
 				logger.info("\n");
 			}
 
+			for (int row = 0; row < N; row ++) {
+				for(int col = 0; col < N; col ++)
+					A.setEntry(row, col, A.getEntry(row, col)/colsum[col]);
+			}
+
 			//System.out.println(A);
-			System.out.println(index);
+			//System.out.println(index);
 			System.out.println(index.size());
 			//System.out.println(index.get());
 
