@@ -92,6 +92,7 @@ public class PageRank {
 
 				String[] contents = content.split(" ");
 				String title = contents[0].replaceAll(" ", "_");
+				logger.setUseParentHandlers(false);
 				logger.info(title + " ");
 					
 				int i = 0;
