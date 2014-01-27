@@ -1,3 +1,5 @@
+package PageRank;
+
 import java.io.*;
 import java.util.*;
 //import java.util.logging.Logger;
@@ -12,7 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import no.uib.cipr.matrix.*;
+//import no.uib.cipr.matrix.*;
 
 import org.apache.commons.math3.linear.*;
 
@@ -117,8 +119,6 @@ class PageRank {
 							} else {
 								System.out.println("redundant: " + link);
 							} 
-							//System.out.println("link " + N + ": " + link);
-						//	logger.info(link + "\t");
 							N ++;
 							sb = new StringBuffer();
 						}
@@ -204,9 +204,6 @@ class PageRank {
 			logger.removeHandler(fhandler);
 
 		} catch (IOException e) {}
-
-		//DenseMatrix result = new DenseMatrix(matA.numRows(),matB.numColumns());
-		//matA.mult(matB,result);
 	}
 
 	class PlainFormatter extends java.util.logging.Formatter {

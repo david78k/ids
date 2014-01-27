@@ -1,12 +1,11 @@
-jars = mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar
+#jars = mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar
+jars = hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar
 
 all: run upload
 
 compile:
-	javac -classpath $(jars) PageRank.java
+	javac -classpath $(jars) -d PageRank PageRank.java
 	#javac -classpath mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank.java
-	#javac -classpath mtj-1.0.1.jar hadoop-core-1.0.3.jar PageRank.java
-	#javac PageRank.java
 
 compemr:
 	javac -classpath HADOOP HOME/hadoop-HADOOP VERSION-core.jar -d PageRank PageRank.java
@@ -15,13 +14,20 @@ compemr:
 	#3. run in local:
 	hadoop jar PageRank.jar {main-class PageRank.PageRank input output
 
-run: compile
-	java -classpath .:$(jars) PageRank
+run: compile jar hadoop
+	#java -classpath .:$(jars) PageRank
 	#java -classpath .:mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank
-	#java PageRank
+
+hadoop: 
+	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank input output
+	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank input output
+	#hadoop-1.0.3/bin/hadoop jar PageRank.jar --main-class PageRank.PageRank input output
 
 jar:
-	jar -cvf PageRank.jar .
+	jar -cvf PageRank.jar -C PageRank/ . -C commons-math/commons-math3-3.2/commons-math3-3.2/ .
+	#jar -cvf PageRank.jar -C PageRank/ .
+	#jar -cvf PageRank.jar PageRank commons-math3-3.2.jar
+	#jar -cvf PageRank.jar -C PageRank/ . commons-math3-3.2.jar
 
 emr:
 	elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \

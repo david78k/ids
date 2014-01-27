@@ -16,6 +16,8 @@ too many specifications to follow
 
 data manipulation: sort, order, key-valye mapping, indexing,
   
+creating a jar file: combine separate files into one was hard
+
 3. How we solved the problems:
    
 4. What we learned
