@@ -2,3 +2,4 @@ input output directory as arguments
 
 distingush titles in upper case and lower case?
 
+are the directories already created in S3 or should they be created while running?

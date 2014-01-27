@@ -20,8 +20,9 @@ import org.apache.commons.math3.linear.*;
 
 public class PageRank {
 
-	String bucketname;
+	String bucketname = "";
 	String basedir = ".";
+	String resultsdir = basedir + "/results";
 
 	double d = 0.85;
 	int N = 0;
@@ -38,9 +39,17 @@ public class PageRank {
 
 	PageRank() {}
 
+	PageRank(String bucketname) {
+		this.bucketname = bucketname;			
+	}
+
 	public static void main (String[] args) {
 		//System.out.println("PageRank");
-		PageRank pr = new PageRank();
+		String bucketname = args[0];
+		System.out.println(bucketname);
+
+		//PageRank pr = new PageRank();
+		PageRank pr = new PageRank(bucketname);
 		pr.start();
 	}
 	
@@ -68,7 +77,9 @@ public class PageRank {
 
 		try {
 			String filename = "PageRank.inlink.out";
-			String filepath = basedir + "/" + filename;
+			String filepath = resultsdir + "/" + filename;
+			new File(resultsdir).mkdirs();
+
 			FileHandler fhandler = new FileHandler(filepath);
 			fhandler.setFormatter(new PlainFormatter());
 			logger.addHandler(fhandler);
@@ -205,7 +216,7 @@ public class PageRank {
 			// write the total number of pages N
 			// N=?
 			filename = "PageRank.n.out";
-			filepath = basedir + "/" + filename;
+			filepath = resultsdir + "/" + filename;
 			fhandler = new FileHandler(filepath);
 			fhandler.setFormatter(new PlainFormatter());
 			logger.addHandler(fhandler);
@@ -268,7 +279,8 @@ public class PageRank {
 					}
 
 					String filename = "PageRank.iter" + i + ".out";
-					FileHandler fhandler = new FileHandler(filename);
+					String filepath = resultsdir + "/" + filename;
+					FileHandler fhandler = new FileHandler(filepath);
 					fhandler.setFormatter(new PlainFormatter());
 					logger.addHandler(fhandler);
 

@@ -1,1 +1,1 @@
-PageRank.n.out
+results/PageRank.n.out
