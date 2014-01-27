@@ -54,8 +54,8 @@ class PageRank {
 	void extract() {
 		// read data from input file
 		File input = new File("data/100.xml");
-		//File input = new File("data/1000.xml");
-		//File input = new File("data/10000.xml");
+		input = new File("data/1000.xml");
+		input = new File("data/10000.xml");
 
 		double[][] matdata;
 		Hashtable plist = new Hashtable(); // pagerank list for vector R
@@ -131,8 +131,8 @@ class PageRank {
 					plist.put(title, linklist);
 				} else {
 					plist.put(title, links);
+					index.put(title, ind ++);
 				}
-				index.put(title, ind ++);
 /*
 				doc = Jsoup.parse(content);
 				String forbiddenCharacters = "`~!@#$%^&*{}[\"':;,.<>?/|\\";
@@ -175,6 +175,7 @@ class PageRank {
 								
 				int row = (Integer)index.get(title);				
 
+				// create adjacency matrix
 				for (String link: (ArrayList<String>)values) {
 					logger.info(link + "\t");
 					int col = (Integer)index.get(link);
@@ -183,7 +184,6 @@ class PageRank {
 				logger.info("\n");
 				// create page index for adjacency matrix
 				//index.put(entry.getKey().toString(), ind ++);
-				// create adjacency matrix
 			}
 
 			//System.out.println(A);
@@ -193,16 +193,6 @@ class PageRank {
 
 			logger.removeHandler(fhandler);
 			
-			/*
-			for (Map.Entry entry: (Set<Map.Entry>)plist.entrySet()) {
-						
-				ArrayList values = (ArrayList)entry.getValue();
-				for (String link: (ArrayList<String>)values) {
-					logger.info(link + "\t");
-				}
-			}
-			*/
-
 			// write the total number of pages N
 			// N=?
 			filename = "PageRank.n.out";
@@ -264,18 +254,7 @@ class PageRank {
 						if (score >= 5.0/N)
 							rank.put(title, score);
 					}
-					/*
-					Iterator i = valueIterator(rank);
-					while(i.hasNext()) {
-							
-					}
 
-					/*
-					TreeMap rank = new TreeMap();	
-					for (Map.Entry e: (Set<Map.Entry>)rank0.entrySet()) {
-						rank.put(e.getValue(), e.getKey());	
-					}
-					*/
 					String filename = "PageRank.iter" + i + ".out";
 					FileHandler fhandler = new FileHandler(filename);
 					fhandler.setFormatter(new PlainFormatter());
