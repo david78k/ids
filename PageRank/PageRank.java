@@ -324,4 +324,17 @@ public class PageRank {
 	void reduce() {
 
 	}
+
+	class PageRankMapper extends Mapper<Object, Object, Object, Object> {
+		public void map(Object key, Object value, Context context) {	
+		
+		}	
+	}
+
+	class PageRankReducer extends Reducer<Object, Object, Object, Object> {
+		public void reduce(Object key, Object value, Context context) {	
+		
+		}	
+	}
+	
 }
