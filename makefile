@@ -8,7 +8,7 @@ run: compile jar hadoop
 	#java -classpath .:mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank
 
 compile:
-	javac -classpath $(jars) -d PageRank PageRank.java
+	javac -classpath $(jars) -d PageRank PageRank/PageRank.java
 	#javac -classpath mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank.java
 
 jar:

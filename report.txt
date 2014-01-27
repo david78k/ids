@@ -18,6 +18,8 @@ what we want.
 
 - normalizing matrices to make the matrix column stochastic
 
+- arranging (managing, adjusting) output directory layout is clumsy
+
 3. How we solved the problems:
    
 4. What we learned

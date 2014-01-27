@@ -41,6 +41,8 @@ public class PageRank {
 
 	PageRank(String bucketname) {
 		this.bucketname = bucketname;			
+		basedir = bucketname;
+		resultsdir = basedir + "/results";
 	}
 
 	public static void main (String[] args) {
@@ -130,7 +132,7 @@ public class PageRank {
 								plist.put(link, new ArrayList<String>());
 								index.put(link, ind ++);
 							} else {
-								System.out.println("redundant: " + link);
+							//	System.out.println("redundant: " + link);
 							} 
 							N ++;
 							sb = new StringBuffer();
