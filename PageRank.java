@@ -56,8 +56,8 @@ public class PageRank {
 		// read data from input file
 		//File input = new File("s3://spring-2014-ds/data/enwiki-latest-pages-articles.xml");
 		File input = new File("data/100.xml");
-		input = new File("data/1000.xml");
-		input = new File("data/10000.xml");
+		//input = new File("data/1000.xml");
+		//input = new File("data/10000.xml");
 
 		double[][] matdata;
 		Hashtable plist = new Hashtable(); // pagerank list for vector R
