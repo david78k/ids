@@ -1,0 +1,5 @@
+#bin/hadoop fs -rmr input
+#bin/hadoop fs -put conf input
+bin/hadoop fs -rmr output
+#bin/hadoop jar hadoop-examples-1.0.3.jar grep input output 'dfs[a-z.]+'
+bin/hadoop jar hadoop-examples-1.0.3.jar wordcount input output 
