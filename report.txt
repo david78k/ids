@@ -30,9 +30,20 @@ what we want.
 - Although the required mapreduce API (version 1.0.3) that is quite old supports both old API (mapred.*) and new API (mapreduce.*), the old API doesn't work for some cases. should have
   been noted beforehand
 
+- long procedure to run pagerank on EMR: installing many things to use command line tool for running client scripts
+
+- testing and debugging are pains in the ass. every time the code has been changed, it has to
+  be compiled/jared/uploaded. the worst thing is to wait for the cluster to be
+initialized and run the jar application
+
+- s3 API for Java to store output into s3bucket/results folder
+
 3. How we solved the problems:
    
 4. What we learned
+easier to run mapreduce application on AWS EMR rather than running on local
+machine which requires lots of work to set things up. this allows us to focus
+on developing our application 
  
 5. Optimizations
 - sparse matrix (deprecated) for the adjacency matrix A as most of the entries are zero

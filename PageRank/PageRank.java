@@ -25,11 +25,12 @@ import org.jsoup.select.Elements;
 import org.apache.commons.math3.linear.*;
 
 public class PageRank {
-	//String inputpath = "s3://spring-2014-ds/data/enwiki-latest-pages-articles.xml";
-	String inputpath = "data/100.xml";
+	static String inputpath = "s3://spring-2014-ds/data/enwiki-latest-pages-articles.xml";
+	//String inputpath = "data/100.xml";
 
-	String bucketname = "";
-	String basedir = ".";
+	static String bucketname = "";
+	//String basedir = ".";
+	static String basedir = "s3://" + bucketname;
 	String resultdir = basedir + "/results";
 	String outputpath = resultdir;
 
@@ -49,16 +50,23 @@ public class PageRank {
 	PageRank() {}
 
 	PageRank(String bucketname) {
-		this.bucketname = bucketname;			
-		basedir = bucketname;
+	//	this.bucketname = bucketname;			
+	//	basedir = bucketname;
 		resultdir = basedir + "/results";
 		outputpath = resultdir;
 	}
 
 	public static void main (String[] args) throws Exception {
 		//System.out.println("PageRank");
-		String bucketname = args[0];
+		bucketname = args[0];
 		System.out.println(bucketname);
+		basedir = "s3://" + bucketname;
+
+		// for local test
+		if(args.length > 1) {
+			inputpath = args[1];
+			basedir = bucketname;
+		}
 
 		PageRank pr = new PageRank(bucketname);
 		//pr.start();
