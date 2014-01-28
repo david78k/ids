@@ -21,6 +21,8 @@ jar:
 	#jar -cvf PageRank.jar -C PageRank/ . commons-math3-3.2.jar
 
 hadoop: 
+	rm -rf david78k-ids/results
+	#hadoop-1.0.3/bin/hadoop dfs -rmr david78k-ids/results
 	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank david78k-ids 
 	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank input output
 	#hadoop-1.0.3/bin/hadoop jar PageRank.jar --main-class PageRank.PageRank input output
@@ -30,7 +32,7 @@ wordcount:
 	jar -cf WordCount.jar -C WordCount/ . 
 	hadoop-1.0.3/bin/hadoop dfs -rmr output
 	hadoop-1.0.3/bin/hadoop jar WordCount.jar WordCount data/100.xml output
-	hadoop-1.0.3/bin/hadoop dfs -cat output/part-00000
+	hadoop-1.0.3/bin/hadoop dfs -cat output/part-00000 | tail
 
 emr:
 	elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \

@@ -24,6 +24,9 @@ what we want.
 - apache hadoop mapreduce related classes dependency complex, setup/import
   related classes
 
+- mapreduce class type input/output, key/value class type so complex and
+  confusing
+
 3. How we solved the problems:
    
 4. What we learned
