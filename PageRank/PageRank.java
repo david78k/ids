@@ -10,7 +10,7 @@ import org.apache.hadoop.conf.*;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.util.*;
-//import org.apache.hadoop.mapreduce.*; // new API
+//import org.apache.hadoop.mapreduce.*; // new API doesn't work for wordcount example
 //import org.apache.hadoop.mapreduce.lib.input.*;
 //import org.apache.hadoop.mapreduce.lib.output.*;
 import org.apache.hadoop.mapred.*; // old API
@@ -60,12 +60,58 @@ public class PageRank {
 		String bucketname = args[0];
 		System.out.println(bucketname);
 
-		//PageRank pr = new PageRank();
 		PageRank pr = new PageRank(bucketname);
 		//pr.start();
-		pr.wordcount();
+		//pr.wordcount();
+		pr.pagerank();
 	}
 	
+	void pagerank() throws Exception {
+		JobConf conf = new JobConf(PageRank.class);
+		conf.setJobName("pagerank");
+
+		conf.setOutputKeyClass(Text.class);
+		conf.setOutputValueClass(IntWritable.class);
+
+		conf.setMapperClass(WordCountMapper.class);
+		//conf.setCombinerClass(Reduce.class);
+		conf.setReducerClass(WordCountReducer.class);
+
+		conf.setInputFormat(TextInputFormat.class);
+		conf.setOutputFormat(TextOutputFormat.class);
+
+                FileInputFormat.setInputPaths(conf, new Path(inputpath));
+                FileOutputFormat.setOutputPath(conf, new Path(outputpath));
+		//FileInputFormat.setInputPaths(conf, new Path(args[0]));
+		//FileOutputFormat.setOutputPath(conf, new Path(args[1]));
+
+		JobClient.runJob(conf);
+	}
+
+	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
+		private final static IntWritable one = new IntWritable(1);
+		private Text word = new Text();
+
+		public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+			String line = value.toString();
+			StringTokenizer tokenizer = new StringTokenizer(line);
+			while (tokenizer.hasMoreTokens()) {
+				word.set(tokenizer.nextToken());
+				output.collect(word, one);
+			}
+		}
+	}
+
+	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
+		public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+			int sum = 0;
+			while (values.hasNext()) {
+				sum += values.next().get();
+			}
+			output.collect(key, new IntWritable(sum));
+		}
+	}
+
 	void wordcount() throws Exception {
 		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("wordcount");
@@ -86,44 +132,8 @@ public class PageRank {
 		//FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 
 		JobClient.runJob(conf);
-}
-	
-/*
-	void wordcountnew() throws Exception {
-		//JobConf conf = new JobConf(WordCount.class);
-		Configuration conf = new Configuration();
-		//Job job = new Job(WordCount.class);
-		Job job = new Job(conf, "wordcount");
-	
-		job.setJarByClass(PageRank.class);
-
-                job.setMapperClass(WordCountMapper.class);
-		//job.setCombinerClass(Reduce.class);
-		job.setReducerClass(WordCountReducer.class);
-
-                job.setOutputKeyClass(Text.class);
-                //job.setOutputValueClass(Text.class);
-                job.setOutputValueClass(IntWritable.class);
-
-                //job.setMapOutputKeyClass(Text.class);
-                //job.setMapOutputValueClass(IntWritable.class);
-
-                //job.setInputFormatClass(KeyValueTextInputFormat.class);
-                job.setInputFormatClass(TextInputFormat.class);
-                job.setOutputFormatClass(TextOutputFormat.class);
-                //job.setOutputFormatClass(NullOutputFormat.class); // error
-                //job.setOutputFormatClass(KeyValueTextOutputFormat.class); // error
-                //job.setOutputFormatClass(FileOutputFormat.class); // runtime InstantiationException
-
-                FileInputFormat.setInputPaths(job, new Path(inputpath));
-                FileOutputFormat.setOutputPath(job, new Path(outputpath));
-
-		//job.submit();
-                //JobClient.runJob(job);
-		boolean result = job.waitForCompletion(true);
-		System.exit(result ? 0 : 1);
 	}
-*/
+	
 	public static class WordCountMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
 		private final static IntWritable one = new IntWritable(1);
 		private Text word = new Text();
@@ -148,99 +158,12 @@ public class PageRank {
 		}
 	}
 
-	void start() throws Exception {
-		//JobConf conf = new JobConf(WordCount.class);
-		Configuration conf = new Configuration();
-		//Job job = new Job(WordCount.class);
-/*
- 		Job job = new Job(conf, "pagerank");
-
-		job.setJarByClass(PageRank.class);
-
-                job.setOutputKeyClass(Text.class);
-                job.setOutputValueClass(Text.class);
-                //job.setOutputValueClass(IntWritable.class);
-
-                job.setMapperClass(PageRankMapper.class);
-		//job.setCombinerClass(Reduce.class);
-		job.setReducerClass(PageRankReducer.class);
-
-                //job.setInputFormatClass(TextInputFormat.class);
-                job.setInputFormatClass(KeyValueTextInputFormat.class);
-                job.setOutputFormatClass(TextOutputFormat.class);
-
-                FileInputFormat.setInputPaths(job, new Path(inputpath));
-                FileOutputFormat.setOutputPath(job, new Path(outputpath));
-
-                //JobClient.runJob(job);
-		boolean result = job.waitForCompletion(true);
-		System.exit(result ? 0 : 1);
-*/
-	}
-
 	class Page {
 		int id;
 		String title;
 		double pagerank = 1;
 	}
 
-/*
-	//static class WordCounterMapper extends Mapper<Text, LongWritable, Text, IntWritable> {
-	//static class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
-	static class WordCountNewMapper extends Mapper<Object, Text, Text, IntWritable> {
-	//static class WordCounterMapper extends Mapper<Text, Text, Text, IntWritable> {
-		private final static IntWritable one = new IntWritable(1);
-		Text word = new Text();
-
-		//public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {	
-		//public void map(Text key, Text value, Context context) throws IOException, InterruptedException {	
-		//public void map(Text key, Text value, Context context) throws IOException, InterruptedException {	
-		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {	
-			StringTokenizer t = new StringTokenizer(value.toString());
-
-			while(t.hasMoreTokens()) {
-				word.set(t.nextToken());
-				context.write(word, one);				
-			}
-		}	
-	}
-
-	static class WordCountNewReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
-		public void reduce(Text key, Iterator<IntWritable> values, Context context) throws IOException, InterruptedException {	
-			int sum = 0;
-			
-			while(values.hasNext()) {
-				sum += values.next().get();
-			}	
-			System.out.println(key + " = " + sum);
-			context.write(key, new IntWritable(sum));
-		}	
-	}
-*/	
-/*
-	static class PageRankMapper extends Mapper<Text, Text, Text, Text> {
-		Text title = new Text();
-		Text links = new Text();
-		//String[] links;
-
-		public void map(Text key, Text value, Context context) throws IOException, InterruptedException {	
-			String[] strings = value.toString().split(" ");
-
-			for(String s: strings) {
-				//title.set(key);
-				links.set(s);
-				context.write(key, links);				
-			}
-		}	
-	}
-
-	static class PageRankReducer extends Reducer<Text, Text, Text, Text> {
-		public void reduce(Text key, Text value, Context context) throws IOException, InterruptedException {	
-			int sum = 0;
-			
-		}	
-	}
-*/	
 	/** initialize data from input file
 	 *  and construct the adjacency matrix A
 	*/
@@ -491,4 +414,127 @@ public class PageRank {
 		}
 	}
 
+/*
+	void start() throws Exception {
+		//JobConf conf = new JobConf(WordCount.class);
+		Configuration conf = new Configuration();
+		//Job job = new Job(WordCount.class);
+ 		Job job = new Job(conf, "pagerank");
+
+		job.setJarByClass(PageRank.class);
+
+                job.setOutputKeyClass(Text.class);
+                job.setOutputValueClass(Text.class);
+                //job.setOutputValueClass(IntWritable.class);
+
+                job.setMapperClass(PageRankMapper.class);
+		//job.setCombinerClass(Reduce.class);
+		job.setReducerClass(PageRankReducer.class);
+
+                //job.setInputFormatClass(TextInputFormat.class);
+                job.setInputFormatClass(KeyValueTextInputFormat.class);
+                job.setOutputFormatClass(TextOutputFormat.class);
+
+                FileInputFormat.setInputPaths(job, new Path(inputpath));
+                FileOutputFormat.setOutputPath(job, new Path(outputpath));
+
+                //JobClient.runJob(job);
+		boolean result = job.waitForCompletion(true);
+		System.exit(result ? 0 : 1);
+	}
+*/
+
+/*
+	void wordcountnew() throws Exception {
+		//JobConf conf = new JobConf(WordCount.class);
+		Configuration conf = new Configuration();
+		//Job job = new Job(WordCount.class);
+		Job job = new Job(conf, "wordcount");
+	
+		job.setJarByClass(PageRank.class);
+
+                job.setMapperClass(WordCountMapper.class);
+		//job.setCombinerClass(Reduce.class);
+		job.setReducerClass(WordCountReducer.class);
+
+                job.setOutputKeyClass(Text.class);
+                //job.setOutputValueClass(Text.class);
+                job.setOutputValueClass(IntWritable.class);
+
+                //job.setMapOutputKeyClass(Text.class);
+                //job.setMapOutputValueClass(IntWritable.class);
+
+                //job.setInputFormatClass(KeyValueTextInputFormat.class);
+                job.setInputFormatClass(TextInputFormat.class);
+                job.setOutputFormatClass(TextOutputFormat.class);
+                //job.setOutputFormatClass(NullOutputFormat.class); // error
+                //job.setOutputFormatClass(KeyValueTextOutputFormat.class); // error
+                //job.setOutputFormatClass(FileOutputFormat.class); // runtime InstantiationException
+
+                FileInputFormat.setInputPaths(job, new Path(inputpath));
+                FileOutputFormat.setOutputPath(job, new Path(outputpath));
+
+		//job.submit();
+                //JobClient.runJob(job);
+		boolean result = job.waitForCompletion(true);
+		System.exit(result ? 0 : 1);
+	}
+*/
+/*
+	//static class WordCounterMapper extends Mapper<Text, LongWritable, Text, IntWritable> {
+	//static class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+	static class WordCountNewMapper extends Mapper<Object, Text, Text, IntWritable> {
+	//static class WordCounterMapper extends Mapper<Text, Text, Text, IntWritable> {
+		private final static IntWritable one = new IntWritable(1);
+		Text word = new Text();
+
+		//public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {	
+		//public void map(Text key, Text value, Context context) throws IOException, InterruptedException {	
+		//public void map(Text key, Text value, Context context) throws IOException, InterruptedException {	
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {	
+			StringTokenizer t = new StringTokenizer(value.toString());
+
+			while(t.hasMoreTokens()) {
+				word.set(t.nextToken());
+				context.write(word, one);				
+			}
+		}	
+	}
+
+	static class WordCountNewReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+		public void reduce(Text key, Iterator<IntWritable> values, Context context) throws IOException, InterruptedException {	
+			int sum = 0;
+			
+			while(values.hasNext()) {
+				sum += values.next().get();
+			}	
+			System.out.println(key + " = " + sum);
+			context.write(key, new IntWritable(sum));
+		}	
+	}
+*/	
+/*
+	static class PageRankMapper extends Mapper<Text, Text, Text, Text> {
+		Text title = new Text();
+		Text links = new Text();
+		//String[] links;
+
+		public void map(Text key, Text value, Context context) throws IOException, InterruptedException {	
+			String[] strings = value.toString().split(" ");
+
+			for(String s: strings) {
+				//title.set(key);
+				links.set(s);
+				context.write(key, links);				
+			}
+		}	
+	}
+
+	static class PageRankReducer extends Reducer<Text, Text, Text, Text> {
+		public void reduce(Text key, Text value, Context context) throws IOException, InterruptedException {	
+			int sum = 0;
+			
+		}	
+	}
+*/
 }
