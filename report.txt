@@ -27,6 +27,9 @@ what we want.
 - mapreduce class type input/output, key/value class type so complex and
   confusing
 
+- Although the required mapreduce API (version 1.0.3) that is quite old supports both old API (mapred.*) and new API (mapreduce.*), the old API doesn't work for some cases. should have
+  been noted beforehand
+
 3. How we solved the problems:
    
 4. What we learned
