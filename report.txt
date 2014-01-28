@@ -1,7 +1,8 @@
 Description
 
 1. The steps we took to develop the code:
-- 1) non-MR on local machine
+- 1) non-MR on local machine: thought that it was going to be easy to convert
+  non-MR to MR.
 - 2) MR with Hadoop on local machine
 - 3) EMR on AWS
  
@@ -19,6 +20,9 @@ what we want.
 - normalizing matrices to make the matrix column stochastic
 
 - arranging (managing, adjusting) output directory layout is clumsy
+
+- apache hadoop mapreduce related classes dependency complex, setup/import
+  related classes
 
 3. How we solved the problems:
    

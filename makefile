@@ -8,25 +8,29 @@ run: compile jar hadoop
 	#java -classpath .:mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank
 
 compile:
-	#javac -classpath $(jars) -d PageRank PageRank/PageRank.java
-	javac -classpath $(jars) -d WordCount WordCount/WordCount.java
+	javac -classpath $(jars) -d PageRank PageRank/PageRank.java
+	#javac -classpath $(jars) -d WordCount WordCount/WordCount.java
 	#javac -classpath mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank.java
 
 jar:
-	jar -cf WordCount.jar -C WordCount/ . 
-	#jar -cf PageRank.jar -C PageRank/ . 
+	#jar -cf WordCount.jar -C WordCount/ . 
+	jar -cf PageRank.jar -C PageRank/ . 
 	#jar -cf PageRank.jar -C PageRank/ . -C commons-math/commons-math3-3.2/commons-math3-3.2/ .
 	#jar -cvf PageRank.jar -C PageRank/ . -C commons-math/commons-math3-3.2/commons-math3-3.2/ . -C jsoup/ .
 	#jar -cvf PageRank.jar PageRank commons-math3-3.2.jar
 	#jar -cvf PageRank.jar -C PageRank/ . commons-math3-3.2.jar
 
 hadoop: 
+	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank david78k-ids 
+	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank input output
+	#hadoop-1.0.3/bin/hadoop jar PageRank.jar --main-class PageRank.PageRank input output
+
+wordcount:
+	javac -classpath $(jars) -d WordCount WordCount/WordCount.java
+	jar -cf WordCount.jar -C WordCount/ . 
 	hadoop-1.0.3/bin/hadoop dfs -rmr output
 	hadoop-1.0.3/bin/hadoop jar WordCount.jar WordCount data/100.xml output
 	hadoop-1.0.3/bin/hadoop dfs -cat output/part-00000
-	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank david78k-ids output
-	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank input output
-	#hadoop-1.0.3/bin/hadoop jar PageRank.jar --main-class PageRank.PageRank input output
 
 emr:
 	elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \

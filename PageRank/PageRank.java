@@ -7,7 +7,14 @@ import java.util.logging.*;
 import java.util.regex.*;
 
 import org.apache.hadoop.*;
-import org.apache.hadoop.mapreduce.*;
+import org.apache.hadoop.mapreduce.*; // new API
+import org.apache.hadoop.conf.*;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.util.*;
+import org.apache.hadoop.mapreduce.lib.input.*;
+import org.apache.hadoop.mapreduce.lib.output.*;
+//import org.apache.hadoop.mapred.*; // old API
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,10 +26,13 @@ import org.jsoup.select.Elements;
 import org.apache.commons.math3.linear.*;
 
 public class PageRank {
+	//String inputpath = "s3://spring-2014-ds/data/enwiki-latest-pages-articles.xml";
+	String inputpath = "data/100.xml";
 
 	String bucketname = "";
 	String basedir = ".";
-	String resultsdir = basedir + "/results";
+	String resultdir = basedir + "/results";
+	String outputpath = resultdir;
 
 	double d = 0.85;
 	int N = 0;
@@ -42,7 +52,8 @@ public class PageRank {
 	PageRank(String bucketname) {
 		this.bucketname = bucketname;			
 		basedir = bucketname;
-		resultsdir = basedir + "/results";
+		resultdir = basedir + "/results";
+		outputpath = resultdir;
 	}
 
 	public static void main (String[] args) {
@@ -52,23 +63,69 @@ public class PageRank {
 
 		//PageRank pr = new PageRank();
 		PageRank pr = new PageRank(bucketname);
-		pr.start();
+	//	pr.start();
 	}
 	
-	void start() {
-		extract();
-		rank();
+	void start() throws Exception {
+		//JobConf conf = new JobConf(WordCount.class);
+		Configuration conf = new Configuration();
+		//Job job = new Job(WordCount.class);
+		Job job = new Job(conf, "pagerank");
+		job.setJarByClass(PageRank.class);
+
+                job.setOutputKeyClass(Text.class);
+                job.setOutputValueClass(IntWritable.class);
+
+                job.setMapperClass(PageRankMapper.class);
+		//job.setCombinerClass(Reduce.class);
+		job.setReducerClass(PageRankReducer.class);
+
+                job.setInputFormatClass(TextInputFormat.class);
+                job.setOutputFormatClass(TextOutputFormat.class);
+
+                FileInputFormat.setInputPaths(job, new Path(inputpath));
+                FileOutputFormat.setOutputPath(job, new Path(outputpath));
+
+                //JobClient.runJob(job);
+		boolean result = job.waitForCompletion(true);
+		System.exit(result ? 0 : 1);
+
+	//	extract();
+	//	rank();
 	}
 
+	void mapreduce() {
+		map();
+		reduce();
+	}
+
+	void map() {
+
+	}
+
+	void reduce() {
+
+	}
+
+	class PageRankMapper extends Mapper<Object, Object, Object, Object> {
+		public void map(Object key, Object value, Context context) {	
+		
+		}	
+	}
+
+	class PageRankReducer extends Reducer<Object, Object, Object, Object> {
+		public void reduce(Object key, Object value, Context context) {	
+		
+		}	
+	}
+	
 	/** initialize data from input file
 	 *  and construct the adjacency matrix A
 	*/
 	void extract() {
 		// read data from input file
 		//File input = new File("s3://spring-2014-ds/data/enwiki-latest-pages-articles.xml");
-		File input = new File("data/100.xml");
-		//input = new File("data/1000.xml");
-		//input = new File("data/10000.xml");
+		File input = new File(inputpath);
 
 		double[][] matdata;
 		Hashtable plist = new Hashtable(); // pagerank list for vector R
@@ -79,8 +136,8 @@ public class PageRank {
 
 		try {
 			String filename = "PageRank.inlink.out";
-			String filepath = resultsdir + "/" + filename;
-			new File(resultsdir).mkdirs();
+			String filepath = resultdir + "/" + filename;
+			new File(resultdir).mkdirs();
 
 			FileHandler fhandler = new FileHandler(filepath);
 			fhandler.setFormatter(new PlainFormatter());
@@ -219,7 +276,7 @@ public class PageRank {
 			// write the total number of pages N
 			// N=?
 			filename = "PageRank.n.out";
-			filepath = resultsdir + "/" + filename;
+			filepath = resultdir + "/" + filename;
 			fhandler = new FileHandler(filepath);
 			fhandler.setFormatter(new PlainFormatter());
 			logger.addHandler(fhandler);
@@ -282,7 +339,7 @@ public class PageRank {
 					}
 
 					String filename = "PageRank.iter" + i + ".out";
-					String filepath = resultsdir + "/" + filename;
+					String filepath = resultdir + "/" + filename;
 					FileHandler fhandler = new FileHandler(filepath);
 					fhandler.setFormatter(new PlainFormatter());
 					logger.addHandler(fhandler);
@@ -312,29 +369,4 @@ public class PageRank {
 		}
 	}
 
-	void mapreduce() {
-		map();
-		reduce();
-	}
-
-	void map() {
-
-	}
-
-	void reduce() {
-
-	}
-
-	class PageRankMapper extends Mapper<Object, Object, Object, Object> {
-		public void map(Object key, Object value, Context context) {	
-		
-		}	
-	}
-
-	class PageRankReducer extends Reducer<Object, Object, Object, Object> {
-		public void reduce(Object key, Object value, Context context) {	
-		
-		}	
-	}
-	
 }
