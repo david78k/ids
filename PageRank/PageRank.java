@@ -59,14 +59,16 @@ public class PageRank {
 	public static void main (String[] args) throws Exception {
 		//System.out.println("PageRank");
 		bucketname = args[0];
-		System.out.println(bucketname);
 		basedir = "s3://" + bucketname;
 
 		// for local test
 		if(args.length > 1) {
 			inputpath = args[1];
-			basedir = bucketname;
+			if (!inputpath.startsWith("s3://"))
+				basedir = bucketname;
 		}
+
+		System.out.println("bucket name = " + bucketname + ", basedir = " + basedir);
 
 		PageRank pr = new PageRank(bucketname);
 		//pr.start();
