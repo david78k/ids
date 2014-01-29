@@ -3,6 +3,7 @@ package PageRank;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
+import java.text.*;
 //import java.util.regex.*;
 
 import org.apache.hadoop.*;
@@ -20,9 +21,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-//import no.uib.cipr.matrix.*;
-
 import org.apache.commons.math3.linear.*;
+import org.apache.commons.io.IOUtils;
+
+//import no.uib.cipr.matrix.*;
 
 public class PageRank {
 	static String inputpath = "s3://spring-2014-ds/data/enwiki-latest-pages-articles.xml";
@@ -33,7 +35,9 @@ public class PageRank {
 	static String basedir = "s3://" + bucketname;
 	String resultdir = basedir + "/results";
 	String outputpath = resultdir;
-
+	//SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy-HH:mm:ss");
+	SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy_HHmmss");
+	
 	double d = 0.85;
 	int N = 0;
 	int MAX_ITER = 8;
@@ -53,7 +57,8 @@ public class PageRank {
 	//	this.bucketname = bucketname;			
 	//	basedir = bucketname;
 		resultdir = basedir + "/results";
-		outputpath = resultdir;
+		//outputpath = resultdir;
+		outputpath = resultdir + "/" + dateFormat.format(new Date());
 	}
 
 	public static void main (String[] args) throws Exception {
@@ -71,11 +76,94 @@ public class PageRank {
 		System.out.println("bucket name = " + bucketname + ", basedir = " + basedir);
 
 		PageRank pr = new PageRank(bucketname);
-		//pr.start();
-		//pr.wordcount();
 		pr.pagerank();
+		//pr.wordcount();
+		pr.print();
 	}
 	
+	/**
+ 	*  print out result files into a single final output file
+ 	*/
+	void print() {
+		File outfile = new File("PageRank.inlink.out");
+		/*
+		for (File file: files) {
+			outfile.merge(file);	
+		}
+		mergeFiles(files, outfile);
+*/
+	//	IOCopier.joinFiles(new File("D:/d.txt"), new File[] {
+         //       new File("D:/s1.txt"), new File("D:/s2.txt") });
+	}
+
+	class IOCopier {
+		public static void joinFiles(File destination, File[] sources)
+        	    throws IOException {
+	    	    OutputStream output = null;
+	    	    try {
+	    	        output = createAppendableStream(destination);
+	    	        for (File source : sources) {
+	    	            appendFile(output, source);
+	    	        }
+	    	    } finally {
+	   	         IOUtils.closeQuietly(output);
+	   	     }
+	   	 }
+
+	   	 private static BufferedOutputStream createAppendableStream(File destination)
+	   	         throws FileNotFoundException {
+	   	     return new BufferedOutputStream(new FileOutputStream(destination, true));
+	   	 }
+
+	   	 private static void appendFile(OutputStream output, File source)
+	   	         throws IOException {
+	   	     InputStream input = null;
+	   	     try {
+	   	         input = new BufferedInputStream(new FileInputStream(source));
+	   	         IOUtils.copy(input, output);
+	   	     } finally {
+   		         IOUtils.closeQuietly(input);
+   		     }
+   		 }
+	}
+
+	public static void mergeFiles(File[] files, File mergedFile) {
+ 
+		FileWriter fstream = null;
+		BufferedWriter out = null;
+		try {
+			fstream = new FileWriter(mergedFile, true);
+			 out = new BufferedWriter(fstream);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+ 
+		for (File f : files) {
+			System.out.println("merging: " + f.getName());
+			FileInputStream fis;
+			try {
+				fis = new FileInputStream(f);
+				BufferedReader in = new BufferedReader(new InputStreamReader(fis));
+ 
+				String aLine;
+				while ((aLine = in.readLine()) != null) {
+					out.write(aLine);
+					out.newLine();
+				}
+ 
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+ 
+		try {
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	void pagerank() throws Exception {
 		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("pagerank");

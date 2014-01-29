@@ -38,8 +38,13 @@ initialized and run the jar application
 
 - s3 API for Java to store output into s3bucket/results folder
 
+- output file arrangement is messed up. naming files to meet the requirements
+  like inlinks.out, n.out ...
+
 3. How we solved the problems:
-   
+to solve the output file conflict problems, I created files with the current
+date and time.  
+ 
 4. What we learned
 easier to run mapreduce application on AWS EMR rather than running on local
 machine which requires lots of work to set things up. this allows us to focus

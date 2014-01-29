@@ -1,7 +1,7 @@
 mainclass = PageRank
 jar = PageRank.jar
 #jars = mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar
-jars = hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar
+jars = hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar:commons-io.jar
 bucket = david78k-ids
 instance_type = small
 num_instances = 3
