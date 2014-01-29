@@ -33,8 +33,8 @@ public class PageRank {
 	static String bucketname = "";
 	//String basedir = ".";
 	static String basedir = "s3://" + bucketname;
-	String resultdir = basedir + "/results";
-	String outputpath = resultdir;
+	String outputdir = basedir + "/results";
+	String outputpath = outputdir;
 	//SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy-HH:mm:ss");
 	SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy_HHmmss");
 	
@@ -60,8 +60,8 @@ public class PageRank {
 	PageRank() {}
 
 	PageRank(String bucketname) {
-		resultdir = basedir + "/results";
-		outputpath = resultdir + "/" + dateFormat.format(new Date());
+		outputdir = basedir + "/results";
+		outputpath = outputdir + "/" + dateFormat.format(new Date());
 	}
 
 	public static void main (String[] args) throws Exception {
@@ -76,9 +76,12 @@ public class PageRank {
 				basedir = bucketname;
 		}
 
-		System.out.println("bucket name = " + bucketname + ", basedir = " + basedir);
-
 		PageRank pr = new PageRank(bucketname);
+		System.out.println("bucket name = " + bucketname + ", basedir = " + basedir 
+			+ "\ninputpath = " + inputpath 
+			+ ", outputdir = " + pr.outputdir
+			+ ", outputpath = " + pr.outputpath); 
+
 		pr.pagerank();
 		//pr.wordcount();
 		pr.merge();
@@ -88,13 +91,17 @@ public class PageRank {
  	*  merge the result files into a single final output file
  	*/
 	void merge() throws IOException {
-		File outfile = new File(resultdir + "/" + INLINKOUT);
+		File outfile = new File(outputdir + "/" + INLINKOUT);
 		outfile.delete();
 		// merge files under current directory
-		File[] files = new File(outputpath).listFiles();
-		//File[] files = new File(resultdir + "/01282014_231642").listFiles();
-		//
 		ArrayList<File> filelist = new ArrayList<File>();
+		File[] files = new File(outputpath).listFiles();
+		//File[] files = new File(outputdir + "/01282014_231642").listFiles();
+		if(files == null) {
+			System.out.println("Pathname does not denote a directory, or an I/O error occurs.");
+			return;
+		}
+
 		for(File file: files) {
 			if(file.isFile() && file.getName().startsWith("part"))
 				filelist.add(file);
@@ -293,8 +300,8 @@ public class PageRank {
 		int nlinks = 0;
 
 		try {
-			String filepath = resultdir + "/" + INLINKOUT;
-			new File(resultdir).mkdirs();
+			String filepath = outputdir + "/" + INLINKOUT;
+			new File(outputdir).mkdirs();
 
 			FileHandler fhandler = new FileHandler(filepath);
 			fhandler.setFormatter(new PlainFormatter());
@@ -432,7 +439,7 @@ public class PageRank {
 			
 			// write the total number of pages N
 			// N=?
-			filepath = resultdir + "/" + NOUT;
+			filepath = outputdir + "/" + NOUT;
 			fhandler = new FileHandler(filepath);
 			fhandler.setFormatter(new PlainFormatter());
 			logger.addHandler(fhandler);
@@ -495,7 +502,7 @@ public class PageRank {
 					}
 
 					String filename = "PageRank.iter" + i + ".out";
-					String filepath = resultdir + "/" + filename;
+					String filepath = outputdir + "/" + filename;
 					FileHandler fhandler = new FileHandler(filepath);
 					fhandler.setFormatter(new PlainFormatter());
 					logger.addHandler(fhandler);

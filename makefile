@@ -3,7 +3,7 @@ jar = PageRank.jar
 #jars = mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar
 jars = hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar:commons-io.jar
 bucket = david78k-ids
-instance_type = small
+instance_type = m1.small
 num_instances = 3
 
 all: run upload
@@ -28,7 +28,7 @@ jar:
 	#jar -cvf PageRank.jar -C PageRank/ . commons-math3-3.2.jar
 
 hadoop: 
-	rm -rf david78k-ids/results
+#	rm -rf david78k-ids/results
 	#hadoop-1.0.3/bin/hadoop dfs -rmr $(bucket)/results
 	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/100.xml
 	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank input output
@@ -46,7 +46,7 @@ s3:
 	s3cmd put PageRank.jar s3://$(bucket)/job/PageRank.jar 
 
 emr:
-	elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \
+	emr-cli/elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \
 	--instance-type $(instance_type) --num-instances $(num_instances) \
 	--jar s3n://$(bucket)/job/PageRank.jar \
 	--main-class PageRank.PageRank \
