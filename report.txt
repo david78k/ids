@@ -41,6 +41,8 @@ initialized and run the jar application
 - output file arrangement is messed up. naming files to meet the requirements
   like inlinks.out, n.out ...
 
+- passing multiple arguments using emr command line tool was not easy
+
 3. How we solved the problems:
 to solve the output file conflict problems, I created files with the current
 date and time.  
