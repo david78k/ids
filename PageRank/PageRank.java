@@ -42,6 +42,12 @@ public class PageRank {
 	int N = 0;
 	int MAX_ITER = 8;
 
+
+	final static String INLINKOUT = "PageRank.inlink.out";
+	final static String NOUT = "PageRank.n.out";
+	final static String ITER1 = "PageRank.iter1.out";
+	final static String ITER8 = "PageRank.iter8.out";
+
 	RealVector R0; // initially 1
 	RealVector R;
 	//SparseRealMatrix A;
@@ -54,10 +60,7 @@ public class PageRank {
 	PageRank() {}
 
 	PageRank(String bucketname) {
-	//	this.bucketname = bucketname;			
-	//	basedir = bucketname;
 		resultdir = basedir + "/results";
-		//outputpath = resultdir;
 		outputpath = resultdir + "/" + dateFormat.format(new Date());
 	}
 
@@ -78,26 +81,36 @@ public class PageRank {
 		PageRank pr = new PageRank(bucketname);
 		pr.pagerank();
 		//pr.wordcount();
-		pr.print();
+		pr.merge();
 	}
 	
 	/**
- 	*  print out result files into a single final output file
+ 	*  merge the result files into a single final output file
  	*/
-	void print() {
-		File outfile = new File("PageRank.inlink.out");
-		/*
-		for (File file: files) {
-			outfile.merge(file);	
+	void merge() throws IOException {
+		File outfile = new File(resultdir + "/" + INLINKOUT);
+		outfile.delete();
+		// merge files under current directory
+		File[] files = new File(outputpath).listFiles();
+		//File[] files = new File(resultdir + "/01282014_231642").listFiles();
+		//
+		ArrayList<File> filelist = new ArrayList<File>();
+		for(File file: files) {
+			if(file.isFile() && file.getName().startsWith("part"))
+				filelist.add(file);
 		}
-		mergeFiles(files, outfile);
-*/
-	//	IOCopier.joinFiles(new File("D:/d.txt"), new File[] {
-         //       new File("D:/s1.txt"), new File("D:/s2.txt") });
+
+		File[] newFiles = new File[filelist.size()];
+		filelist.toArray(newFiles);
+		//files = (File[])filelist.toArray();
+		new IOCopier().joinFiles(outfile, newFiles);
+
+	//	mergeFiles(files, outfile);
 	}
 
 	class IOCopier {
-		public static void joinFiles(File destination, File[] sources)
+		//public static void joinFiles(File destination, File[] sources)
+		public void joinFiles(File destination, File[] sources)
         	    throws IOException {
 	    	    OutputStream output = null;
 	    	    try {
@@ -110,12 +123,14 @@ public class PageRank {
 	   	     }
 	   	 }
 
-	   	 private static BufferedOutputStream createAppendableStream(File destination)
+	   	 //private static BufferedOutputStream createAppendableStream(File destination)
+	   	 private BufferedOutputStream createAppendableStream(File destination)
 	   	         throws FileNotFoundException {
 	   	     return new BufferedOutputStream(new FileOutputStream(destination, true));
 	   	 }
 
-	   	 private static void appendFile(OutputStream output, File source)
+	   	 //private static void appendFile(OutputStream output, File source)
+	   	 private void appendFile(OutputStream output, File source)
 	   	         throws IOException {
 	   	     InputStream input = null;
 	   	     try {
@@ -278,8 +293,7 @@ public class PageRank {
 		int nlinks = 0;
 
 		try {
-			String filename = "PageRank.inlink.out";
-			String filepath = resultdir + "/" + filename;
+			String filepath = resultdir + "/" + INLINKOUT;
 			new File(resultdir).mkdirs();
 
 			FileHandler fhandler = new FileHandler(filepath);
@@ -418,8 +432,7 @@ public class PageRank {
 			
 			// write the total number of pages N
 			// N=?
-			filename = "PageRank.n.out";
-			filepath = resultdir + "/" + filename;
+			filepath = resultdir + "/" + NOUT;
 			fhandler = new FileHandler(filepath);
 			fhandler.setFormatter(new PlainFormatter());
 			logger.addHandler(fhandler);
