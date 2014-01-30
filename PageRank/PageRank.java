@@ -24,6 +24,13 @@ import org.jsoup.select.Elements;
 import org.apache.commons.math3.linear.*;
 import org.apache.commons.io.IOUtils;
 
+import org.apache.mahout.classifier.bayes.XmlInputFormat;
+//import org.apache.mahout.text.wikipedia.XmlInputFormat;
+
+//import edu.umd.cloud9.collection.XMLInputFormatOld;
+//import edu.umd.cloud9.collection.XMLInputFormat;
+//import edu.umd.cloud9.collection.*;
+
 //import no.uib.cipr.matrix.*;
 
 public class PageRank {
@@ -82,71 +89,12 @@ public class PageRank {
 
 		pr.pagerank();
 		// secondary sort by PageRank scores with resulting files
-		pr.secsort(); 
+		//pr.secsort(); 
+
 		//pr.wordcount();
 		//pr.merge();
 	}
 	
-	/**
- 	*  merge the result files into a single final output file
- 	*/
-	void merge() throws IOException {
-		File outfile = new File(outputdir + "/" + INLINKOUT);
-		outfile.delete();
-		// merge files under current directory
-		ArrayList<File> filelist = new ArrayList<File>();
-		File[] files = new File(outputpath).listFiles();
-		//File[] files = new File(outputdir + "/01282014_231642").listFiles();
-		if(files == null) {
-			System.out.println("Pathname does not denote a directory, or an I/O error occurs.");
-			return;
-		}
-
-		for(File file: files) {
-			if(file.isFile() && file.getName().startsWith("part"))
-				filelist.add(file);
-		}
-
-		File[] newFiles = new File[filelist.size()];
-		filelist.toArray(newFiles);
-		//files = (File[])filelist.toArray();
-		new IOCopier().joinFiles(outfile, newFiles);
-	}
-
-	class IOCopier {
-		//public static void joinFiles(File destination, File[] sources)
-		public void joinFiles(File destination, File[] sources)
-        	    throws IOException {
-	    	    OutputStream output = null;
-	    	    try {
-	    	        output = createAppendableStream(destination);
-	    	        for (File source : sources) {
-	    	            appendFile(output, source);
-	    	        }
-	    	    } finally {
-	   	         IOUtils.closeQuietly(output);
-	   	     }
-	   	 }
-
-	   	 //private static BufferedOutputStream createAppendableStream(File destination)
-	   	 private BufferedOutputStream createAppendableStream(File destination)
-	   	         throws FileNotFoundException {
-	   	     return new BufferedOutputStream(new FileOutputStream(destination, true));
-	   	 }
-
-	   	 //private static void appendFile(OutputStream output, File source)
-	   	 private void appendFile(OutputStream output, File source)
-	   	         throws IOException {
-	   	     InputStream input = null;
-	   	     try {
-	   	         input = new BufferedInputStream(new FileInputStream(source));
-	   	         IOUtils.copy(input, output);
-	   	     } finally {
-   		         IOUtils.closeQuietly(input);
-   		     }
-   		 }
-	}
-
 	/** secondary sort by values (PageRank score)
   	 *  while merging files
   	 */
@@ -166,10 +114,12 @@ public class PageRank {
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
-                //FileInputFormat.setInputPaths(conf, new Path(outputpath));
-                FileInputFormat.setInputPaths(conf, new Path(outputdir + "/test"));
+                FileInputFormat.setInputPaths(conf, new Path(outputpath));
+                //FileInputFormat.setInputPaths(conf, new Path(outputdir + "/test"));
                 FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/" + INLINKOUT));
                 //FileOutputFormat.setOutputPath(conf, new Path(outputdir + "/" + INLINKOUT));
+
+		conf.setNumReduceTasks(1);
 
 		JobClient.runJob(conf);
 	}
@@ -190,12 +140,13 @@ public class PageRank {
 				//System.out.print(line + ",\t");
 				title = tok.nextToken();
 				word.set(title);
-				int count = Integer.parseInt(tok.nextToken());
-				sum += count;
+				output.collect(word, new IntWritable(Integer.parseInt(tok.nextToken())));
+				//int count = Integer.parseInt(tok.nextToken());
+		//		sum += count;
 				//sum += values.next().get();
 			}
 			//System.out.println();
-			output.collect(word, new IntWritable(sum));
+		//	output.collect(word, new IntWritable(sum));
 		}
 	}
 
@@ -203,14 +154,23 @@ public class PageRank {
 		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("pagerank");
 
+		conf.set("xmlinput.start", "<page>");
+		conf.set("xmlinput.end", "</page>");
+
 		conf.setOutputKeyClass(Text.class);
-		conf.setOutputValueClass(IntWritable.class);
+		conf.setOutputValueClass(Text.class);
+		//conf.setOutputValueClass(IntWritable.class);
 
-		conf.setMapperClass(WordCountMapper.class);
+		conf.setMapperClass(PageRankMapper.class);
+		conf.setReducerClass(PageRankReducer.class);
+		//conf.setMapperClass(WordCountMapper.class);
 		//conf.setCombinerClass(Reduce.class);
-		conf.setReducerClass(WordCountReducer.class);
+		//conf.setReducerClass(WordCountReducer.class);
 
-		conf.setInputFormat(TextInputFormat.class);
+		//conf.setInputFormat(TextInputFormat.class);
+		conf.setInputFormat(XmlInputFormat.class);
+		//conf.setInputFormat(XMLInputFormat.class);
+		//conf.setInputFormat(XMLInputFormatOld.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
                 FileInputFormat.setInputPaths(conf, new Path(inputpath));
@@ -221,27 +181,82 @@ public class PageRank {
 		JobClient.runJob(conf);
 	}
 
-	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
+	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
+	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, XmlInputFormat, Text, Text> {
+	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
+	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, XMLInputFormat, Text, Text> {
+	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, XMLInputFormatOld, Text, Text> {
 		private final static IntWritable one = new IntWritable(1);
 		private Text word = new Text();
 
-		public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
-			String line = value.toString();
+		/** extract Page data structure */
+		//public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+		//public void map(LongWritable key, XmlInputFormat value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+		//public void map(LongWritable key, XMLInputFormat value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+		//public void map(LongWritable key, XMLInputFormatOld value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+			String xmlstr = value.toString();
+			Page p;
+				
+			Document doc = Jsoup.parse(xmlstr);
+	
+			Element e = doc.select("title").first();
+			String title = e.text();
+			e = doc.select("text").first();
+			String text = doc.body().text();
+
+/*			Elements pages = doc.select("title");
+			for (Element page: pages) {
+				String content = page.text();
+
+				String[] contents = content.split(" ");
+				String title = contents[0].replaceAll(" ", "_");
+				logger.setUseParentHandlers(false);
+				logger.info(title + " ");
+			}
+*/
+			output.collect(new Text(title), new Text(text));
+			//output.collect(new Text(title), new Text(xmlstr));
+			/*
 			StringTokenizer tokenizer = new StringTokenizer(line);
 			while (tokenizer.hasMoreTokens()) {
 				word.set(tokenizer.nextToken());
 				output.collect(word, one);
-			}
+			}*/
 		}
 	}
 
-	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
-		public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+	//public static class PageRankReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
+	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
+		//public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+			//System.out.println(key.toString());
+
 			int sum = 0;
+			Text content = new Text(); 	
+			StringBuffer sb = new StringBuffer();
 			while (values.hasNext()) {
-				sum += values.next().get();
+				Text t = values.next();
+			//	System.out.println(t.toString());
+				//sum += values.next().get();
+				sb.append(t.toString());
 			}
-			output.collect(key, new IntWritable(sum));
+			content.set(sb.toString());
+			output.collect(key, content);
+			//output.collect(key, new IntWritable(sum));
+			
+		}
+	}
+
+	class Page {
+		int id;
+		String title;
+		double pagerank = 1;
+
+		Page (int id, String title, double pagerank) {
+			this.id = id;
+			this.title = title;
+			this.pagerank = pagerank;
 		}
 	}
 
@@ -291,12 +306,6 @@ public class PageRank {
 			}
 			output.collect(key, new IntWritable(sum));
 		}
-	}
-
-	class Page {
-		int id;
-		String title;
-		double pagerank = 1;
 	}
 
 	/** initialize data from input file

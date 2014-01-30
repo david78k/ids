@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Implementation-Vendor: The Apache Software Foundation
+Implementation-Title: Mahout Integration
+Implementation-Version: 0.8
+Implementation-Vendor-Id: org.apache.mahout
+Built-By: grantingersoll
+Build-Jdk: 1.7.0_17
+Specification-Vendor: The Apache Software Foundation
+Specification-Title: Mahout Integration
+Created-By: Apache Maven 3.0.4
+Specification-Version: 0.8
+Archiver-Version: Plexus Archiver
+

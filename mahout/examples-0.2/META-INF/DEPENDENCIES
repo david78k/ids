@@ -1,0 +1,121 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// maven pom organized by organization.
+// ------------------------------------------------------------------
+
+Mahout examples
+
+
+From: 'an unknown organization'
+  - cglib (http://cglib.sourceforge.net/) cglib:cglib:jar:2.1_3
+
+  - Gson (http://code.google.com/p/google-gson/) com.google.code.gson:gson:jar:1.3
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Unnamed - commons-beanutils:commons-beanutils:jar:1.7.0  commons-beanutils:commons-beanutils:jar:1.7.0
+
+  - Unnamed - jfree:jfreechart:pom:1.0.13  jfree:jfreechart:pom:1.0.13
+
+  - jets3t (https://jets3t.dev.java.net/) org.apache.mahout.jets3t:jets3t:jar:0.7.1:compile
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - KFS (http://kosmosfs.sourceforge.net/index.html) org.apache.mahout.kosmofs:kfs:jar:0.3:compile
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Uncommons Math (https://uncommons-maths.dev.java.net/) org.uncommons:uncommons-maths:jar:1.2:compile
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Uncommons Maths (http://maths.uncommons.org/) org.uncommons.maths:uncommons-maths:jar:1.2
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.html)
+  - Watchmaker Framework (https://watchmaker.dev.java.net/) org.uncommons.watchmaker:watchmaker-framework:jar:0.6.2:compile
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Watchmaker Swing (https://watchmaker.dev.java.net/) org.uncommons.watchmaker:watchmaker-swing:jar:0.6.2:compile
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - xmlenc Library (http://xmlenc.sourceforge.net) xmlenc:xmlenc:jar:0.52
+    License: The BSD License  (http://www.opensource.org/licenses/bsd-license.php)
+
+From: 'Apache Software Foundation' (http://jakarta.apache.org/)
+  - HttpClient (http://jakarta.apache.org/httpcomponents/httpclient-3.x/) commons-httpclient:commons-httpclient:jar:3.1
+    License: Apache License  (http://www.apache.org/licenses/LICENSE-2.0)
+
+From: 'Apache Software Foundation' (http://www.apache.org)
+  - Unnamed - commons-collections:commons-collections:jar:3.1  commons-collections:commons-collections:jar:3.1
+
+  - Apache Log4j (http://logging.apache.org:80/log4j/1.2/) log4j:log4j:jar:1.2.15
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'Apache Software Foundation' (http://www.apache.org/)
+  - Commons Codec (http://commons.apache.org/codec/) commons-codec:commons-codec:jar:1.2:compile
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Commons CLI (http://commons.apache.org/cli/) org.apache.mahout.commons:commons-cli:jar:2.0-mahout:compile
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Apache Hadoop (http://hadoop.apache.org/core/) org.apache.mahout.hadoop:hadoop-core:jar:0.20.1:compile
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Apache Hadoop (http://hadoop.apache.org/hbase/) org.apache.mahout.hbase:hbase:jar:0.20.0:compile
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - XML Commons External Components XML APIs (http://xml.apache.org/commons/#external) xml-apis:xml-apis:jar:1.0.b2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'Extreme! Lab, Indiana University' (http://www.extreme.indiana.edu/)
+  - Xml Pull Parser 3rd Edition (http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/) xpp3:xpp3_min:jar:1.1.4c:compile
+    License: Public Domain  (http://www.xmlpull.org/)
+
+From: 'Google' (http://www.google.com)
+  - Google Collections Library (http://code.google.com/p/google-collections/) com.google.collections:google-collections:jar:1.0-rc2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'ObjectWeb' (http://www.objectweb.org/)
+  - asm (http://asm.objectweb.org/) asm:asm:jar:1.5.3
+
+
+From: 'QOS.ch' (http://www.qos.ch)
+  - SLF4J API Module (http://www.slf4j.org) org.slf4j:slf4j-api:jar:1.5.8
+
+  - SLF4J JCL Binding (http://www.slf4j.org) org.slf4j:slf4j-jcl:jar:1.5.8
+
+
+From: 'The Apache OpenEJB development community' (http://openejb.apache.org)
+  - OpenEJB :: Dependencies :: JavaEE API (http://www.apache.org/openejb/deps/javaee-api) org.apache.openejb:javaee-api:jar:5.0-1
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'The Apache Software Foundation' (http://commons.apache.org/)
+  - Commons Pool (http://commons.apache.org/pool/) commons-pool:commons-pool:jar:1.4
+    License: The Apache Software License, Version 2.0  (/LICENSE.txt)
+
+From: 'The Apache Software Foundation' (http://jakarta.apache.org)
+  - Commons DBCP (http://jakarta.apache.org/commons/${pom.artifactId.substring(8)}/) commons-dbcp:commons-dbcp:jar:1.2.2
+    License: The Apache Software License, Version 2.0  (/LICENSE.txt)
+  - Digester (http://jakarta.apache.org/commons/digester/) commons-digester:commons-digester:jar:1.7
+    License: The Apache Software License, Version 2.0  (/LICENSE.txt)
+
+From: 'The Apache Software Foundation' (http://www.apache.org/)
+  - Commons Lang (http://commons.apache.org/lang/) commons-lang:commons-lang:jar:2.4
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Commons Logging (http://commons.apache.org/logging) commons-logging:commons-logging:jar:1.1.1
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Commons Math (http://commons.apache.org/math/) commons-math:commons-math:jar:1.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Commons Compress (http://commons.apache.org/compress/) org.apache.commons:commons-compress:jar:1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Lucene Analyzers (http://lucene.apache.org/java/lucene-contrib/lucene-analyzers) org.apache.lucene:lucene-analyzers:jar:2.9.1
+    License: Apache 2  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Lucene Benchmark (http://lucene.apache.org/java/lucene-contrib/lucene-benchmark) org.apache.lucene:lucene-benchmark:jar:2.9.1
+    License: Apache 2  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Lucene Core (http://lucene.apache.org/java/lucene-core) org.apache.lucene:lucene-core:jar:2.9.1
+    License: Apache 2  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Lucene Demos (http://lucene.apache.org/java/lucene-demos) org.apache.lucene:lucene-demos:jar:2.9.1
+    License: Apache 2  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Lucene Highlighter (http://lucene.apache.org/java/lucene-contrib/lucene-highlighter) org.apache.lucene:lucene-highlighter:jar:2.9.1
+    License: Apache 2  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Lucene Memory (http://lucene.apache.org/java/lucene-contrib/lucene-memory) org.apache.lucene:lucene-memory:jar:2.9.1
+    License: Apache 2  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Lucene Wikipedia Tools (http://lucene.apache.org/java/lucene-contrib/lucene-wikipedia) org.apache.lucene:lucene-wikipedia:jar:2.9.1
+    License: Apache 2  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Mahout core (http://lucene.apache.org/mahout/mahout-parent/mahout-core) org.apache.mahout:mahout-core:jar:0.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Mahout utilities (http://lucene.apache.org/mahout/mahout-parent/mahout-utils) org.apache.mahout:mahout-utils:jar:0.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'XStream' (http://xstream.codehaus.org)
+  - XStream Core  com.thoughtworks.xstream:xstream:jar:1.3.1
+    License: BSD style  (http://xstream.codehaus.com/license.html)
+
+
+
+

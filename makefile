@@ -1,7 +1,7 @@
 mainclass = PageRank
 jar = PageRank.jar
 #jars = mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar
-jars = hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar:commons-io.jar
+jars = hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar:commons-io.jar:mahout-integration-0.8.jar:mahout-examples-0.3.jar:cloud9-1.5.0.jar
 bucket = david78k-ids
 instance_type = m1.small
 num_instances = 3
@@ -30,10 +30,10 @@ jar:
 hadoop: 
 	rm -rf david78k-ids/results/PageRank.inlink.out
 	#hadoop-1.0.3/bin/hadoop dfs -rmr $(bucket)/results
-	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/100.xml
+	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
 	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank input output
 	#hadoop-1.0.3/bin/hadoop jar PageRank.jar --main-class PageRank.PageRank input output
-	hadoop-1.0.3/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
+	#hadoop-1.0.3/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
 
 wordcount:
 	javac -classpath $(jars) -d WordCount WordCount/WordCount.java
