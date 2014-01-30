@@ -44,7 +44,7 @@ public class PageRank {
 	double d = 0.85;
 	int N = 0;
 	int MAX_ITER = 8;
-
+	private static int pid = 0; // unique page id
 
 	final static String INLINKOUT = "PageRank.inlink.out";
 	final static String NOUT = "PageRank.n.out";
@@ -158,7 +158,8 @@ public class PageRank {
 		conf.set("xmlinput.end", "</page>");
 
 		conf.setOutputKeyClass(Text.class);
-		conf.setOutputValueClass(Text.class);
+		conf.setOutputValueClass(Page.class);
+		//conf.setOutputValueClass(Text.class);
 		//conf.setOutputValueClass(IntWritable.class);
 
 		conf.setMapperClass(PageRankMapper.class);
@@ -172,6 +173,7 @@ public class PageRank {
 		//conf.setInputFormat(XMLInputFormat.class);
 		//conf.setInputFormat(XMLInputFormatOld.class);
 		conf.setOutputFormat(TextOutputFormat.class);
+		//conf.setOutputFormat(Page.class);
 
                 FileInputFormat.setInputPaths(conf, new Path(inputpath));
                 FileOutputFormat.setOutputPath(conf, new Path(outputpath));
@@ -181,20 +183,15 @@ public class PageRank {
 		JobClient.runJob(conf);
 	}
 
-	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
-	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, XmlInputFormat, Text, Text> {
-	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
-	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, XMLInputFormat, Text, Text> {
-	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, XMLInputFormatOld, Text, Text> {
+	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
+	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Page> {
 		private final static IntWritable one = new IntWritable(1);
 		private Text word = new Text();
 
 		/** extract Page data structure */
 		//public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
-		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-		//public void map(LongWritable key, XmlInputFormat value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-		//public void map(LongWritable key, XMLInputFormat value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-		//public void map(LongWritable key, XMLInputFormatOld value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+		//public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+		public void map(LongWritable key, Text value, OutputCollector<Text, Page> output, Reporter reporter) throws IOException {
 			String xmlstr = value.toString();
 			Page p;
 				
@@ -202,7 +199,7 @@ public class PageRank {
 	
 			Element e = doc.select("title").first();
 			String title = e.text();
-			e = doc.select("text").first();
+			//e = doc.select("text").first();
 			String text = doc.body().text();
 
 /*			Elements pages = doc.select("title");
@@ -215,8 +212,10 @@ public class PageRank {
 				logger.info(title + " ");
 			}
 */
-			output.collect(new Text(title), new Text(text));
-			//output.collect(new Text(title), new Text(xmlstr));
+			int pageid = pid ++;
+			Page page = new Page(pageid, title, 1, new ArrayList());
+			output.collect(new Text(title), page);
+			//output.collect(new Text(title), new Text(text));
 			/*
 			StringTokenizer tokenizer = new StringTokenizer(line);
 			while (tokenizer.hasMoreTokens()) {
@@ -227,19 +226,21 @@ public class PageRank {
 	}
 
 	//public static class PageRankReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
-	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
+	//public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
+	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Page, Text, Text> {
 		//public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
-		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+		//public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+		public void reduce(Text key, Iterator<Page> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			//System.out.println(key.toString());
 
 			int sum = 0;
 			Text content = new Text(); 	
 			StringBuffer sb = new StringBuffer();
 			while (values.hasNext()) {
-				Text t = values.next();
+				Page p = values.next();
 			//	System.out.println(t.toString());
 				//sum += values.next().get();
-				sb.append(t.toString());
+				sb.append(p.toString());
 			}
 			content.set(sb.toString());
 			output.collect(key, content);
@@ -248,15 +249,31 @@ public class PageRank {
 		}
 	}
 
-	class Page {
+	static class Page implements Writable{
 		int id;
 		String title;
 		double pagerank = 1;
+		ArrayList links = new ArrayList();
 
-		Page (int id, String title, double pagerank) {
+		Page() {}
+
+		Page (int id, String title, double pagerank, ArrayList links) {
 			this.id = id;
 			this.title = title;
 			this.pagerank = pagerank;
+			this.links = links;
+		}
+		
+		public void write(DataOutput out) throws IOException {
+         		out.writeInt(id);
+	       	}
+
+		public void readFields(DataInput in) throws IOException {
+	        	id = in.readInt();
+		}
+
+		public String toString() {
+			return id + ", " + pagerank + ", " + links.toString();
 		}
 	}
 
