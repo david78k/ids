@@ -43,6 +43,12 @@ initialized and run the jar application
 
 - passing multiple arguments using emr command line tool was not easy
 
+- Exception in thread "main"
+  org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory
+file:/root/datascience/david78k-ids/results already exists
+  It is so embarrassing that we can't overwrite existing directory. I had to
+create a tmp directory for this.
+
 3. How we solved the problems:
 to solve the output file conflict problems, I created files with the current
 date and time.  

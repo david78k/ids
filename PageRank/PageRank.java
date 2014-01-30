@@ -81,8 +81,10 @@ public class PageRank {
 			+ ", outputpath = " + pr.outputpath); 
 
 		pr.pagerank();
+		// secondary sort by PageRank scores with resulting files
+		pr.secsort(); 
 		//pr.wordcount();
-		pr.merge();
+		//pr.merge();
 	}
 	
 	/**
@@ -152,20 +154,49 @@ public class PageRank {
 		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("secondary sort");
 
-		conf.setOutputKeyClass(Text.class);
-		conf.setOutputValueClass(IntWritable.class);
+		//conf.setOutputKeyClass(Text.class);
+		conf.setOutputKeyClass(LongWritable.class);
+		conf.setOutputValueClass(Text.class);
+		//conf.setOutputValueClass(IntWritable.class);
 
-		conf.setMapperClass(WordCountMapper.class);
+		//conf.setMapperClass(SortMapper.class);
 		//conf.setCombinerClass(Reduce.class);
-		conf.setReducerClass(WordCountReducer.class);
+		conf.setReducerClass(SortReducer.class);
 
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
-                FileInputFormat.setInputPaths(conf, new Path(outputpath));
-                FileOutputFormat.setOutputPath(conf, new Path(outputdir));
+                //FileInputFormat.setInputPaths(conf, new Path(outputpath));
+                FileInputFormat.setInputPaths(conf, new Path(outputdir + "/test"));
+                FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/" + INLINKOUT));
+                //FileOutputFormat.setOutputPath(conf, new Path(outputdir + "/" + INLINKOUT));
 
 		JobClient.runJob(conf);
+	}
+
+	//public static class SortReducer extends MapReduceBase implements Reducer<LongWritable, Text, LongWritable, IntWritable> {
+	public static class SortReducer extends MapReduceBase implements Reducer<LongWritable, Text, Text, IntWritable> {
+		//public void reduce(LongWritable key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+		//public void reduce(LongWritable key, Iterator<Text> values, OutputCollector<LongWritable, IntWritable> output, Reporter reporter) throws IOException {
+		public void reduce(LongWritable key, Iterator<Text> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+			//System.out.print(key.toString() + "\t");
+			//System.out.println(key.toString() + ", " + values.toString());
+			Text word = new Text();
+			int sum = 0;
+			String title;
+			while (values.hasNext()) {
+				String line = values.next().toString();
+				StringTokenizer tok = new StringTokenizer(line);	
+				//System.out.print(line + ",\t");
+				title = tok.nextToken();
+				word.set(title);
+				int count = Integer.parseInt(tok.nextToken());
+				sum += count;
+				//sum += values.next().get();
+			}
+			//System.out.println();
+			output.collect(word, new IntWritable(sum));
+		}
 	}
 
 	void pagerank() throws Exception {
@@ -241,6 +272,7 @@ public class PageRank {
 		private Text word = new Text();
 
 		public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+			//System.out.println(key.toString() + ", " + value);
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line);
 			while (tokenizer.hasMoreTokens()) {
@@ -252,6 +284,7 @@ public class PageRank {
 
 	public static class WordCountReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
 		public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+			//System.out.println(key.toString() + ", " + values);
 			int sum = 0;
 			while (values.hasNext()) {
 				sum += values.next().get();
