@@ -41,15 +41,17 @@ public class PageRank {
 	String outputpath = outputdir;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy_HHmmss");
 	
-	double d = 0.85;
-	int N = 0;
-	int MAX_ITER = 8;
+	final static double d = 0.85;
+	static int N = 0; // total number of pages
+	final static int MAX_ITER = 8;
 	private static int pid = 0; // unique page id
 
 	final static String INLINKOUT = "PageRank.inlink.out";
 	final static String NOUT = "PageRank.n.out";
 	final static String ITER1 = "PageRank.iter1.out";
 	final static String ITER8 = "PageRank.iter8.out";
+
+	static Hashtable plist = new Hashtable(); // global page list
 
 	RealVector R0; // initially 1
 	RealVector R;
@@ -212,23 +214,74 @@ public class PageRank {
 				logger.info(title + " ");
 			}
 */
-			int pageid = pid ++;
-			Page page = new Page(pageid, title, 1, new ArrayList());
+			String content = text;
+			int i = 0;
+			char c = content.charAt(i);
+			StringBuffer sb = new StringBuffer();
+			ArrayList links = new ArrayList(); // inlinks 
+			int len = content.length();
+			//Page page = new Page(pageid, title, 1, new ArrayList());
+			Page page = null;
+
+			while (i < len) {
+				c = content.charAt(i ++);	
+				if (c == '[') {
+					if (i >= len) break;
+
+					c = content.charAt(i);
+					if (c == '[') {
+						i ++;
+						while(i < len && (c = content.charAt(i ++)) != '|') {
+							if (c == ']') {
+								if(i < len && (c = content.charAt(i ++)) != ']' && c != '|') {
+									sb.append(c); 
+								} else break;
+							} else {
+								sb.append(c); 
+								if (i < len && (c = content.charAt(i ++)) != ']' && c != '|') {
+									sb.append(c); 
+								} else break;
+							}
+						} 
+							
+						String link = sb.toString().replaceAll(" ", "_");
+						links.add(link);
+						//ArrayList linklist = (ArrayList)(plist.get(link));
+						//if(linklist == null)
+						if((ArrayList)plist.get(link) == null) {
+							plist.put(link, new ArrayList<String>());
+							//index.put(link, ind ++);
+							page = new Page(pid ++, title, 1, new ArrayList());
+						} else {
+						//	System.out.println("redundant: " + link);
+						} 
+						N ++;
+						sb = new StringBuffer();
+					}
+				}				
+			}
+				
+			ArrayList linklist = (ArrayList)plist.get(title);
+			if(linklist != null) {
+				linklist.addAll(links);
+				plist.put(title, linklist);
+			} else {
+				plist.put(title, links);
+			//	index.put(title, ind ++);
+				page = new Page(pid ++, title, 1, new ArrayList());
+			}
+	
+			int nlinks = N;
+			N = plist.size();
+
+			//int pageid = pid ++;
+			//Page page = new Page(pageid, title, 1, new ArrayList());
 			output.collect(new Text(title), page);
-			//output.collect(new Text(title), new Text(text));
-			/*
-			StringTokenizer tokenizer = new StringTokenizer(line);
-			while (tokenizer.hasMoreTokens()) {
-				word.set(tokenizer.nextToken());
-				output.collect(word, one);
-			}*/
 		}
 	}
 
-	//public static class PageRankReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
 	//public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
 	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Page, Text, Text> {
-		//public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
 		//public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 		public void reduce(Text key, Iterator<Page> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			//System.out.println(key.toString());
@@ -266,10 +319,15 @@ public class PageRank {
 		
 		public void write(DataOutput out) throws IOException {
          		out.writeInt(id);
+			out.writeDouble(pagerank);
+			out.writeBytes(title);
 	       	}
 
 		public void readFields(DataInput in) throws IOException {
 	        	id = in.readInt();
+			pagerank = in.readDouble();
+			title = in.readLine();
+			//links = in.readFully();
 		}
 
 		public String toString() {
