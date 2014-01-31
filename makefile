@@ -30,8 +30,8 @@ jar:
 hadoop: 
 	rm -rf david78k-ids/results/PageRank.inlink.out
 	#hadoop-1.0.3/bin/hadoop dfs -rmr $(bucket)/results
+	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/100.xml
 	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
-	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank input output
 	#hadoop-1.0.3/bin/hadoop jar PageRank.jar --main-class PageRank.PageRank input output
 	#hadoop-1.0.3/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
 

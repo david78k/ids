@@ -49,6 +49,9 @@ file:/root/datascience/david78k-ids/results already exists
   It is so embarrassing that we can't overwrite existing directory. I had to
 create a tmp directory for this.
 
+- writable data structure for page that includes title and inlinks has complex
+  format
+
 3. How we solved the problems:
 to solve the output file conflict problems, I created files with the current
 date and time.  

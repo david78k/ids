@@ -201,19 +201,12 @@ public class PageRank {
 	
 			Element e = doc.select("title").first();
 			String title = e.text();
-			//e = doc.select("text").first();
+			e = doc.select("text").first();
 			String text = doc.body().text();
+			text = e.text();
 
-/*			Elements pages = doc.select("title");
-			for (Element page: pages) {
-				String content = page.text();
+			//System.out.println(title + "\t" + text);
 
-				String[] contents = content.split(" ");
-				String title = contents[0].replaceAll(" ", "_");
-				logger.setUseParentHandlers(false);
-				logger.info(title + " ");
-			}
-*/
 			String content = text;
 			int i = 0;
 			char c = content.charAt(i);
@@ -246,8 +239,10 @@ public class PageRank {
 							
 						String link = sb.toString().replaceAll(" ", "_");
 						links.add(link);
+						//System.out.println(link);
 						//ArrayList linklist = (ArrayList)(plist.get(link));
 						//if(linklist == null)
+						/*
 						if((ArrayList)plist.get(link) == null) {
 							plist.put(link, new ArrayList<String>());
 							//index.put(link, ind ++);
@@ -257,10 +252,15 @@ public class PageRank {
 						} 
 						N ++;
 						sb = new StringBuffer();
+						*/
 					}
 				}				
 			}
 				
+			page = new Page(pid ++, title, 1, links);
+			//System.out.println(page);
+
+			/*
 			ArrayList linklist = (ArrayList)plist.get(title);
 			if(linklist != null) {
 				linklist.addAll(links);
@@ -268,11 +268,11 @@ public class PageRank {
 			} else {
 				plist.put(title, links);
 			//	index.put(title, ind ++);
-				page = new Page(pid ++, title, 1, new ArrayList());
+				page = new Page(pid ++, title, 1, links);
 			}
-	
+			*/
 			int nlinks = N;
-			N = plist.size();
+			//N = plist.size();
 
 			//int pageid = pid ++;
 			//Page page = new Page(pageid, title, 1, new ArrayList());
@@ -284,14 +284,14 @@ public class PageRank {
 	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Page, Text, Text> {
 		//public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 		public void reduce(Text key, Iterator<Page> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-			//System.out.println(key.toString());
+			System.out.println(key.toString());
 
 			int sum = 0;
 			Text content = new Text(); 	
 			StringBuffer sb = new StringBuffer();
 			while (values.hasNext()) {
 				Page p = values.next();
-			//	System.out.println(t.toString());
+				//System.out.println(p.toString());
 				//sum += values.next().get();
 				sb.append(p.toString());
 			}
@@ -306,7 +306,7 @@ public class PageRank {
 		int id;
 		String title;
 		double pagerank = 1;
-		ArrayList links = new ArrayList();
+		ArrayList<String> links = new ArrayList<String>();
 
 		Page() {}
 
@@ -319,19 +319,36 @@ public class PageRank {
 		
 		public void write(DataOutput out) throws IOException {
          		out.writeInt(id);
+			//out.writeBytes(title);
+			Text.writeString(out, title);
 			out.writeDouble(pagerank);
-			out.writeBytes(title);
+			out.writeInt(links.size());
+			for(String link: links) 
+				Text.writeString(out, link);
+				//out.writeBytes(link);
 	       	}
 
 		public void readFields(DataInput in) throws IOException {
 	        	id = in.readInt();
+			//title = in.readLine();
+			title = Text.readString(in);
+//			System.out.println(title);
 			pagerank = in.readDouble();
-			title = in.readLine();
-			//links = in.readFully();
+//			System.out.println(pagerank);
+			int size = in.readInt();
+			//links = new ArrayList(size);
+			links = new ArrayList();
+			for(int i = 0; i < size; i ++) {
+				//String link = in.readLine();
+				String link = Text.readString(in);
+				links.add(link);
+			}
 		}
 
 		public String toString() {
-			return id + ", " + pagerank + ", " + links.toString();
+			return pagerank + "\t" + links.toString();
+			//return title + "\t" + pagerank + "\t" + links.toString();
+			//return id + ", " + pagerank + ", " + links.toString();
 		}
 	}
 
