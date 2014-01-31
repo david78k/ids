@@ -211,10 +211,7 @@ public class PageRank {
 			int i = 0;
 			char c = content.charAt(i);
 			StringBuffer sb = new StringBuffer();
-			ArrayList links = new ArrayList(); // inlinks 
 			int len = content.length();
-			//Page page = new Page(pageid, title, 1, new ArrayList());
-			Page page = null;
 
 			while (i < len) {
 				c = content.charAt(i ++);	
@@ -238,45 +235,19 @@ public class PageRank {
 						} 
 							
 						String link = sb.toString().replaceAll(" ", "_");
-						links.add(link);
+						if(!link.startsWith("#top") 
+							/*
+							&& !link.contains(":") 
+							//!link.startsWith("#section name") && 
+							&& !link.contains("#") 
+							&& !link.contains("/")
+							*/
+						)
+							output.collect(new Text(title), new Page(pid ++, link, 1, new ArrayList()));
 						//System.out.println(link);
-						//ArrayList linklist = (ArrayList)(plist.get(link));
-						//if(linklist == null)
-						/*
-						if((ArrayList)plist.get(link) == null) {
-							plist.put(link, new ArrayList<String>());
-							//index.put(link, ind ++);
-							page = new Page(pid ++, title, 1, new ArrayList());
-						} else {
-						//	System.out.println("redundant: " + link);
-						} 
-						N ++;
-						sb = new StringBuffer();
-						*/
 					}
 				}				
 			}
-				
-			page = new Page(pid ++, title, 1, links);
-			//System.out.println(page);
-
-			/*
-			ArrayList linklist = (ArrayList)plist.get(title);
-			if(linklist != null) {
-				linklist.addAll(links);
-				plist.put(title, linklist);
-			} else {
-				plist.put(title, links);
-			//	index.put(title, ind ++);
-				page = new Page(pid ++, title, 1, links);
-			}
-			*/
-			int nlinks = N;
-			//N = plist.size();
-
-			//int pageid = pid ++;
-			//Page page = new Page(pageid, title, 1, new ArrayList());
-			output.collect(new Text(title), page);
 		}
 	}
 
@@ -287,18 +258,18 @@ public class PageRank {
 			System.out.println(key.toString());
 
 			int sum = 0;
-			Text content = new Text(); 	
+			Text inlinks = new Text();
 			StringBuffer sb = new StringBuffer();
 			while (values.hasNext()) {
 				Page p = values.next();
 				//System.out.println(p.toString());
 				//sum += values.next().get();
-				sb.append(p.toString());
+				sb.append(p.title + "\t");
+				//sb.append(p.toString());
 			}
-			content.set(sb.toString());
-			output.collect(key, content);
-			//output.collect(key, new IntWritable(sum));
-			
+			inlinks.set(sb.toString());
+
+			output.collect(key, inlinks);
 		}
 	}
 
@@ -336,7 +307,6 @@ public class PageRank {
 			pagerank = in.readDouble();
 //			System.out.println(pagerank);
 			int size = in.readInt();
-			//links = new ArrayList(size);
 			links = new ArrayList();
 			for(int i = 0; i < size; i ++) {
 				//String link = in.readLine();

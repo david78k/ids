@@ -1,3 +1,12 @@
+Q.what is #section name? how to find out anchors like section names?
+
+Q. what if there are the same pageranks in the map phase?
+- guess key is unique, the later one will overwrite the former one
+- 0.111 page1
+  0.111 page2
+  Then, the result will be 0.111 page2
+
+
 input output directory as arguments
 
 adjacency matrix: combine titles and inlinks or only inlinks?
