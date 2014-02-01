@@ -3,8 +3,11 @@ jar = PageRank.jar
 #jars = mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar
 jars = hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar:commons-io.jar:mahout-integration-0.8.jar:mahout-examples-0.3.jar:cloud9-1.5.0.jar
 bucket = david78k-ids
-instance_type = m1.small
-num_instances = 3
+instance_type = m3.2xlarge
+#instance_type = m1.xlarge
+#instance_type = m1.small
+num_instances = 10
+#num_instances = 3
 
 all: run upload
 
@@ -61,10 +64,7 @@ upload:
 	git commit -a -m update
 	git push
 
-compemr:
-	javac -classpath HADOOP HOME/hadoop-HADOOP VERSION-core.jar -d PageRank PageRank.java
-	#2. create jar:
-	jar -cvf PageRank.jar -C PageRank/ .
-	#3. run in local:
-	hadoop jar PageRank.jar {main-class PageRank.PageRank input output
+tar:
+	tar cvf PageRank.tar report.txt PageRank/PageRank.java PageRank.jar
+	#tar cvf PageRank.tar report.txt PageRank/*.java PageRank.jar
 

@@ -261,14 +261,19 @@ public class PageRank {
 			System.out.println(key.toString());
 
 			int sum = 0;
+			Set set = new HashSet();
+			ArrayList list = new ArrayList();
 			Text inlinks = new Text();
 			StringBuffer sb = new StringBuffer();
 			while (values.hasNext()) {
 				Page p = values.next();
 				//System.out.println(p.toString());
-				//sum += values.next().get();
-				sb.append(p.title + "\t");
-				//sb.append(p.toString());
+				//String title = (String)set.get(p.title);
+				if(!list.contains(p.title) && !p.title.equals(key.toString())) {
+					sb.append(p.title + "\t");
+					//list.add(p);
+					set.add(p.title);
+				}	
 			}
 			inlinks.set(sb.toString());
 
