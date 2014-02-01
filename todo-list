@@ -1,13 +1,15 @@
 Q.what is #section name? how to find out anchors like section names?
 
-Q. what if there are the same pageranks in the map phase?
+Q. what if there are the same pageranks in the map phase when sorting?
 - guess key is unique, the later one will overwrite the former one
 - 0.111 page1
   0.111 page2
   Then, the result will be 0.111 page2
 
 
-input output directory as arguments
+regular expression to exclude links
+
+output file naming and merging into single file
 
 adjacency matrix: combine titles and inlinks or only inlinks?
 - When creating the adjacency matrix, should we combine titles and inlinks or consider only inlinks? 

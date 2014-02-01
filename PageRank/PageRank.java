@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.*;
 import java.text.*;
-//import java.util.regex.*;
+import java.util.regex.*;
 
 import org.apache.hadoop.*;
 import org.apache.hadoop.conf.*;
@@ -237,15 +237,26 @@ public class PageRank {
 						} 
 							
 						String link = sb.toString().replaceAll(" ", "_");
-						if(!link.startsWith("#top") 
-							/*
-							&& !link.contains(":") 
-							//!link.startsWith("#section name") && 
-							&& !link.contains("#") 
-							&& !link.contains("/")
-							*/
+						if(!link.startsWith("#top") // 3. table row
+							&& !link.matches(".*:.+:.*") // 1. interwiki
+							//&& !link.matchs("#section name")
+							&& !link.contains("#") // 2. section
+							&& !link.contains("/") // 4. subpage
 						)
 							output.collect(new Text(title), new Page(pid ++, link, 1, new ArrayList()));
+
+						/*
+						String forbiddenCharacters = "`~!@#$%^&*{}[\"':;,.<>?/|\\";
+		                                String patternToMatch = "[\\\\!\"#$%&()*+,./:;<=>?@\\[\\^_{|}~]+";
+                		                patternToMatch = "#$%&()*+,./:;<=>?@\\[\\^_{|}~";
+                	        	        pattern = "\\[\\[([A-Za-z0-9.]+)\\]\\]";
+
+                		                pattern = Pattern.compile("\\[\\[[\\w\\s\\|\\:\\/" + Pattern.quote(forbiddenCharacters) + Pattern.quote(patternToMatch) + ".]+\\]\\]");
+        	        	                pattern = Pattern.compile("\\[\\[(\\w.)+\\]\\]");
+						Matcher matcher = pattern.matcher(content);
+		                                while(matcher.find())
+							matcher.group() + "\t";
+						*/
 						//System.out.println(link);
 						sb = new StringBuffer();
 					}
