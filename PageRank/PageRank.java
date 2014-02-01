@@ -209,6 +209,8 @@ public class PageRank {
 
 			String content = text;
 			int i = 0;
+			if (content == null || content.length() == 0) return;
+
 			char c = content.charAt(i);
 			StringBuffer sb = new StringBuffer();
 			int len = content.length();

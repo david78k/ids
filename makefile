@@ -50,8 +50,9 @@ emr:
 	--instance-type $(instance_type) --num-instances $(num_instances) \
 	--jar s3n://$(bucket)/job/PageRank.jar \
 	--main-class PageRank.PageRank \
-	--arg $(bucket) \
-	--arg s3://$(bucket)/input/1000.xml 
+	--arg $(bucket) 
+	#--arg $(bucket) \
+	#--arg s3://$(bucket)/input/1000.xml 
 	#--arg s3://$(bucket)/input/100.xml 
 	#--args $(bucket),s3://$(bucket)/input/100.xml
 
