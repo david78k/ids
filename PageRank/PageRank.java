@@ -245,6 +245,7 @@ public class PageRank {
 						)
 							output.collect(new Text(title), new Page(pid ++, link, 1, new ArrayList()));
 						//System.out.println(link);
+						sb = new StringBuffer();
 					}
 				}				
 			}
