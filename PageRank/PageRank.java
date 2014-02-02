@@ -28,12 +28,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.mahout.classifier.bayes.XmlInputFormat;
 //import org.apache.mahout.text.wikipedia.XmlInputFormat;
 
-//import edu.umd.cloud9.collection.XMLInputFormatOld;
-//import edu.umd.cloud9.collection.XMLInputFormat;
-//import edu.umd.cloud9.collection.*;
-
-//import no.uib.cipr.matrix.*;
-
 public class PageRank {
 	static String inputpath = "s3://spring-2014-ds/data/enwiki-latest-pages-articles.xml";
 	static String bucketname = "";
@@ -70,7 +64,6 @@ public class PageRank {
 	}
 
 	public static void main (String[] args) throws Exception {
-		//System.out.println("PageRank");
 		bucketname = args[0];
 		basedir = "s3://" + bucketname;
 
@@ -90,11 +83,16 @@ public class PageRank {
 			+ ", outputdir = " + pr.outputdir
 			+ ", outputpath = " + pr.outputpath); 
 
+		System.out.println("Parsing the inlinks ...");
 		pr.parse();
+		System.out.println("Computing the number of total pages ...");
 		pr.totalpages();
+		//System.out.println("Computing the PageRanks ...");
 		//pr.pagerank();
 		// secondary sort by PageRank scores with resulting files
+		//System.out.println("Sorting the PageRanks ...");
 		//pr.secsort(); 
+		System.out.println("All jobs complete.");
 
 		//pr.wordcount();
 		//pr.merge();
@@ -155,6 +153,76 @@ public class PageRank {
 		}
 	}
 
+	void pagerank() throws Exception {
+		JobConf conf = new JobConf(PageRank.class);
+		conf.setJobName("page rank");
+		//conf.setNumReduceTasks(1);
+		
+		conf.setOutputKeyClass(Text.class);
+		//conf.setOutputValueClass(Page.class);
+		//conf.setOutputValueClass(Text.class);
+		conf.setOutputValueClass(IntWritable.class);
+
+		conf.setMapperClass(TotalPagesMapper.class);
+		conf.setReducerClass(TotalPagesReducer.class);
+		//conf.setCombinerClass(Reduce.class);
+
+		conf.setInputFormat(TextInputFormat.class);
+		//conf.setInputFormat(XmlInputFormat.class);
+		conf.setOutputFormat(TextOutputFormat.class);
+
+                FileInputFormat.setInputPaths(conf, new Path(outputpath));
+                FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/pagerank"));
+		//FileInputFormat.setInputPaths(conf, new Path(args[0]));
+		//FileOutputFormat.setOutputName(conf, "PageRank.n.out");
+
+		JobClient.runJob(conf);
+		
+/*
+		Path src = new Path(outputpath + "/n/part-00000");
+		Path dest = new Path(outputpath + "/" + NOUT);
+		FileSystem.get(new URI(outputpath), conf).rename(src, dest);
+*/
+	}
+
+	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
+		private final static IntWritable one = new IntWritable(1);
+		private Text word = new Text();
+		private static StringBuffer sb = new StringBuffer();
+
+		public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+			//System.out.println(key.toString() + ", " + value);
+			//Page p = value.get();
+			// map phase: read N and compute column sum 
+			// reduce phase: compute rank
+			//p.pagerank = (1 - d)*N + d*sum(p.pagerank/p.columnsum())
+			/*
+			String line = value.toString();
+			StringTokenizer tokenizer = new StringTokenizer(line);
+			while (tokenizer.hasMoreTokens()) {
+				word.set(tokenizer.nextToken());
+			//	output.collect(word, one);
+			}
+			*/
+			output.collect(new Text("N"), one);
+		}
+	}
+
+	//public static class TotalPagesReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
+	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, Text> {
+		public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+			//System.out.println(key.toString() + ", " + values);
+			int sum = 0;
+			while (values.hasNext()) {
+				sum += values.next().get();
+			}
+			key.set("N=" + sum);
+			N = sum;
+			output.collect(key, new Text());
+			//output.collect(key, new IntWritable(sum));
+		}
+	}
+
 	void totalpages() throws Exception {
 		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("compute total pages");
@@ -181,14 +249,10 @@ public class PageRank {
 		JobClient.runJob(conf);
 		
 		Path src = new Path(outputpath + "/n/part-00000");
-		Path dest = new Path(outputpath + "/" + NOUT);
-		FileSystem.get(new URI(outputpath), conf).rename(src, dest);
-		//FileSystem.get(conf).rename(src, dest);
-		//FileSystem fs = p.getFileSystem(conf);
-		//FileUtil.replaceFile("/n/part-00000", "/" + NOUT);
-		//FileSystem fs = FileSystem.get(conf);
-		//fs.rename(new Path(outputpath + "/n/part-00000"), new Path(outputpath + "/" + NOUT));
-		//FileUtil.replaceFile(new Path(outputpath + "/n/part-00000"), new Path(outputpath + "/" + NOUT));
+		Path dest = new Path(outputdir + "/" + NOUT);
+		//Path dest = new Path(outputpath + "/" + NOUT);
+		FileSystem.get(new URI(outputdir), conf).rename(src, dest);
+		//FileSystem.get(new URI(outputpath), conf).rename(src, dest);
 	}
 
 	public static class TotalPagesMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
@@ -197,15 +261,6 @@ public class PageRank {
 		private static StringBuffer sb = new StringBuffer();
 
 		public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
-			//System.out.println(key.toString() + ", " + value);
-			/*
-			String line = value.toString();
-			StringTokenizer tokenizer = new StringTokenizer(line);
-			while (tokenizer.hasMoreTokens()) {
-				word.set(tokenizer.nextToken());
-			//	output.collect(word, one);
-			}
-			*/
 			output.collect(new Text("N"), one);
 		}
 	}
@@ -227,28 +282,66 @@ public class PageRank {
 	void parse() throws Exception {
 		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("parse adjacency graph");
+		conf.setNumReduceTasks(1);
 
 		conf.set("xmlinput.start", "<page>");
 		conf.set("xmlinput.end", "</page>");
 
 		conf.setOutputKeyClass(Text.class);
 		conf.setOutputValueClass(Page.class);
-		//conf.setOutputValueClass(Text.class);
-		//conf.setOutputValueClass(IntWritable.class);
 
 		conf.setMapperClass(ParseMapper.class);
 		conf.setReducerClass(ParseReducer.class);
 		//conf.setCombinerClass(Reduce.class);
 
-		//conf.setInputFormat(TextInputFormat.class);
 		conf.setInputFormat(XmlInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
                 FileInputFormat.setInputPaths(conf, new Path(inputpath));
                 FileOutputFormat.setOutputPath(conf, new Path(outputpath));
-		//FileInputFormat.setInputPaths(conf, new Path(args[0]));
 
 		JobClient.runJob(conf);
+
+		/*
+		conf.setOutputKeyClass(Text.class);
+		conf.setOutputValueClass(Page.class);
+
+		conf.setMapperClass(ParseMapper.class);
+		conf.setReducerClass(ParseReducer.class);
+		//conf.setCombinerClass(Reduce.class);
+
+		conf.setInputFormat(XmlInputFormat.class);
+		conf.setOutputFormat(TextOutputFormat.class);
+
+		JobClient.runJob(conf);
+		*/
+
+		//Path src = new Path(outputpath + "/inlink/part-00000");
+		Path src = new Path(outputpath + "/part-00000");
+		Path dest = new Path(outputdir + "/" + INLINKOUT);
+		//Path dest = new Path(outputpath + "/" + INLINKOUT);
+		FileSystem.get(new URI(outputdir), conf).rename(src, dest);
+		//FileSystem.get(new URI(outputpath), conf).rename(src, dest);
+	}
+
+	//public static class InlinkReducer extends MapReduceBase implements Reducer<LongWritable, Text, LongWritable, IntWritable> {
+	public static class InlinkReducer extends MapReduceBase implements Reducer<LongWritable, Text, Text, Text> {
+		//public void reduce(LongWritable key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+		//public void reduce(LongWritable key, Iterator<Text> values, OutputCollector<LongWritable, IntWritable> output, Reporter reporter) throws IOException {
+		public void reduce(LongWritable key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+			//System.out.print(key.toString() + "\t");
+			//System.out.println(key.toString() + ", " + values.toString());
+			Text word = new Text();
+			while (values.hasNext()) {
+				String line = values.next().toString();
+				//System.out.print(line + ",\t");
+				//word.set(line);
+				output.collect(word, new Text(line));
+				//output.collect(word, new IntWritable(Integer.parseInt(tok.nextToken())));
+			}
+			//System.out.println();
+		//	output.collect(word, new IntWritable(sum));
+		}
 	}
 
 	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
@@ -304,7 +397,7 @@ public class PageRank {
 							&& !link.contains("#") // 2. section
 							&& !link.contains("/") // 4. subpage
 						)
-							output.collect(new Text(title), new Page(pid ++, link, 1, new ArrayList()));
+							output.collect(new Text(title.replaceAll(" ", "_")), new Page(pid ++, link, 1, new ArrayList()));
 
 						//System.out.println(link);
 						sb = new StringBuffer();
@@ -430,147 +523,6 @@ public class PageRank {
 		}
 	}
 
-	/** initialize data from input file
-	 *  and construct the adjacency matrix A
-	*/
-	void extract() {
-		// read data from input file
-		//File input = new File("s3://spring-2014-ds/data/enwiki-latest-pages-articles.xml");
-		File input = new File(inputpath);
-
-		double[][] matdata;
-		Hashtable plist = new Hashtable(); // pagerank list for vector R
-		ArrayList alist = new ArrayList(); // adjacency list for matrix A
-
-		int ind = 0;
-		int nlinks = 0;
-
-		try {
-			String filepath = outputdir + "/" + INLINKOUT;
-			new File(outputdir).mkdirs();
-
-			FileHandler fhandler = new FileHandler(filepath);
-			fhandler.setFormatter(new PlainFormatter());
-			logger.addHandler(fhandler);
-
-			Document doc = Jsoup.parse(input, "UTF-8");
-	
-			Elements pages = doc.select("page");
-			for (Element page: pages) {
-				String content = page.text();
-
-				String[] contents = content.split(" ");
-				String title = contents[0].replaceAll(" ", "_");
-				logger.setUseParentHandlers(false);
-				logger.info(title + " ");
-					
-				int i = 0;
-				char c = content.charAt(i);
-				StringBuffer sb = new StringBuffer();
-				ArrayList links = new ArrayList();
-				int len = content.length();
-
-				while (i < len) {
-					c = content.charAt(i ++);	
-					if (c == '[') {
-						if (i >= len) break;
-
-						c = content.charAt(i);
-						if (c == '[') {
-							i ++;
-							while(i < len && (c = content.charAt(i ++)) != '|') {
-								if (c == ']') {
-									if(i < len && (c = content.charAt(i ++)) != ']' && c != '|') {
-										sb.append(c); 
-									} else break;
-								} else {
-									sb.append(c); 
-									if (i < len && (c = content.charAt(i ++)) != ']' && c != '|') {
-										sb.append(c); 
-									} else break;
-								}
-							} 
-							
-							String link = sb.toString().replaceAll(" ", "_");
-							links.add(link);
-							//ArrayList linklist = (ArrayList)(plist.get(link));
-							//if(linklist == null)
-							if((ArrayList)plist.get(link) == null) {
-								plist.put(link, new ArrayList<String>());
-								index.put(link, ind ++);
-							} else {
-							//	System.out.println("redundant: " + link);
-							} 
-							N ++;
-							sb = new StringBuffer();
-						}
-					}				
-				}
-				
-				ArrayList linklist = (ArrayList)plist.get(title);
-				if(linklist != null) {
-					linklist.addAll(links);
-					plist.put(title, linklist);
-				} else {
-					plist.put(title, links);
-					index.put(title, ind ++);
-				}
-			}
-	
-			nlinks = N;
-			N = plist.size();
-			//System.out.println("plist.size() = " + N);
-
-			A = new Array2DRowRealMatrix(N, N);
-			R0 = new ArrayRealVector(N, 1.0/N);
-			R = new ArrayRealVector(N);
-
-			int[] colsum = new int[N];
-
-			// output inliks and create adjacency matrix
-			for (Map.Entry entry: (Set<Map.Entry>)plist.entrySet()) {
-				String title = entry.getKey().toString();
-				logger.info(title + "\t");
-				ArrayList values = (ArrayList)entry.getValue();
-								
-				int row = (Integer)index.get(title);				
-
-				// create adjacency matrix
-				for (String link: (ArrayList<String>)values) {
-					logger.info(link + "\t");
-					int col = (Integer)index.get(link);
-					A.setEntry(row, col, 1);
-					colsum[col] += 1;
-				}
-				logger.info("\n");
-			}
-
-			// normalize for column stochastic
-			for(int col = 0; col < N; col ++)
-				for (int row = 0; row < N; row ++) 
-					if(colsum[col] != 0)
-						A.setEntry(row, col, A.getEntry(row, col)/colsum[col]);
-
-			//System.out.println(A);
-			//System.out.println(index);
-			System.out.println(index.size());
-			//System.out.println(index.get());
-
-			logger.removeHandler(fhandler);
-			
-			// write the total number of pages N
-			// N=?
-			filepath = outputdir + "/" + NOUT;
-			fhandler = new FileHandler(filepath);
-			fhandler.setFormatter(new PlainFormatter());
-			logger.addHandler(fhandler);
-			//logger.info("N=" + nlinks + "\n");
-			logger.info("N=" + N + "\n");
-			logger.removeHandler(fhandler);
-
-		} catch (IOException e) {}
-	}
-
 	class PlainFormatter extends java.util.logging.Formatter {
 		public String format(LogRecord record) {
 			return record.getMessage(); 
@@ -652,35 +604,5 @@ public class PageRank {
 		//	}
 		}
 	}
-
-/*
-	void start() throws Exception {
-		//JobConf conf = new JobConf(WordCount.class);
-		Configuration conf = new Configuration();
-		//Job job = new Job(WordCount.class);
- 		Job job = new Job(conf, "pagerank");
-
-		job.setJarByClass(PageRank.class);
-
-                job.setOutputKeyClass(Text.class);
-                job.setOutputValueClass(Text.class);
-                //job.setOutputValueClass(IntWritable.class);
-
-                job.setMapperClass(PageRankMapper.class);
-		//job.setCombinerClass(Reduce.class);
-		job.setReducerClass(PageRankReducer.class);
-
-                //job.setInputFormatClass(TextInputFormat.class);
-                job.setInputFormatClass(KeyValueTextInputFormat.class);
-                job.setOutputFormatClass(TextOutputFormat.class);
-
-                FileInputFormat.setInputPaths(job, new Path(inputpath));
-                FileOutputFormat.setOutputPath(job, new Path(outputpath));
-
-                //JobClient.runJob(job);
-		boolean result = job.waitForCompletion(true);
-		System.exit(result ? 0 : 1);
-	}
-*/
 }
 
