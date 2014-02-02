@@ -179,8 +179,13 @@ public class PageRank {
 
 		JobClient.runJob(conf);
 		
-		FileSystem fs = FileSystem.get(conf);
-		fs.rename(new Path(outputpath + "/n/part-00000"), new Path(outputpath + "/" + NOUT));
+		Path src = new Path(outputpath + "/n/part-00000");
+		Path dest = new Path(outputpath + "/" + NOUT);
+		FileSystem.get(conf).rename(src, dest);
+		//FileSystem fs = p.getFileSystem(conf);
+		//FileUtil.replaceFile("/n/part-00000", "/" + NOUT);
+		//FileSystem fs = FileSystem.get(conf);
+		//fs.rename(new Path(outputpath + "/n/part-00000"), new Path(outputpath + "/" + NOUT));
 		//FileUtil.replaceFile(new Path(outputpath + "/n/part-00000"), new Path(outputpath + "/" + NOUT));
 	}
 
@@ -203,14 +208,17 @@ public class PageRank {
 		}
 	}
 
-	public static class TotalPagesReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
-		public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+	//public static class TotalPagesReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
+	public static class TotalPagesReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, Text> {
+		public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			//System.out.println(key.toString() + ", " + values);
 			int sum = 0;
 			while (values.hasNext()) {
 				sum += values.next().get();
 			}
-			output.collect(key, new IntWritable(sum));
+			key.set("N=" + sum);
+			output.collect(key, new Text());
+			//output.collect(key, new IntWritable(sum));
 		}
 	}
 
