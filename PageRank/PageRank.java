@@ -89,7 +89,9 @@ public class PageRank {
 			+ ", outputdir = " + pr.outputdir
 			+ ", outputpath = " + pr.outputpath); 
 
-		pr.pagerank();
+		pr.parse();
+		pr.totalpages();
+		//pr.pagerank();
 		// secondary sort by PageRank scores with resulting files
 		//pr.secsort(); 
 
@@ -152,9 +154,69 @@ public class PageRank {
 		}
 	}
 
-	void pagerank() throws Exception {
+	void totalpages() throws Exception {
 		JobConf conf = new JobConf(PageRank.class);
-		conf.setJobName("pagerank");
+		conf.setJobName("compute total pages");
+		conf.setNumReduceTasks(1);
+		
+		conf.setOutputKeyClass(Text.class);
+		//conf.setOutputValueClass(Page.class);
+		//conf.setOutputValueClass(Text.class);
+		conf.setOutputValueClass(IntWritable.class);
+
+		conf.setMapperClass(TotalPagesMapper.class);
+		conf.setReducerClass(TotalPagesReducer.class);
+		//conf.setCombinerClass(Reduce.class);
+
+		conf.setInputFormat(TextInputFormat.class);
+		//conf.setInputFormat(XmlInputFormat.class);
+		conf.setOutputFormat(TextOutputFormat.class);
+
+                FileInputFormat.setInputPaths(conf, new Path(outputpath));
+                FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/n"));
+		//FileInputFormat.setInputPaths(conf, new Path(args[0]));
+		//FileOutputFormat.setOutputName(conf, "PageRank.n.out");
+
+		JobClient.runJob(conf);
+		
+		FileSystem fs = FileSystem.get(conf);
+		fs.rename(new Path(outputpath + "/n/part-00000"), new Path(outputpath + "/" + NOUT));
+		//FileUtil.replaceFile(new Path(outputpath + "/n/part-00000"), new Path(outputpath + "/" + NOUT));
+	}
+
+	public static class TotalPagesMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
+		private final static IntWritable one = new IntWritable(1);
+		private Text word = new Text();
+		private static StringBuffer sb = new StringBuffer();
+
+		public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+			//System.out.println(key.toString() + ", " + value);
+			/*
+			String line = value.toString();
+			StringTokenizer tokenizer = new StringTokenizer(line);
+			while (tokenizer.hasMoreTokens()) {
+				word.set(tokenizer.nextToken());
+			//	output.collect(word, one);
+			}
+			*/
+			output.collect(new Text("N"), one);
+		}
+	}
+
+	public static class TotalPagesReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
+		public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+			//System.out.println(key.toString() + ", " + values);
+			int sum = 0;
+			while (values.hasNext()) {
+				sum += values.next().get();
+			}
+			output.collect(key, new IntWritable(sum));
+		}
+	}
+
+	void parse() throws Exception {
+		JobConf conf = new JobConf(PageRank.class);
+		conf.setJobName("parse adjacency graph");
 
 		conf.set("xmlinput.start", "<page>");
 		conf.set("xmlinput.end", "</page>");
@@ -164,35 +226,24 @@ public class PageRank {
 		//conf.setOutputValueClass(Text.class);
 		//conf.setOutputValueClass(IntWritable.class);
 
-		conf.setMapperClass(PageRankMapper.class);
-		conf.setReducerClass(PageRankReducer.class);
-		//conf.setMapperClass(WordCountMapper.class);
+		conf.setMapperClass(ParseMapper.class);
+		conf.setReducerClass(ParseReducer.class);
 		//conf.setCombinerClass(Reduce.class);
-		//conf.setReducerClass(WordCountReducer.class);
 
 		//conf.setInputFormat(TextInputFormat.class);
 		conf.setInputFormat(XmlInputFormat.class);
-		//conf.setInputFormat(XMLInputFormat.class);
-		//conf.setInputFormat(XMLInputFormatOld.class);
 		conf.setOutputFormat(TextOutputFormat.class);
-		//conf.setOutputFormat(Page.class);
 
                 FileInputFormat.setInputPaths(conf, new Path(inputpath));
                 FileOutputFormat.setOutputPath(conf, new Path(outputpath));
 		//FileInputFormat.setInputPaths(conf, new Path(args[0]));
-		//FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 
 		JobClient.runJob(conf);
 	}
 
 	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
-	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Page> {
-		private final static IntWritable one = new IntWritable(1);
-		private Text word = new Text();
-
+	public static class ParseMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Page> {
 		/** extract Page data structure */
-		//public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
-		//public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 		public void map(LongWritable key, Text value, OutputCollector<Text, Page> output, Reporter reporter) throws IOException {
 			String xmlstr = value.toString();
 			Page p;
@@ -245,18 +296,6 @@ public class PageRank {
 						)
 							output.collect(new Text(title), new Page(pid ++, link, 1, new ArrayList()));
 
-						/*
-						String forbiddenCharacters = "`~!@#$%^&*{}[\"':;,.<>?/|\\";
-		                                String patternToMatch = "[\\\\!\"#$%&()*+,./:;<=>?@\\[\\^_{|}~]+";
-                		                patternToMatch = "#$%&()*+,./:;<=>?@\\[\\^_{|}~";
-                	        	        pattern = "\\[\\[([A-Za-z0-9.]+)\\]\\]";
-
-                		                pattern = Pattern.compile("\\[\\[[\\w\\s\\|\\:\\/" + Pattern.quote(forbiddenCharacters) + Pattern.quote(patternToMatch) + ".]+\\]\\]");
-        	        	                pattern = Pattern.compile("\\[\\[(\\w.)+\\]\\]");
-						Matcher matcher = pattern.matcher(content);
-		                                while(matcher.find())
-							matcher.group() + "\t";
-						*/
 						//System.out.println(link);
 						sb = new StringBuffer();
 					}
@@ -266,7 +305,7 @@ public class PageRank {
 	}
 
 	//public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
-	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Page, Text, Text> {
+	public static class ParseReducer extends MapReduceBase implements Reducer<Text, Page, Text, Text> {
 		//public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 		public void reduce(Text key, Iterator<Page> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			System.out.println(key.toString());
@@ -309,18 +348,15 @@ public class PageRank {
 		
 		public void write(DataOutput out) throws IOException {
          		out.writeInt(id);
-			//out.writeBytes(title);
 			Text.writeString(out, title);
 			out.writeDouble(pagerank);
 			out.writeInt(links.size());
 			for(String link: links) 
 				Text.writeString(out, link);
-				//out.writeBytes(link);
 	       	}
 
 		public void readFields(DataInput in) throws IOException {
 	        	id = in.readInt();
-			//title = in.readLine();
 			title = Text.readString(in);
 //			System.out.println(title);
 			pagerank = in.readDouble();
@@ -328,7 +364,6 @@ public class PageRank {
 			int size = in.readInt();
 			links = new ArrayList();
 			for(int i = 0; i < size; i ++) {
-				//String link = in.readLine();
 				String link = Text.readString(in);
 				links.add(link);
 			}
@@ -336,8 +371,6 @@ public class PageRank {
 
 		public String toString() {
 			return pagerank + "\t" + links.toString();
-			//return title + "\t" + pagerank + "\t" + links.toString();
-			//return id + ", " + pagerank + ", " + links.toString();
 		}
 	}
 
@@ -357,8 +390,6 @@ public class PageRank {
 
                 FileInputFormat.setInputPaths(conf, new Path(inputpath));
                 FileOutputFormat.setOutputPath(conf, new Path(outputpath));
-		//FileInputFormat.setInputPaths(conf, new Path(args[0]));
-		//FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 
 		JobClient.runJob(conf);
 	}
