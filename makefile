@@ -3,12 +3,12 @@ jar = PageRank.jar
 #jars = mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar:mahout-integration-0.8.jar:cloud9-1.5.0.jar
 jars = hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar:commons-io.jar:mahout-examples-0.3.jar
 bucket = david78k-ids
-#instance_type = m3.2xlarge
-#instance_type = m3.xlarge
 instance_type = m1.xlarge
 #instance_type = m1.small
 num_instances = 10
 #num_instances = 3
+#instance_type = m3.2xlarge # not supported
+#instance_type = m3.xlarge # not supported
 
 all: run upload
 
@@ -57,6 +57,7 @@ emr:
 	--arg $(bucket) 
 	#--arg $(bucket) \
 	#--arg s3://$(bucket)/input/1000.xml 
+
 	#--arg s3://$(bucket)/input/100.xml 
 	#--args $(bucket),s3://$(bucket)/input/100.xml
 

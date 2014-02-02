@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.logging.*;
 import java.text.*;
 import java.util.regex.*;
+import java.net.URI;
 
 import org.apache.hadoop.*;
 import org.apache.hadoop.conf.*;
@@ -181,7 +182,8 @@ public class PageRank {
 		
 		Path src = new Path(outputpath + "/n/part-00000");
 		Path dest = new Path(outputpath + "/" + NOUT);
-		FileSystem.get(conf).rename(src, dest);
+		FileSystem.get(new URI(outputpath), conf).rename(src, dest);
+		//FileSystem.get(conf).rename(src, dest);
 		//FileSystem fs = p.getFileSystem(conf);
 		//FileUtil.replaceFile("/n/part-00000", "/" + NOUT);
 		//FileSystem fs = FileSystem.get(conf);

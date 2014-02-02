@@ -52,6 +52,9 @@ create a tmp directory for this.
 - writable data structure for page that includes title and inlinks has complex
   format
 
+- following the file formatting was the hardest part in this project, not the
+  algorithms
+
 3. How we solved the problems:
 to solve the output file conflict problems, I created files with the current
 date and time.  
