@@ -55,6 +55,9 @@ create a tmp directory for this.
 - following the file formatting was the hardest part in this project, not the
   algorithms
 
+- it was impossible to have two output classes during mapphase in pagerank
+  job. Hence, I made use of the Page data structure.
+
 3. How we solved the problems:
 to solve the output file conflict problems, I created files with the current
 date and time.  
@@ -66,3 +69,9 @@ on developing our application
  
 5. Optimizations
 - sparse matrix (deprecated) for the adjacency matrix A as most of the entries are zero
+
+6. Work contribution
+- Yifei:
+- Tae:
+
+
