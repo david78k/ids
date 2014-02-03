@@ -87,8 +87,8 @@ public class PageRank {
 		pr.parse();
 		System.out.println("Computing the number of total pages ...");
 		pr.totalpages();
-		//System.out.println("Computing the PageRanks ...");
-		//pr.pagerank();
+		System.out.println("Computing the PageRanks ...");
+		pr.pagerank();
 		// secondary sort by PageRank scores with resulting files
 		//System.out.println("Sorting the PageRanks ...");
 		//pr.secsort(); 
@@ -197,8 +197,8 @@ public class PageRank {
 		conf.setJobName("iterate" + iter);
 		//conf.setNumReduceTasks(1);
 		
-		conf.setOutputKeyClass(Text.class);
-		//conf.setOutputValueClass(Page.class);
+		//conf.setOutputKeyClass(Text.class);
+		conf.setOutputKeyClass(Page.class);
 		//conf.setOutputValueClass(Text.class);
 		conf.setOutputValueClass(DoubleWritable.class);
 
@@ -210,7 +210,8 @@ public class PageRank {
 		//conf.setInputFormat(XmlInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
-                FileInputFormat.setInputPaths(conf, new Path(outputpath));
+                //FileInputFormat.setInputPaths(conf, new Path(outputpath + "/" + INLINKOUT));
+                FileInputFormat.setInputPaths(conf, new Path(outputdir + "/" + INLINKOUT));
                 FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/iter" + iter));
                 //FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/pagerank"));
 
@@ -488,7 +489,7 @@ public class PageRank {
 		}
 	}
 
-	static class Page implements Writable{
+	static class Page implements WritableComparable<Page> {
 		int id;
 		String title;
 		double pagerank = 1;
@@ -510,6 +511,10 @@ public class PageRank {
 			this.links = links;
 		}
 		
+		public int compareTo(Page p2) {
+			return title.compareTo(p2.title);
+		}
+
 		public void write(DataOutput out) throws IOException {
          		out.writeInt(id);
 			Text.writeString(out, title);
