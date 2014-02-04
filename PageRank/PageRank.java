@@ -39,6 +39,7 @@ public class PageRank {
 	final static double d = 0.85;
 	static int N = 0; // total number of pages
 	final static int MAX_ITER = 8;
+	private static int iter = 1; // current iteration
 	private static int pid = 0; // unique page id
 
 	final static String OUTLINKOUT = "PageRank.outlink.out";
@@ -124,7 +125,7 @@ public class PageRank {
 	/** secondary sort by values (PageRank score)
   	 *  while merging files
   	 */
-	void sort(int iter) throws Exception {
+	void sort() throws Exception {
 		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("secondary sort");
 
@@ -210,12 +211,14 @@ public class PageRank {
 	}
 
 	void pagerank() throws Exception {
-		iterate(1);
-		sort(1);
-		for (int i = 2; i <= MAX_ITER; i ++) { 
-			iterate(i);
+		iterate();
+		sort();
+		//for (int i = 2; i <= MAX_ITER; i ++) { 
+		for (iter = 2; iter <= MAX_ITER; iter ++) { 
+			iterate();
+			if (iter == MAX_ITER)
+				sort();
 		}	
-		sort(MAX_ITER);
 	}
 
 	public static class CustomPathFilter implements PathFilter {
@@ -225,16 +228,13 @@ public class PageRank {
 	    }
 	}
 
-	void iterate(int iter) throws Exception {
+	void iterate() throws Exception {
 		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("iterate" + iter);
 		//conf.setNumReduceTasks(1);
 		
 		conf.setOutputKeyClass(Text.class);
-		//conf.setOutputKeyClass(Page.class);
 		conf.setOutputValueClass(Text.class);
-		//conf.setOutputValueClass(Page.class);
-		//conf.setOutputValueClass(DoubleWritable.class);
 
 		conf.setMapperClass(PageRankMapper.class);
 		conf.setReducerClass(PageRankReducer.class);
@@ -248,7 +248,6 @@ public class PageRank {
 		if (iter == 1) {
                 	//FileInputFormat.setInputPaths(conf, new Path(outputpath + "/" + OUTLINKOUT));
 	                FileInputFormat.setInputPaths(conf, new Path(outputdir + "/" + OUTLINKOUT));
-	                //FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/pagerank"));
 		} else if (iter == MAX_ITER){
 /*
 		Path src = new Path(outputpath + "/n/part-00000");
@@ -271,9 +270,9 @@ public class PageRank {
 	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
 		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			//System.out.println(key.toString() + ", " + value);
+
 			// map phase: read N and compute column sum 
 			// reduce phase: compute rank
-
 			int count = 0;
 			StringBuffer sb = new StringBuffer();
 
@@ -363,7 +362,6 @@ public class PageRank {
 		JobClient.runJob(conf);
 		
 		fs.rename(src, dest);
-		//FileSystem.get(new URI(outputpath), conf).rename(src, dest);
 
 		//finalize(conf);
 	}
@@ -426,7 +424,6 @@ public class PageRank {
 		JobClient.runJob(conf);
 
 		fs.rename(src, dest);
-		//FileSystem.get(new URI(outputpath), conf).rename(src, dest);
 	}
 
 	//public static class InlinkReducer extends MapReduceBase implements Reducer<LongWritable, Text, LongWritable, IntWritable> {
@@ -530,7 +527,6 @@ public class PageRank {
 			while (values.hasNext()) {
 				Page p = values.next();
 				//System.out.println(p.toString());
-				//String title = (String)set.get(p.title);
 				if(!list.contains(p.title) && !p.title.equals(key.toString())) {
 					sb.append(p.title + "\t");
 					//list.add(p);
@@ -603,7 +599,6 @@ public class PageRank {
 			for (String link: links)
 				sb.append(link + "\t");
 			return pagerank + "\t" + sb.toString();
-			//return pagerank + "\t" + links.toString();
 		}
 	}
 
