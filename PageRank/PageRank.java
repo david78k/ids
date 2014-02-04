@@ -38,7 +38,7 @@ public class PageRank {
 	
 	final static double d = 0.85;
 	static int N = 0; // total number of pages
-	final static int MAX_ITER = 8;
+	final static int MAX_ITER = 2;
 	private static int iter = 1; // current iteration
 	private static int pid = 0; // unique page id
 
@@ -88,9 +88,8 @@ public class PageRank {
 		pr.parse();
 		System.out.println("Computing the number of total pages ...");
 		pr.totalpages();
-		System.out.println("Computing the PageRanks ...");
+		System.out.println("Computing the PageRanks of " + N + " pages ...");
 		pr.pagerank();
-		//pr.finalize();
 		System.out.println("All jobs complete.");
 
 		//pr.wordcount();
@@ -211,13 +210,18 @@ public class PageRank {
 	}
 
 	void pagerank() throws Exception {
+		System.out.println("First iteration ...");
 		iterate();
+		System.out.println("Sorting the first iteration ...");
 		sort();
 		//for (int i = 2; i <= MAX_ITER; i ++) { 
 		for (iter = 2; iter <= MAX_ITER; iter ++) { 
+			System.out.println(iter + "th iteration ...");
 			iterate();
-			if (iter == MAX_ITER)
+			if (iter == MAX_ITER) {
+				System.out.println("Sorting the last iteration ...");
 				sort();
+			}
 		}	
 	}
 
@@ -248,16 +252,7 @@ public class PageRank {
 		if (iter == 1) {
                 	//FileInputFormat.setInputPaths(conf, new Path(outputpath + "/" + OUTLINKOUT));
 	                FileInputFormat.setInputPaths(conf, new Path(outputdir + "/" + OUTLINKOUT));
-		} else if (iter == MAX_ITER){
-/*
-		Path src = new Path(outputpath + "/n/part-00000");
-		Path dest = new Path(outputpath + "/" + NOUT);
-		FileSystem.get(new URI(outputpath), conf).rename(src, dest);
-*/
-
-		} else {
-	        //        FileInputFormat.setInputPaths(conf, new Path(outputpath + "/iter" + (iter - 1)));
-		}
+		} 
 
 		try {
 			JobClient.runJob(conf);
@@ -283,6 +278,10 @@ public class PageRank {
 			String title = tok.nextToken();
 			double pagerank = 1.0/N;
 			
+			if(iter > 1) {
+				pagerank = Double.parseDouble(tok.nextToken());
+			}
+
 			while (tok.hasMoreTokens()) {
 				String link = tok.nextToken();
 				links.add(link);
