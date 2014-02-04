@@ -91,10 +91,10 @@ public class PageRank {
 		pr.pagerank();
 		// secondary sort by PageRank scores with resulting files
 		//System.out.println("Sorting the PageRanks ...");
-		//pr.secsort(); 
 		//pr.finalize();
 		System.out.println("All jobs complete.");
 
+		//pr.sort(); 
 		//pr.wordcount();
 		//pr.merge();
 	}
@@ -116,36 +116,6 @@ public class PageRank {
 		} catch (FileNotFoundException e) {}
 	}
 	
-	public static class DescendingDoubleWritable extends DoubleWritable {
-		
-		public DescendingDoubleWritable() {super();}
-		public DescendingDoubleWritable(double d) {super(d);}
-
-		/** A Comparator optimized for DoubleWritable. */ 
-  		public static class Comparator extends WritableComparator {
-		    public Comparator() {
- 		     super(DoubleWritable.class);
- 		   }
-
-		    public int compare(byte[] b1, int s1, int l1,
-	                       byte[] b2, int s2, int l2) {
-		      double thisValue = readDouble(b1, s1);
-		      double thatValue = readDouble(b2, s2);
-		      return (thisValue > thatValue ? -1 : (thisValue == thatValue ? 0 : 1));
-		    }
- 		 }	
-
-		  static {                                        // register this comparator
-		    WritableComparator.define(DoubleWritable.class, new Comparator());
-		  }
-
-		/*
-		public int compareTo(DescendingDoubleWritable d) {
-			return -super.compareTo(d);
-		}
-		*/
-	}
-
 	public static class DescendingDoubleComparator extends DoubleWritable.Comparator {
 		public int compare (byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
 			return -super.compare (b1, s1, l1, b2, s2, l2);
@@ -175,10 +145,7 @@ public class PageRank {
 
 		//conf.setOutputKeyClass(Text.class);
 		conf.setOutputKeyClass(DoubleWritable.class);
-		//conf.setOutputKeyClass(DescendingDoubleWritable.class);
-		//conf.setOutputValueClass(DescendingDoubleWritable.class);
 		conf.setOutputValueClass(Text.class);
-	//	conf.setOutputKeyComparatorClass(DescendingWritableComparable.class);
 
 		conf.setMapperClass(SortMapper.class);
 		//conf.setCombinerClass(Reduce.class);
@@ -193,7 +160,6 @@ public class PageRank {
 
 		conf.setNumReduceTasks(1);
 		//conf.setSortComparatorClass(LongWritable.DecreasingComparator.class);
-//		conf.setOutputValueGroupingComparator(DescendingDoubleComparator.class);
 		conf.setOutputKeyComparatorClass(DescendingDoubleComparator.class);
 
 		JobClient.runJob(conf);
@@ -201,56 +167,14 @@ public class PageRank {
 		fs.rename(src, dest);
 	}
 
-	static Iterator valueIterator(TreeMap map) {
-		Set set = new TreeSet(new Comparator<Map.Entry<String, Double>>() {
-			public int compare(Map.Entry<String, Double> e1, Map.Entry<String, Double> e2) {
-				//return e1.getValue().compareTo(e2.getValue()) < 0 ? -1 : 1;
-				return e1.getValue().compareTo(e2.getValue()) > 0 ? 1 : -1;
-			}
-		});
-		set.addAll(map.entrySet());
-		return set.iterator();
-	}
-
-/*
-	public static class DescendingKeyComparator extends WritableComparator {
-	    protected DescendingKeyComparator() {
-	        super(Text.class, true);
-	    }
-
-	    @SuppressWarnings("rawtypes")
-	    @Override
-	    public int compare(WritableComparable w1, WritableComparable w2) {
-	        LongWritable key1 = (LongWritable) w1;
-	        LongWritable key2 = (LongWritable) w2;          
-	        return -1 * key1.compareTo(key2);
-	    }
-	}
-*/
-/*
-	public static class DescendingWritableComparable extends DoubleWritable {
-	    /** A decreasing Comparator optimized for IntWritable. */ 
-/*
-	    public static class DecreasingKeyComparator extends Comparator {
-	        public int compare(WritableComparable a, WritableComparable b) {
-	            return -super.compare(a, b);
-	        }
-	        public int compare(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
-	            return -super.compare(b1, s1, l1, b2, s2, l2);
-	        }
-	    }
-	}
-*/
 	/** filter scores >= 5.0/N and
   	 *  input: <file, line (title pagerank inliks)> = <LongWritable, Text>
  	 *  output: <score, title> = <DoubleWritable, Text>
   	 */
-	//public static class SortMapper extends MapReduceBase implements Mapper<LongWritable, Text, DescendingDoubleWritable, Text> {
 	public static class SortMapper extends MapReduceBase implements Mapper<LongWritable, Text, DoubleWritable, Text> {
 		private Text word = new Text();
 		private static StringBuffer sb = new StringBuffer();
 
-		//public void map(LongWritable key, Text value, OutputCollector<DescendingDoubleWritable, Text> output, Reporter reporter) throws IOException {
 		public void map(LongWritable key, Text value, OutputCollector<DoubleWritable, Text> output, Reporter reporter) throws IOException {
 			String line = value.toString();
 			StringTokenizer tok = new StringTokenizer(line);	
@@ -259,9 +183,8 @@ public class PageRank {
 			word.set(title);
 			double score = Double.parseDouble(tok.nextToken());
 		//	if (score >= 5.0/N)
-			if (score >= 0.1/N)
+			if (score >= 0.2/N)
 				output.collect(new DoubleWritable(score), word);
-				//output.collect(new DescendingDoubleWritable(score), word);
 		}
 	}
 
@@ -270,11 +193,9 @@ public class PageRank {
  	 *  input: <score, title list> = <DoubleWritable, Text>
  	 *  output: <title, score> = <Text, DoubleWritable>
   	 */
-	//public static class SortReducer extends MapReduceBase implements Reducer<DescendingDoubleWritable, Text, Text, DoubleWritable> {
 	public static class SortReducer extends MapReduceBase implements Reducer<DoubleWritable, Text, Text, DoubleWritable> {
 		private Text word = new Text();
 
-		//public void reduce(DescendingDoubleWritable key, Iterator<Text> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
 		public void reduce(DoubleWritable key, Iterator<Text> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
 			//System.out.println(key.toString() + ", " + values.toString());
 			//System.out.println(key.toString());
@@ -289,28 +210,17 @@ public class PageRank {
 				output.collect(new Text(title), new DoubleWritable (score));
 				System.out.println(title + "\t" + score);
 			}
-			
-			/*
-			Iterator iter = valueIterator(rank);
-			while(iter.hasNext())  {
-				Map.Entry e = (Map.Entry)iter.next();
-				word.set((String)e.getKey());
-				output.collect(word, new DoubleWritable ((Double)e.getValue()));
-				System.out.println(e.getKey() + "\t" + e.getValue());
-			}
-			*/
 		}
 	}
 
 	void pagerank() throws Exception {
 		iterate(1);
 		sort(1);
-		/*
-		for (int i = 2; i <= MAX_ITER) { 
+		for (int i = 2; i <= 2; i ++) { 
+	//	for (int i = 2; i <= MAX_ITER; i ++) { 
 			iterate(i);
 		}	
-		sort(MAX_ITER);
-		*/
+	//	sort(MAX_ITER);
 	}
 
 	void iterate(int iter) throws Exception {
@@ -329,7 +239,6 @@ public class PageRank {
 		//conf.setCombinerClass(Reduce.class);
 
 		conf.setInputFormat(TextInputFormat.class);
-		//conf.setInputFormat(XmlInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
 	        FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/iter" + iter));
@@ -345,7 +254,6 @@ public class PageRank {
 */
 
 		} else {
-
 	                FileInputFormat.setInputPaths(conf, new Path(outputpath + "/iter" + (iter - 1)));
 		}
 
@@ -376,7 +284,6 @@ public class PageRank {
 			String title = tok.nextToken();
 			//double pagerank = Double.parseDouble(tok.next());
 			double pagerank = 1.0;
-		//	StringBuffer sb = new StringBuffer();
 			
 			while (tok.hasMoreTokens()) {
 				String link = tok.nextToken();
@@ -765,6 +672,16 @@ public class PageRank {
 			double v2 = (Double)e2.getValue();
 			return v1 > v2 ? 1: v1 == v2 ? 0:-1;
 		}
+	}
+
+	static Iterator valueIterator(TreeMap map) {
+		Set set = new TreeSet(new Comparator<Map.Entry<String, Double>>() {
+			public int compare(Map.Entry<String, Double> e1, Map.Entry<String, Double> e2) {
+				return e1.getValue().compareTo(e2.getValue()) > 0 ? 1 : -1;
+			}
+		});
+		set.addAll(map.entrySet());
+		return set.iterator();
 	}
 
 	void rank() {
