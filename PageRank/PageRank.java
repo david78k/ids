@@ -38,7 +38,7 @@ public class PageRank {
 	
 	final static double d = 0.85;
 	static int N = 0; // total number of pages
-	final static int MAX_ITER = 2;
+	final static int MAX_ITER = 8;
 	private static int iter = 1; // current iteration
 	private static int pid = 0; // unique page id
 
