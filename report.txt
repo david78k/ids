@@ -59,19 +59,42 @@ create a tmp directory for this.
   job. Hence, I made use of the Page data structure.
 
 3. How we solved the problems:
-to solve the output file conflict problems, I created files with the current
+- to solve the output file conflict problems, I created files with the current
 date and time.  
  
+- As hadoop doesn' allow multiple input/output, i used string for both page
+ranks and links to store/recover the link graph from map phase to reduce
+phase. The problem with this approach is the precision of double number
+(decimal point below 17 digits).
+However, double number compuatation is not accurate anyway even with Double
+class.
+
 4. What we learned
-easier to run mapreduce application on AWS EMR rather than running on local
+- long process from input data to output data. there are too many steps, too
+  many small things to take care of although the core algorithm is simple
+- running the same code on a single local machine and distributed systemsa are somewhat different (e.g., different APIs for local file system and s3)
+  static variable N is not set properly on EMR while it is set properly on
+local environment
+- processing the small data and large data is also different (e.g., 100KB vs.
+  44GB) processing
+  large data is challenging.
+- not all jobs can be done in parallel (e.g., final sort to produce a single
+  sorted file)
+- easier to run mapreduce application on AWS EMR rather than running on local
 machine which requires lots of work to set things up. this allows us to focus
 on developing our application 
+- I spent tremendous amount of time for finding APIs that work with our hadoop
+  versoin. Version compatibility is
+  quite important.
  
 5. Optimizations
+- static variables instead of local variables 
+- merged some map and reduce phases into one
 - sparse matrix (deprecated) for the adjacency matrix A as most of the entries are zero
 
-6. Work contribution
-- Yifei:
-- Tae:
+6. Work contribution division
+- Yifei: 
+- Tae: implemented job 1,2,3,4 and tested/deployed the code with EMR on AWS
+	parse XML file, compute the total number of pages, pagerank iteration 1 through 8, sort the results, input/output file management 
 
 

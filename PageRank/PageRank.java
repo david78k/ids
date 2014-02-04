@@ -38,7 +38,7 @@ public class PageRank {
 	
 	final static double d = 0.85;
 	static int N = 0; // total number of pages
-	final static int MAX_ITER = 8;
+	final static int MAX_ITER = 2;
 	private static int iter = 1; // current iteration
 	private static int pid = 0; // unique page id
 
@@ -254,6 +254,16 @@ public class PageRank {
 	                FileInputFormat.setInputPaths(conf, new Path(outputdir + "/" + OUTLINKOUT));
 		} 
 
+		// read N from NOUT file
+		FileSystem fs = FileSystem.get(new URI(outputdir), conf);
+		BufferedReader br=new BufferedReader(new InputStreamReader(fs.open(new Path(outputdir + "/" + NOUT))));
+                String line = br.readLine();
+                if (line != null){
+			N = Integer.parseInt(line.trim().substring(2));
+                        System.out.println("N = " + N + ", (" + line + ")");
+			conf.set("N", N + "");
+                }
+
 		try {
 			JobClient.runJob(conf);
 		} catch (IOException e) {}
@@ -263,6 +273,8 @@ public class PageRank {
 	 *  output: <page, pagerank> = <Page, Double>
 	 */
 	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
+		private int N;
+
 		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			//System.out.println(key.toString() + ", " + value);
 
@@ -276,18 +288,20 @@ public class PageRank {
 			ArrayList<String> links = new ArrayList<String>();
 			StringTokenizer tok = new StringTokenizer(line);
 			String title = tok.nextToken();
+		
 			double pagerank = 1.0/N;
 			
 			if(iter > 1) {
 				pagerank = Double.parseDouble(tok.nextToken());
 			}
-
+			
 			while (tok.hasMoreTokens()) {
 				String link = tok.nextToken();
 				links.add(link);
 				sb.append(link + "\t");
 				count ++;
 			}
+			//output.collect(new Text("Mapper: " + N + "_" + pagerank), new Text((pagerank/count) + "\tPageRankPageNode\t" + sb.toString()));
 			output.collect(new Text(title), new Text((pagerank/count) + "\tPageRankPageNode\t" + sb.toString()));
 			
 			double share = -1;
@@ -297,12 +311,18 @@ public class PageRank {
 			for (String link: links) 
 				output.collect(new Text(link), new Text(share + ""));
 		}
+		
+		public void configure(JobConf conf) {
+			N = Integer.parseInt(conf.get("N"));
+		}
 	}
 
 	/** input: <Page, pagerank list)> = <Page, Double>
 	 *  output: <title, pagerank with inlinks> = <Text, Page>
 	 */
 	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Text, Text, Page> {
+		private int N;
+
 		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Page> output, Reporter reporter) throws IOException {
 			//System.out.print(key + " ");
 
@@ -327,8 +347,14 @@ public class PageRank {
 
 			//p.pagerank = (1 - d)*N + d*sum(p.pagerank/p.columnsum())
 			double pr = (1 - d)/N + d*sum;
-			if(isPage)
+			if(isPage) {
+				output.collect(new Text("Reducer: " + N + "_" + pr), null);
 				output.collect(key, new Page(key.toString(), pr, links));
+			}
+		}
+
+		public void configure(JobConf conf) {
+			N = Integer.parseInt(conf.get("N"));
 		}
 	}
 
@@ -385,6 +411,7 @@ public class PageRank {
 			}
 			key.set("N=" + sum);
 			N = sum;
+			
 			output.collect(key, new Text());
 			//output.collect(key, new IntWritable(sum));
 		}
