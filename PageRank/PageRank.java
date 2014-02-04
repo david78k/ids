@@ -41,7 +41,7 @@ public class PageRank {
 	final static int MAX_ITER = 8;
 	private static int pid = 0; // unique page id
 
-	final static String INLINKOUT = "PageRank.inlink.out";
+	final static String OUTLINKOUT = "PageRank.outlink.out";
 	final static String NOUT = "PageRank.n.out";
 	final static String ITER1 = "PageRank.iter1.out";
 	final static String ITER8 = "PageRank.iter8.out";
@@ -89,20 +89,16 @@ public class PageRank {
 		pr.totalpages();
 		System.out.println("Computing the PageRanks ...");
 		pr.pagerank();
-		// secondary sort by PageRank scores with resulting files
-		//System.out.println("Sorting the PageRanks ...");
 		//pr.finalize();
 		System.out.println("All jobs complete.");
 
-		//pr.sort(); 
 		//pr.wordcount();
-		//pr.merge();
 	}
 	
 	void finalize(JobConf conf) throws Exception {
 		FileSystem fs = FileSystem.get(new URI(outputdir), conf);
-		Path src = new Path(outputpath + "/" + INLINKOUT);
-		Path dest = new Path(outputdir + "/" + INLINKOUT);
+		Path src = new Path(outputpath + "/" + OUTLINKOUT);
+		Path dest = new Path(outputdir + "/" + OUTLINKOUT);
 
 		try {
 			fs.delete(dest, true);
@@ -132,7 +128,7 @@ public class PageRank {
 		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("secondary sort");
 
-		Path src = new Path(outputpath + "/iter" + iter + "/sort/part-00000");
+		Path src = new Path(outputpath + "/iter" + iter + "-sort/part-00000");
 		//Path dest = new Path(outputpath + "/" + NOUT);
 		Path dest = new Path(outputdir + "/" + ITER1);
 		if(iter == MAX_ITER)
@@ -156,7 +152,7 @@ public class PageRank {
 
                 FileInputFormat.setInputPaths(conf, new Path(outputpath + "/iter" + iter));
                 //FileOutputFormat.setOutputPath(conf, new Path(outputdir + "/" + ITER1));
-                FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/iter" + iter + "/sort"));
+                FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/iter" + iter + "-sort"));
 
 		conf.setNumReduceTasks(1);
 		//conf.setSortComparatorClass(LongWritable.DecreasingComparator.class);
@@ -182,8 +178,8 @@ public class PageRank {
 			String title = tok.nextToken();
 			word.set(title);
 			double score = Double.parseDouble(tok.nextToken());
-		//	if (score >= 5.0/N)
-			if (score >= 0.2/N)
+			//if (score >= 5.0/N)
+		//	if (score >= 0.2/N)
 				output.collect(new DoubleWritable(score), word);
 		}
 	}
@@ -216,11 +212,17 @@ public class PageRank {
 	void pagerank() throws Exception {
 		iterate(1);
 		sort(1);
-		for (int i = 2; i <= 2; i ++) { 
-	//	for (int i = 2; i <= MAX_ITER; i ++) { 
+		for (int i = 2; i <= MAX_ITER; i ++) { 
 			iterate(i);
 		}	
-	//	sort(MAX_ITER);
+		sort(MAX_ITER);
+	}
+
+	public static class CustomPathFilter implements PathFilter {
+	    @Override
+	    public boolean accept(Path path) {
+	        return false; 
+	    }
 	}
 
 	void iterate(int iter) throws Exception {
@@ -241,10 +243,11 @@ public class PageRank {
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
+	        FileInputFormat.setInputPaths(conf, new Path(outputpath + "/iter" + (iter - 1)));
 	        FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/iter" + iter));
 		if (iter == 1) {
-                	//FileInputFormat.setInputPaths(conf, new Path(outputpath + "/" + INLINKOUT));
-	                FileInputFormat.setInputPaths(conf, new Path(outputdir + "/" + INLINKOUT));
+                	//FileInputFormat.setInputPaths(conf, new Path(outputpath + "/" + OUTLINKOUT));
+	                FileInputFormat.setInputPaths(conf, new Path(outputdir + "/" + OUTLINKOUT));
 	                //FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/pagerank"));
 		} else if (iter == MAX_ITER){
 /*
@@ -254,36 +257,32 @@ public class PageRank {
 */
 
 		} else {
-	                FileInputFormat.setInputPaths(conf, new Path(outputpath + "/iter" + (iter - 1)));
+	        //        FileInputFormat.setInputPaths(conf, new Path(outputpath + "/iter" + (iter - 1)));
 		}
 
-		JobClient.runJob(conf);
+		try {
+			JobClient.runJob(conf);
+		} catch (IOException e) {}
 	}
 
 	/** input: <file, line containing title inlinks> = <LongWritable, Text>
 	 *  output: <page, pagerank> = <Page, Double>
 	 */
-	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Page, DoubleWritable> {
-	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Page> {
 	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
-		private static StringBuffer sb = new StringBuffer();
-
-		//public void map(LongWritable key, Text value, OutputCollector<Page, DoubleWritable> output, Reporter reporter) throws IOException {
-		//public void map(LongWritable key, Text value, OutputCollector<Text, Page> output, Reporter reporter) throws IOException {
 		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			//System.out.println(key.toString() + ", " + value);
-			//Page p = value.get();
 			// map phase: read N and compute column sum 
 			// reduce phase: compute rank
 
 			int count = 0;
+			StringBuffer sb = new StringBuffer();
+
 			String line = value.toString();
 
 			ArrayList<String> links = new ArrayList<String>();
 			StringTokenizer tok = new StringTokenizer(line);
 			String title = tok.nextToken();
-			//double pagerank = Double.parseDouble(tok.next());
-			double pagerank = 1.0;
+			double pagerank = 1.0/N;
 			
 			while (tok.hasMoreTokens()) {
 				String link = tok.nextToken();
@@ -291,8 +290,7 @@ public class PageRank {
 				sb.append(link + "\t");
 				count ++;
 			}
-			//output.collect(new Page(title, pagerank, links), new DoubleWritable(0));
-			output.collect(new Text(title), new Text((pagerank/count) + "\t" + sb.toString()));
+			output.collect(new Text(title), new Text((pagerank/count) + "\tPageRankPageNode\t" + sb.toString()));
 			
 			double share = -1;
 			int size = links.size();	
@@ -300,8 +298,6 @@ public class PageRank {
 				share = pagerank/size;
 			for (String link: links) 
 				output.collect(new Text(link), new Text(share + ""));
-				//output.collect(new Page(link, pagerank, links), new DoubleWritable(share));
-			//output.collect(new Text(title), new Page(title, 1.0, inlinks));
 		}
 	}
 
@@ -314,22 +310,27 @@ public class PageRank {
 
 			ArrayList<String> links = new ArrayList<String>();
 			double sum = 0;
+			boolean isPage = false;
 			while (values.hasNext()) {
 				Text text = values.next();
 				// parse NPR (neighbor pagerank) and inliks
 				StringTokenizer tok = new StringTokenizer(text.toString());
+				// first parse npr
 				double npr = Double.parseDouble(tok.nextToken());	
+				if(tok.hasMoreTokens() && tok.nextToken().equals("PageRankPageNode"))
+					isPage = true;
+				// next part inlinks
 				while(tok.hasMoreTokens())
 					links.add(tok.nextToken());
 				//System.out.print(npr + " ");
 				if (npr != -1)
 					sum += npr;
 			}
-			//System.out.println();
 
 			//p.pagerank = (1 - d)*N + d*sum(p.pagerank/p.columnsum())
 			double pr = (1 - d)/N + d*sum;
-			output.collect(key, new Page(key.toString(), pr, links));
+			if(isPage)
+				output.collect(key, new Page(key.toString(), pr, links));
 		}
 	}
 
@@ -347,8 +348,6 @@ public class PageRank {
 		} catch (FileNotFoundException e) {}
 
 		conf.setOutputKeyClass(Text.class);
-		//conf.setOutputValueClass(Page.class);
-		//conf.setOutputValueClass(Text.class);
 		conf.setOutputValueClass(IntWritable.class);
 
 		conf.setMapperClass(TotalPagesMapper.class);
@@ -356,15 +355,10 @@ public class PageRank {
 		//conf.setCombinerClass(Reduce.class);
 
 		conf.setInputFormat(TextInputFormat.class);
-		//conf.setInputFormat(XmlInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
-                //FileInputFormat.setInputPaths(conf, new Path(outputpath));
-                FileInputFormat.setInputPaths(conf, new Path(outputdir + "/" + INLINKOUT));
-                //FileInputFormat.setInputPaths(conf, new Path(outputpath + "/" + INLINKOUT));
+                FileInputFormat.setInputPaths(conf, new Path(outputdir + "/" + OUTLINKOUT));
                 FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/n"));
-		//FileInputFormat.setInputPaths(conf, new Path(args[0]));
-		//FileOutputFormat.setOutputName(conf, "PageRank.n.out");
 
 		JobClient.runJob(conf);
 		
@@ -406,8 +400,8 @@ public class PageRank {
 
 		//Path src = new Path(outputpath + "/inlink/part-00000");
 		Path src = new Path(outputpath + "/part-00000");
-		Path dest = new Path(outputdir + "/" + INLINKOUT);
-		//Path dest = new Path(outputpath + "/" + INLINKOUT);
+		Path dest = new Path(outputdir + "/" + OUTLINKOUT);
+		//Path dest = new Path(outputpath + "/" + OUTLINKOUT);
 		FileSystem fs = FileSystem.get(new URI(outputdir), conf);
 		try {
 			fs.delete(dest, true);
