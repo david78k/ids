@@ -38,7 +38,7 @@ public class PageRank {
 	
 	final static double d = 0.85;
 	static int N = 0; // total number of pages
-	final static int MAX_ITER = 2;
+	final static int MAX_ITER = 8;
 	private static int iter = 1; // current iteration
 	private static int pid = 0; // unique page id
 
@@ -178,8 +178,7 @@ public class PageRank {
 			String title = tok.nextToken();
 			word.set(title);
 			double score = Double.parseDouble(tok.nextToken());
-			//if (score >= 5.0/N)
-		//	if (score >= 0.2/N)
+			if (score >= 5.0/N)
 				output.collect(new DoubleWritable(score), word);
 		}
 	}
@@ -276,8 +275,6 @@ public class PageRank {
 		private int N;
 
 		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-			//System.out.println(key.toString() + ", " + value);
-
 			// map phase: read N and compute column sum 
 			// reduce phase: compute rank
 			int count = 0;
@@ -324,8 +321,6 @@ public class PageRank {
 		private int N;
 
 		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Page> output, Reporter reporter) throws IOException {
-			//System.out.print(key + " ");
-
 			ArrayList<String> links = new ArrayList<String>();
 			double sum = 0;
 			boolean isPage = false;
@@ -348,7 +343,7 @@ public class PageRank {
 			//p.pagerank = (1 - d)*N + d*sum(p.pagerank/p.columnsum())
 			double pr = (1 - d)/N + d*sum;
 			if(isPage) {
-				output.collect(new Text("Reducer: " + N + "_" + pr), null);
+				//output.collect(new Text("Reducer: " + N + "_" + pr), null);
 				output.collect(key, new Page(key.toString(), pr, links));
 			}
 		}
@@ -452,26 +447,6 @@ public class PageRank {
 		fs.rename(src, dest);
 	}
 
-	//public static class InlinkReducer extends MapReduceBase implements Reducer<LongWritable, Text, LongWritable, IntWritable> {
-	public static class InlinkReducer extends MapReduceBase implements Reducer<LongWritable, Text, Text, Text> {
-		//public void reduce(LongWritable key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
-		//public void reduce(LongWritable key, Iterator<Text> values, OutputCollector<LongWritable, IntWritable> output, Reporter reporter) throws IOException {
-		public void reduce(LongWritable key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-			//System.out.print(key.toString() + "\t");
-			//System.out.println(key.toString() + ", " + values.toString());
-			Text word = new Text();
-			while (values.hasNext()) {
-				String line = values.next().toString();
-				//System.out.print(line + ",\t");
-				//word.set(line);
-				output.collect(word, new Text(line));
-				//output.collect(word, new IntWritable(Integer.parseInt(tok.nextToken())));
-			}
-			//System.out.println();
-		//	output.collect(word, new IntWritable(sum));
-		}
-	}
-
 	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
 	public static class ParseMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Page> {
 		/** extract Page data structure */
@@ -521,7 +496,8 @@ public class PageRank {
 						//String link = sb.toString().replaceAll(" ", "_");
 						String link = sb.toString(); //.replaceAll(" ", "_");
 						if(!link.startsWith("#top") // 3. table row
-							&& !link.matches(".*:.+:.*") // 1. interwiki
+							&& !link.contains(":") // 1. interwiki
+							//&& !link.matches(".*:.+:.*") // 1. interwiki
 							//&& !link.matchs("#section name")
 							&& !link.contains("#") // 2. section
 							&& !link.contains("/") // 4. subpage
@@ -543,7 +519,7 @@ public class PageRank {
 	public static class ParseReducer extends MapReduceBase implements Reducer<Text, Page, Text, Text> {
 		//public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 		public void reduce(Text key, Iterator<Page> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-			System.out.println(key.toString());
+	//		System.out.println(key.toString());
 
 			int sum = 0;
 			Set set = new HashSet();
@@ -750,9 +726,6 @@ public class PageRank {
 			// for each column 
 			// 	for each row
 			// 		divide each entry by the column sum	
-		//	for(A.getRows()) {
-
-		//	}
 		}
 	}
 }

@@ -9,8 +9,8 @@ instance_type = m1.small
 #instance_type = c1.xlarge # max 20
 #instance_type = hi1.4xlarge # max 2
 #instance_type = hs1.8xlarge # max 2
-#num_instances = 10
-num_instances = 3
+num_instances = 10
+#num_instances = 3
 #num_instances = 20 # total max quota 20
 #num_instances = 2
 
@@ -31,36 +31,13 @@ run: compile jar hadoop
 
 runemr: compile jar s3 emr
 
-compile:
-	javac -classpath $(jars) -d PageRank PageRank/PageRank.java
-	#javac -classpath $(jars) -d WordCount WordCount/WordCount.java
-	#javac -classpath mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank.java
-
-jar:
-	#jar -cf WordCount.jar -C WordCount/ . 
-	jar -cf PageRank.jar -C PageRank/ . 
-	#jar -cf PageRank.jar -C PageRank/ . -C commons-math/commons-math3-3.2/commons-math3-3.2/ .
-	#jar -cvf PageRank.jar -C PageRank/ . -C commons-math/commons-math3-3.2/commons-math3-3.2/ . -C jsoup/ .
-	#jar -cvf PageRank.jar PageRank commons-math3-3.2.jar
-	#jar -cvf PageRank.jar -C PageRank/ . commons-math3-3.2.jar
-
 hadoop: 
-	rm -rf david78k-ids/results/PageRank.inlink.out
+	#rm -rf david78k-ids/results/PageRank.inlink.out
 	#hadoop-1.0.3/bin/hadoop dfs -rmr $(bucket)/results
-	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/100.xml
-	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
-	#hadoop-1.0.3/bin/hadoop jar PageRank.jar --main-class PageRank.PageRank input output
+	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
+	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
+	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
 	#hadoop-1.0.3/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
-
-wordcount:
-	javac -classpath $(jars) -d WordCount WordCount/WordCount.java
-	jar -cf WordCount.jar -C WordCount/ . 
-	hadoop-1.0.3/bin/hadoop dfs -rmr output
-	hadoop-1.0.3/bin/hadoop jar WordCount.jar WordCount data/100.xml output
-	hadoop-1.0.3/bin/hadoop dfs -cat output/part-00000 | tail
-
-s3:
-	s3cmd put PageRank.jar s3://$(bucket)/job/PageRank.jar 
 
 emr:
 	emr-cli/elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \
@@ -69,11 +46,15 @@ emr:
 	--main-class PageRank.PageRank \
 	--log-uri s3n://$(bucket)/logs \
 	--arg $(bucket) \
-	--arg s3://$(bucket)/input/1000.xml 
+	--arg s3://$(bucket)/input/1000000.xml 
+	#--arg s3://$(bucket)/input/1000.xml 
 	#--arg $(bucket) 
 
 	#--arg s3://$(bucket)/input/100.xml 
 	#--args $(bucket),s3://$(bucket)/input/100.xml
+
+s3:
+	s3cmd put PageRank.jar s3://$(bucket)/job/PageRank.jar 
 
 upload:
 	git add .
@@ -83,4 +64,22 @@ upload:
 tar:
 	tar cvf PageRank.tar report.txt PageRank/PageRank.java PageRank.jar
 	#tar cvf PageRank.tar report.txt PageRank/*.java PageRank.jar
+
+compile:
+	javac -classpath $(jars) -d PageRank PageRank/PageRank.java
+	#javac -classpath $(jars) -d WordCount WordCount/WordCount.java
+	#javac -classpath mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank.java
+
+jar:
+	#jar -cf WordCount.jar -C WordCount/ . 
+	jar -cf PageRank.jar -C PageRank/ . 
+	#jar -cf PageRank.jar -C PageRank/ . -C commons-math/commons-math3-3.2/commons-math3-3.2/ .
+	#jar -cvf PageRank.jar -C PageRank/ . commons-math3-3.2.jar
+
+wordcount:
+	javac -classpath $(jars) -d WordCount WordCount/WordCount.java
+	jar -cf WordCount.jar -C WordCount/ . 
+	hadoop-1.0.3/bin/hadoop dfs -rmr output
+	hadoop-1.0.3/bin/hadoop jar WordCount.jar WordCount data/100.xml output
+	hadoop-1.0.3/bin/hadoop dfs -cat output/part-00000 | tail
 
