@@ -9,8 +9,8 @@ instance_type = m1.small
 #instance_type = c1.xlarge # max 20
 #instance_type = hi1.4xlarge # max 2
 #instance_type = hs1.8xlarge # max 2
-num_instances = 10
-#num_instances = 3
+#num_instances = 10
+num_instances = 3
 #num_instances = 20 # total max quota 20
 #num_instances = 2
 
@@ -34,7 +34,8 @@ runemr: compile jar s3 emr
 hadoop: 
 	#rm -rf david78k-ids/results/PageRank.inlink.out
 	#hadoop-1.0.3/bin/hadoop dfs -rmr $(bucket)/results
-	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
+	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/enwiki.xml
+	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
 	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
 	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
 	#hadoop-1.0.3/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
@@ -46,8 +47,8 @@ emr:
 	--main-class PageRank.PageRank \
 	--log-uri s3n://$(bucket)/logs \
 	--arg $(bucket) \
-	--arg s3://$(bucket)/input/1000000.xml 
-	#--arg s3://$(bucket)/input/1000.xml 
+	--arg s3://$(bucket)/input/1000.xml 
+	#--arg s3://$(bucket)/input/1000000.xml 
 	#--arg $(bucket) 
 
 	#--arg s3://$(bucket)/input/100.xml 

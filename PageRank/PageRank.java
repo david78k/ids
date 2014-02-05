@@ -38,7 +38,10 @@ public class PageRank {
 	
 	final static double d = 0.85;
 	static int N = 0; // total number of pages
-	final static int MAX_ITER = 8;
+	final static int MAX_ITER = 2;
+	//final static int MAX_ITER = 8;
+	//final static double THRESHOLD = 5.0; // pagerank score threshold to show top ranked pages 
+	final static double THRESHOLD = 0.0; // 0 means to show all the pages 
 	private static int iter = 1; // current iteration
 	private static int pid = 0; // unique page id
 
@@ -158,6 +161,15 @@ public class PageRank {
 		//conf.setSortComparatorClass(LongWritable.DecreasingComparator.class);
 		conf.setOutputKeyComparatorClass(DescendingDoubleComparator.class);
 
+		// read N from file
+		BufferedReader br=new BufferedReader(new InputStreamReader(fs.open(new Path(outputdir + "/" + NOUT))));
+                String line = br.readLine();
+                if (line != null){
+			N = Integer.parseInt(line.trim().substring(2));
+                        System.out.println("N = " + N + ", (" + line + ")");
+			conf.set("N", N + "");
+                }
+
 		JobClient.runJob(conf);
 		
 		fs.rename(src, dest);
@@ -168,6 +180,7 @@ public class PageRank {
  	 *  output: <score, title> = <DoubleWritable, Text>
   	 */
 	public static class SortMapper extends MapReduceBase implements Mapper<LongWritable, Text, DoubleWritable, Text> {
+		private int N;
 		private Text word = new Text();
 		private static StringBuffer sb = new StringBuffer();
 
@@ -178,8 +191,14 @@ public class PageRank {
 			String title = tok.nextToken();
 			word.set(title);
 			double score = Double.parseDouble(tok.nextToken());
-			if (score >= 5.0/N)
+		//	if (score >= 5.0/N)
+		//	if (score >= 0.1/N)
+			if (score >= THRESHOLD/N)
 				output.collect(new DoubleWritable(score), word);
+		}
+
+		public void configure(JobConf conf) {
+			N = Integer.parseInt(conf.get("N"));
 		}
 	}
 
