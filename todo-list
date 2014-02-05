@@ -1,3 +1,6 @@
+Q. is a title case sensitive? should we distinguish upper case and lower case?
+  => yes. see the Q&A slide
+
 Q.what is #section name? how to find out anchors like section names?
 
 Q. what if there are the same pageranks in the map phase when sorting?

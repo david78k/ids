@@ -38,8 +38,8 @@ public class PageRank {
 	
 	final static double d = 0.85;
 	static int N = 0; // total number of pages
-	//final static int MAX_ITER = 2;
-	final static int MAX_ITER = 8;
+	final static int MAX_ITER = 2;
+	//final static int MAX_ITER = 8;
 	final static double THRESHOLD = 5.0; // pagerank score threshold to show top ranked pages 
 	//final static double THRESHOLD = 0.0; // 0 means to show all the pages 
 	private static int iter = 1; // current iteration
@@ -87,7 +87,7 @@ public class PageRank {
 			+ ", outputdir = " + pr.outputdir
 			+ ", outputpath = " + pr.outputpath); 
 
-		System.out.println("Parsing the inlinks ...");
+		System.out.println("Parsing the outlinks ...");
 		pr.parse();
 		System.out.println("Computing the number of total pages ...");
 		pr.totalpages();
@@ -287,7 +287,7 @@ public class PageRank {
 		} catch (IOException e) {}
 	}
 
-	/** input: <file, line containing title inlinks> = <LongWritable, Text>
+	/** input: <file, line containing title outlinks> = <LongWritable, Text>
 	 *  output: <page, pagerank> = <Page, Double>
 	 */
 	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
@@ -334,7 +334,7 @@ public class PageRank {
 	}
 
 	/** input: <Page, pagerank list)> = <Page, Double>
-	 *  output: <title, pagerank with inlinks> = <Text, Page>
+	 *  output: <title, pagerank with outlinks> = <Text, Page>
 	 */
 	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Text, Text, Page> {
 		private int N;
@@ -351,7 +351,7 @@ public class PageRank {
 				double npr = Double.parseDouble(tok.nextToken());	
 				if(tok.hasMoreTokens() && tok.nextToken().equals("PageRankPageNode"))
 					isPage = true;
-				// next part inlinks
+				// next part outlinks
 				while(tok.hasMoreTokens())
 					links.add(tok.nextToken());
 				//System.out.print(npr + " ");
@@ -466,6 +466,10 @@ public class PageRank {
 		fs.rename(src, dest);
 	}
 
+	/** parse mapper: parses <person> tag from input xml file and produces <title, page> pair
+	 *  input: <file, person tag>
+	 *  output: <title, page> = <Text, Page>
+	 */
 	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
 	public static class ParseMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Page> {
 		/** extract Page data structure */
@@ -477,6 +481,13 @@ public class PageRank {
 	
 			Element e = doc.select("title").first();
 			String title = e.text();
+
+			if (title.startsWith("#top") 	
+				|| title.contains(":") 
+				|| title.contains ("#") 
+				|| title.contains ("/"))
+				return;
+
 			e = doc.select("text").first();
 			String text = doc.body().text();
 			text = e.text();
@@ -543,7 +554,7 @@ public class PageRank {
 			int sum = 0;
 			Set set = new HashSet();
 			ArrayList list = new ArrayList();
-			Text inlinks = new Text();
+			Text outlinks = new Text();
 			StringBuffer sb = new StringBuffer();
 			while (values.hasNext()) {
 				Page p = values.next();
@@ -554,9 +565,9 @@ public class PageRank {
 					set.add(p.title);
 				}	
 			}
-			inlinks.set(sb.toString());
+			outlinks.set(sb.toString());
 
-			output.collect(key, inlinks);
+			output.collect(key, outlinks);
 		}
 	}
 

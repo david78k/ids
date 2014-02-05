@@ -25,20 +25,20 @@ num_instances = 10
 
 all: run upload
 
-run: compile jar hadoop
+run: compile jar hadoop2
 	#java -classpath .:$(jars) PageRank
 	#java -classpath .:mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank
 
 runemr: compile jar s3 emr
 
-hadoop: 
+hadoop2: 
 	#rm -rf david78k-ids/results/PageRank.inlink.out
 	#hadoop-1.0.3/bin/hadoop dfs -rmr $(bucket)/results
-	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/enwiki.xml
+	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/enwiki.xml
 	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
-	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
+	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
 	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
-	#hadoop-1.0.3/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
+	hadoop-1.0.3/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
 
 emr:
 	emr-cli/elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \
