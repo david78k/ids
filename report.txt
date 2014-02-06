@@ -8,7 +8,7 @@ Description
 - we also developed from small data to original huge data (ultimately the data given to
   us). For small data, we had to split the original data into small size
 (first 100 lines, 1000 lines, 10000lines, 1million lines, and 5 million
-lines). If we succeeded with small data, we incrementally grow the data size.
+lines). If we succeeded with small data, we incrementally grew the data size.
  
 2. Difficulties we faced:
 - parsing xml page was not easy. at first, we were trying to use a parser
