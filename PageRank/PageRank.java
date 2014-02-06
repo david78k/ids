@@ -38,8 +38,8 @@ public class PageRank {
 	
 	final static double d = 0.85;
 	static int N = 0; // total number of pages
-	final static int MAX_ITER = 2;
-	//final static int MAX_ITER = 8;
+	//final static int MAX_ITER = 2;
+	final static int MAX_ITER = 8;
 	final static double THRESHOLD = 5.0; // pagerank score threshold to show top ranked pages 
 	//final static double THRESHOLD = 0.0; // 0 means to show all the pages 
 	private static int iter = 1; // current iteration
