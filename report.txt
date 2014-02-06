@@ -58,6 +58,9 @@ create a tmp directory for this.
 - it was impossible to have two output classes during mapphase in pagerank
   job. Hence, I made use of the Page data structure.
 
+- the data given is so large, I coudn't handle the disk space even on local
+  cluster machines
+
 3. How we solved the problems:
 - to solve the output file conflict problems, I created files with the current
 date and time.  

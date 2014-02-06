@@ -34,11 +34,11 @@ runemr: compile jar s3 emr
 hadoop2: 
 	#rm -rf david78k-ids/results/PageRank.inlink.out
 	#hadoop-1.0.3/bin/hadoop dfs -rmr $(bucket)/results
-	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/enwiki.xml
-	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
-	hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
+	hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/enwiki.xml
+	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
+	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
 	#hadoop-1.0.3/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
-	hadoop-1.0.3/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
+	hadoop/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
 
 emr:
 	emr-cli/elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \
@@ -66,6 +66,11 @@ upload:
 tar:
 	tar cvf PageRank.tar report.txt PageRank/PageRank.java PageRank.jar
 	#tar cvf PageRank.tar report.txt PageRank/*.java PageRank.jar
+
+show:
+	hadoop fs -cat $(bucket)/results/PageRank.n.out
+	hadoop fs -cat david78k-ids/results/PageRank.iter1.out | nl
+	hadoop fs -cat david78k-ids/results/PageRank.iter8.out | nl
 
 compile:
 	javac -classpath $(jars) -d PageRank PageRank/PageRank.java
