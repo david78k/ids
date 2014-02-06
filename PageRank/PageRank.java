@@ -191,8 +191,7 @@ public class PageRank {
 			String title = tok.nextToken();
 			word.set(title);
 			double score = Double.parseDouble(tok.nextToken());
-		//	if (score >= 5.0/N)
-		//	if (score >= 0.1/N)
+
 			if (score >= THRESHOLD/N)
 				output.collect(new DoubleWritable(score), word);
 		}
@@ -296,7 +295,7 @@ public class PageRank {
 		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			// map phase: read N and compute column sum 
 			// reduce phase: compute rank
-			int count = 0;
+		//	int count = 0;
 			StringBuffer sb = new StringBuffer();
 
 			String line = value.toString();
@@ -312,20 +311,26 @@ public class PageRank {
 			}
 			
 			while (tok.hasMoreTokens()) {
-				String link = tok.nextToken();
-				links.add(link);
-				sb.append(link + "\t");
-				count ++;
+				String link = tok.nextToken().trim();
+				if(!link.equals("")) {
+					links.add(link);
+					sb.append(link + "\t");
+				//	count ++;
+				}
 			}
-			//output.collect(new Text("Mapper: " + N + "_" + pagerank), new Text((pagerank/count) + "\tPageRankPageNode\t" + sb.toString()));
-			output.collect(new Text(title), new Text((pagerank/count) + "\tPageRankPageNode\t" + sb.toString()));
+
+			// insert itself
+			output.collect(new Text(title), new Text("0\tPageRankPageNode\t" + sb.toString()));
+			//output.collect(new Text(title), new Text((pagerank/count) + "\tPageRankPageNode\t" + sb.toString()));
 			
+			// insert others
 			double share = -1;
 			int size = links.size();	
-			if (size > 0)
+			if (size > 0) {
 				share = pagerank/size;
-			for (String link: links) 
-				output.collect(new Text(link), new Text(share + ""));
+				for (String link: links) 
+					output.collect(new Text(link), new Text(share + ""));
+			}
 		}
 		
 		public void configure(JobConf conf) {
@@ -401,8 +406,6 @@ public class PageRank {
 		JobClient.runJob(conf);
 		
 		fs.rename(src, dest);
-
-		//finalize(conf);
 	}
 
 	public static class TotalPagesMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {

@@ -72,6 +72,9 @@ phase. The problem with this approach is the precision of double number
 However, double number compuatation is not accurate anyway even with Double
 class.
 
+- shared variables for Mapper and Reducer with global variables in distributed
+  mode while they work in single node
+
 4. What we learned
 - long process from input data to output data. there are too many steps, too
   many small things to take care of although the core algorithm is simple
