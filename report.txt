@@ -100,7 +100,6 @@ on developing our application
 5. Optimizations
 - static variables instead of local variables 
 - merged some map and reduce phases into one
-- sparse matrix (deprecated) for the adjacency matrix A as most of the entries are zero
 
 6. Work contribution division
 - Yifei: 
