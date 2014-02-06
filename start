@@ -1,6 +1,0 @@
-javac PageRank.java
-java PageRank
-
-git add .
-git commit -a -m update
-git push

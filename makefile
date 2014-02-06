@@ -70,8 +70,8 @@ tar:
 
 show:
 	hadoop fs -cat $(bucket)/results/PageRank.n.out
-	hadoop fs -cat $(basedir)/PageRank.iter1.out | head
-	hadoop fs -cat $(basedir)/PageRank.iter8.out | head
+	hadoop fs -cat $(basedir)/PageRank.iter1.out | head | nl
+	hadoop fs -cat $(basedir)/PageRank.iter8.out | head | nl
 
 compile:
 	javac -classpath $(jars) -d PageRank PageRank/PageRank.java
