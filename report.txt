@@ -53,33 +53,29 @@ initialized and run the jar application
   org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory
 file:/root/datascience/david78k-ids/results already exists
   It is so embarrassing that we can't overwrite existing directory. I had to
-create new directories for this.
+create new directories for this. To solve the output file name conflict problems, I created files with the current date and time.  
 
-- writable data structure for page that includes title and inlinks has complex
+- Writable data structure for a page that includes title and outlinks has complex
   format
 
 - following the file formatting was the hardest part in this project, not the
   algorithms
 
-- it was impossible to have two output classes during mapphase in pagerank
-  job. Hence, I made use of the Page data structure.
+- it was impossible to have two output classes during map phase in pagerank
+  job. Hence, I made use of the Page data structurei to contain all the
+outputs.
 
-- the data given is so large, I coudn't handle the disk space even on local
-  cluster machines
+- the data given is so large, I coudn't handle the disk space even on local cluster machines. Thus, I reduced the hdfs replication factor to 1.
 
-3. How we solved the problems:
-- to solve the output file conflict problems, I created files with the current
-date and time.  
- 
-- As hadoop doesn' allow multiple input/output, i used string for both page
+- As hadoop doesn't allow multiple input/output, i used string for both page
 ranks and links to store/recover the link graph from map phase to reduce
 phase. The problem with this approach is the precision of double number
-(decimal point below 17 digits).
-However, double number compuatation is not accurate anyway even with Double
-class.
+(decimal point below 17 digits). However, double number compuatation is not accurate anyway even with Double
+class.  
 
-- shared variables for Mapper and Reducer with global variables in distributed
-  mode while they work in single node
+- shared variables for Mapper and Reducer using global variables in distributed
+  mode does not work while they work in single node. so, I had to use Jobconf
+to set/get the variables for Mapper and Reducer class.
 
 4. What we learned
 - long process from input data to output data. there are too many steps, too
@@ -100,12 +96,12 @@ on developing our application
   quite important.
  
 5. Optimizations
-- static variables instead of local variables 
+- used static variables instead of local variables in map and reduce methods
 - merged some map and reduce phases into one
 
 6. Work contribution division
 - Yifei: 
-- Tae: implemented job 1,2,3,4 and tested/deployed the code with EMR on AWS
-	parse XML file, compute the total number of pages, pagerank iteration 1 through 8, sort the results, input/output file management 
+- Tae: implemented job 1,2,3,4 and tested/deployed the code with EMR on AWS,
+  draw up the report, parsed XML file, computed the total number of pages, pagerank iteration 1 through 8, sorted the results, input/output file management 
 
 
