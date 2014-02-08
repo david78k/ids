@@ -1,46 +1,48 @@
 Description
 
 1. The steps we took to develop the code:
-- 1) non-MR on local machine: thought that it was going to be easy to convert
+- 1) First started developing non-MR (MapReduce) pure Java implementation of the PageRank algorithm on local machine without Hadoop: thought that it was going to be easy to convert
   non-MR to MR.
-- 2) MR with Hadoop on local machine
-- 3) EMR on AWS
-- we also developed from small data to original huge data (ultimately the data given to
+- 2) MR with Hadoop on local machine: implemented the algorhtm with MapReduce
+  functions, set up Hadoop on local machine and run
+  the algorithm on a single node
+- 3) EMR and S3 on AWS: uploaded the data and ran the alogirhtm on EMR
+- we also developed from small data to original huge data (the data given to
   us). For small data, we had to split the original data into small size
 (first 100 lines, 1000 lines, 10000lines, 1million lines, and 5 million
 lines). If we succeeded with small data, we incrementally grew the data size.
  
-2. Difficulties we faced:
+2. Difficulties we faced and how we solved the problems:
 - parsing xml page was not easy. at first, we were trying to use a parser
 library, but we couldn't get it right. After all, we parsed manually to get
-what we want.
+what we want. Then, we realized the need of the XMLInputFormat library
+provided Mahout community which we finally used.
 
-- too many specifications to follow
+- too many specifications to follow: although simplified, there were still
+  lots of instructions to obey. For example, file input/output name, which
+links to parse and not
 
-- data manipulation: sort, order, key-valye mapping, indexing,
+- data manipulation: sort, order, key-valye mapping, indexing
   
-- creating a jar file: combine separate files (external jars) into one was hard
+- creating a jar file: combining separate files (external jar files) into a single file was so complicated
 
-- normalizing matrices to make the matrix column stochastic
+- arranging, managing, and adjusting output directory layout was clumsy
 
-- arranging (managing, adjusting) output directory layout is clumsy
+- apache hadoop mapreduce related classes had dependency complex. setup/import
+  related classes was hard and time-consuming
 
-- apache hadoop mapreduce related classes dependency complex, setup/import
-  related classes
-
-- mapreduce class type input/output, key/value class type so complex and
+- mapreduce class type input/output and key/value class type are so complex and
   confusing
 
-- Although the required mapreduce API (version 1.0.3) that is quite old supports both old API (mapred.*) and new API (mapreduce.*), the old API doesn't work for some cases. should have
-  been noted beforehand
+- Although the required mapreduce API (version 1.0.3) that is very old supports both old API (mapred.*) and new API (mapreduce.*), the old API doesn't work for some cases. should have been noted beforehand
 
-- long procedure to run pagerank on EMR: installing many things to use command line tool for running client scripts
+- long procedure to run pagerank using EMR and S3: had to install many things to use command line tools (s3cmd and elastic-mapreduce) for running client scripts
 
 - testing and debugging are pains in the ass. every time the code has been changed, it has to
   be compiled/jared/uploaded. the worst thing is to wait for the cluster to be
 initialized and run the jar application
 
-- s3 API for Java to store output into s3bucket/results folder
+- using s3 Java API to store output into s3bucket/results folder was so hard
 
 - output file arrangement is messed up. naming files to meet the requirements
   like inlinks.out, n.out ...
@@ -51,7 +53,7 @@ initialized and run the jar application
   org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory
 file:/root/datascience/david78k-ids/results already exists
   It is so embarrassing that we can't overwrite existing directory. I had to
-create a tmp directory for this.
+create new directories for this.
 
 - writable data structure for page that includes title and inlinks has complex
   format
