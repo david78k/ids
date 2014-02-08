@@ -98,6 +98,7 @@ on developing our application
 5. Optimizations
 - used static variables instead of local variables in map and reduce methods
 - merged some map and reduce phases into one
+- various local optimizations: for/while loop
 
 6. Work contribution division
 - Yifei: 
