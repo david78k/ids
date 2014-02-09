@@ -45,19 +45,19 @@ Description
 
 - Exception in thread "main" org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory
 file:/root/datascience/david78k-ids/results already exists
-  It is frustrating that we can't overwrite existing directory. I had to create new directories for this. To solve the output file name conflict problems, I created files with the current date and time.  
+  It is frustrating that we can't overwrite existing directory. we had to create new directories for this. To solve the output file name conflict problems, we created files with the current date and time.  
 
 - Writable data structure for a page that includes title and outlinks has complex format
 
 - following the file formatting was the hardest part in this project, not the algorithms
 
-- it was impossible to have two output classes during map phase in pagerank job. Hence, I made use of the Page data structure to contain all the outputs.
+- it was impossible to have two output classes during map phase in pagerank job. Hence, we made use of the Page data structure to contain all the outputs.
 
-- the data given was so large, I coudn't handle the disk space even on local cluster machines. Thus, I reduced the hdfs replication factor to 1.
+- the data given was so large, we coudn't handle the disk space even on local cluster machines. Thus, we reduced the hdfs replication factor to 1.
 
 - As hadoop doesn't allow multiple input/output, i used string for both page ranks and links to store/recover the link graph from map phase to reduce phase. The problem with this approach is the precision of double number (decimal point below 17 digits). However, double number computation is not accurate anyways even with Double class.  
 
-- shared variables for Mapper and Reducer using global variables in distributed mode does not work while they work in single node. so, I had to use Jobconf to set/get the variables for Mapper and Reducer class.
+- shared variables for Mapper and Reducer using global variables in distributed mode does not work while they work in single node. so, we had to use Jobconf to set/get the variables for Mapper and Reducer class.
 
 *************************************************************************
 
@@ -73,7 +73,7 @@ file:/root/datascience/david78k-ids/results already exists
 - not all jobs can be done in parallel (e.g., final sort to produce a single sorted file)
 
 - easier to run mapreduce application on AWS EMR rather than running on local machine which requires lots of work to set things up. this allows us to focus on developing our application 
-- I spent tremendous amount of time finding APIs that work with our hadoop version. Version compatibility is
+- We spent tremendous amount of time finding APIs that work with our hadoop version. Version compatibility is
   quite important.
  
 *************************************************************************
@@ -93,7 +93,8 @@ file:/root/datascience/david78k-ids/results already exists
 *************************************************************************
 
 contribution division
-- Yifei: 
-- Tae: implemented job 1,2,3,4 and tested/deployed the code with EMR on AWS, drew up the report, parsed XML file, computed the total number of pages, pagerank iteration 1 through 8, sorted the results, input/output file
-management 
+- Yifei: job 3,4, pagerank and sort 
+- Tae: implemented main() function, workflow, job 1,2,3,4 and merged/deployed/tested the code with EMR on AWS, 
+  drew up the report, parsed XML file, computed the total number of pages,
+pagerank iteration 1 through 8, sorted the results, input/output file management 
 

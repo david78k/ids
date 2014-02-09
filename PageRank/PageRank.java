@@ -98,23 +98,6 @@ public class PageRank {
 		//pr.wordcount();
 	}
 	
-	void finalize(JobConf conf) throws Exception {
-		FileSystem fs = FileSystem.get(new URI(outputdir), conf);
-		Path src = new Path(outputpath + "/" + OUTLINKOUT);
-		Path dest = new Path(outputdir + "/" + OUTLINKOUT);
-
-		try {
-			fs.delete(dest, true);
-			fs.rename(src, dest);
-
-			src = new Path(outputpath + "/" + NOUT);
-			dest = new Path(outputdir + "/" + NOUT);
-			
-			fs.delete(dest, true);
-			fs.rename(src, dest);
-		} catch (FileNotFoundException e) {}
-	}
-	
 	public static class DescendingDoubleComparator extends DoubleWritable.Comparator {
 		public int compare (byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
 			return -super.compare (b1, s1, l1, b2, s2, l2);
