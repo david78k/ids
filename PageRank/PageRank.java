@@ -242,6 +242,7 @@ public class PageRank {
 	 */
 	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
 		private int N;
+		ArrayList<String> links = new ArrayList<String>();
 
 		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			// map phase: read N and compute column sum 
@@ -250,7 +251,6 @@ public class PageRank {
 
 			String line = value.toString();
 
-			ArrayList<String> links = new ArrayList<String>();
 			StringTokenizer tok = new StringTokenizer(line);
 			String title = tok.nextToken();
 		
@@ -291,9 +291,9 @@ public class PageRank {
 	 */
 	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Text, Text, Page> {
 		private int N;
+		ArrayList<String> links = new ArrayList<String>();
 
 		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Page> output, Reporter reporter) throws IOException {
-			ArrayList<String> links = new ArrayList<String>();
 			double sum = 0;
 			boolean isPage = false;
 			while (values.hasNext()) {
@@ -366,8 +366,6 @@ public class PageRank {
 	public static class TotalPagesReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, Text> {
 		private static int sum = 0;
 		public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-			//System.out.println(key.toString() + ", " + values);
-		//	int sum = 0;
 			while (values.hasNext()) {
 				sum += values.next().get();
 			}
@@ -529,12 +527,14 @@ public class PageRank {
  	*   output: <title, string of outlink list> = <Text, Text>
  	*/ 
 	public static class ParseReducer extends MapReduceBase implements Reducer<Text, Page, Text, Text> {
+			static Set<String> set = new HashSet<String>(); // no duplicate link
+			static Text outlinks = new Text();
+			static StringBuffer sb = new StringBuffer();
 
 		public void reduce(Text key, Iterator<Page> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-		//	int sum = 0;
-			Set<String> set = new HashSet<String>(); // no duplicate link
-			Text outlinks = new Text();
-			StringBuffer sb = new StringBuffer();
+			//Set<String> set = new HashSet<String>(); // no duplicate link
+			//Text outlinks = new Text();
+			//StringBuffer sb = new StringBuffer();
 
 			while (values.hasNext()) {
 				Page p = values.next();
