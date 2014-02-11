@@ -513,7 +513,7 @@ public class PageRank {
 
 		public void reduce(Text key, Iterator<Page> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 		//	int sum = 0;
-			Set<String> set = new HashSet<String>(); // no duplicate tlink
+			Set<String> set = new HashSet<String>(); // no duplicate link
 			Text outlinks = new Text();
 			StringBuffer sb = new StringBuffer();
 
@@ -579,17 +579,18 @@ public class PageRank {
 					if(p.title.equals(NOREDLINK))
 						isRedlink = false;
 					else {
-						String link = p.title;
+						//String link = p.title;
+						/*
 						if( !link.contains(":") // 1. interwiki
 							//&& !link.matchs("#section name")
 							&& !link.contains("#") // 2. section
 							&& !link.contains("/") // 4. subpage
 							&& !link.equals(title)// not title
 							//&& !// no duplicate
-						) { 
+						) { */
 							sb.append(p.title + "\t");
 							set.add(p.title);
-						}
+						//}
 					}
 				}	
 			}
