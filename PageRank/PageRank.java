@@ -405,18 +405,9 @@ public class PageRank {
 	void filter() throws Exception {
 		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("filter red links");
-		conf.setNumReduceTasks(1);
-
-		Path src = new Path(outputpath + "/outlink/part-00000");
-		Path dest = new Path(outputdir + "/" + OUTLINKOUT);
-
-		FileSystem fs = FileSystem.get(new URI(outputdir), conf);
-		try {
-			fs.delete(dest, true);
-		} catch (FileNotFoundException e) {}
 
 		conf.setOutputKeyClass(Text.class);
-		conf.setOutputValueClass(Page.class);
+		conf.setOutputValueClass(Text.class);
 
 		conf.setMapperClass(RedlinkFilterMapper.class);
 		conf.setReducerClass(RedlinkFilterReducer.class);
@@ -427,6 +418,34 @@ public class PageRank {
                 //FileInputFormat.setInputPaths(conf, new Path(outputdir + "/PageRank.inlink.out"));
                 FileInputFormat.setInputPaths(conf, new Path(outputpath));
                 FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/outlink"));
+
+		JobClient.runJob(conf);
+
+		// merge the results
+		conf = new JobConf(PageRank.class);
+		conf.setJobName("merge filtered links");
+		conf.setNumReduceTasks(1);
+
+		Path src = new Path(outputpath + "/filter/part-00000");
+		Path dest = new Path(outputdir + "/" + OUTLINKOUT);
+
+		FileSystem fs = FileSystem.get(new URI(outputdir), conf);
+		try {
+			fs.delete(dest, true);
+		} catch (FileNotFoundException e) {}
+
+		conf.setOutputKeyClass(Text.class);
+		conf.setOutputValueClass(Text.class);
+
+		//conf.setMapperClass(RedlinkFilterMapper.class);
+		conf.setReducerClass(RedlinkReducer.class);
+
+		conf.setInputFormat(TextInputFormat.class);
+		conf.setOutputFormat(TextOutputFormat.class);
+
+                //FileInputFormat.setInputPaths(conf, new Path(outputdir + "/PageRank.inlink.out"));
+                FileInputFormat.setInputPaths(conf, new Path(outputpath + "/outlink"));
+                FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/filter"));
 
 		JobClient.runJob(conf);
 
@@ -535,73 +554,83 @@ public class PageRank {
 	}
 
 	/** 
- 	*   input: <title, string of outlink list> = <Text, Text>
+ 	*   input: <file, (title, string of outlink list)> = <LongWritable, Text>
  	*   output: <outlink, title> = <Text, Text>
  	*/ 
-	public static class RedlinkFilterMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Page> {
+	public static class RedlinkFilterMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
+		private static final Text NOREDLINKTEXT = new Text(NOREDLINK);
 		/** extract Page data structure */
-		public void map(LongWritable key, Text value, OutputCollector<Text, Page> output, Reporter reporter) throws IOException {
+		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			String line = value.toString();
 			StringTokenizer tok = new StringTokenizer(line);
 			String title = tok.nextToken();
 			Text titleText = new Text(title);
 			
 			//System.out.println(line + ", title = " + title);
-			output.collect(titleText, new Page(NOREDLINK, 1));	
+			output.collect(titleText, NOREDLINKTEXT);	
 
 			while(tok.hasMoreTokens()) {
-				output.collect(new Text(tok.nextToken()), new Page(title, 1));	
+				output.collect(new Text(tok.nextToken()), titleText);	
 			}
 		}				
 	}
 
 	/** 
- 	*   input: <title, outlink page> = <Text, Page>
+ 	*   input: <title, outlink string> = <Text, Text>
  	*   output: <title, string of outlink list> = <Text, Text>
  	*/ 
-	public static class RedlinkFilterReducer extends MapReduceBase implements Reducer<Text, Page, Text, Text> {
-		public void reduce(Text key, Iterator<Page> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+	public static class RedlinkFilterReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
+		static Text text = new Text();
+		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			boolean isRedlink = true;
-			String title = key.toString();
-
-			// remove red link
 
 			Set<String> set = new HashSet<String>(); // no duplicate tlink
-			Text outlinks = new Text();
-			StringBuffer sb = new StringBuffer();
+			String link1;
 
 			while (values.hasNext()) {
-				Page p = values.next();
-				//System.out.println(p.toString());
-				if(p !=null && !p.title.equals(key.toString()) // no self-refrence link
-					// no red links
-				) {
-					if(p.title.equals(NOREDLINK))
-						isRedlink = false;
-					else {
-						//String link = p.title;
-						/*
-						if( !link.contains(":") // 1. interwiki
-							//&& !link.matchs("#section name")
-							&& !link.contains("#") // 2. section
-							&& !link.contains("/") // 4. subpage
-							&& !link.equals(title)// not title
-							//&& !// no duplicate
-						) { */
-							sb.append(p.title + "\t");
-							set.add(p.title);
-						//}
-					}
-				}	
+				link1 = values.next().toString();
+				if(link1.equals(NOREDLINK))
+					isRedlink = false;
+				set.add(link1);
 			}
-			
-			if(!isRedlink) {
-				outlinks.set(sb.toString());
-				output.collect(key, outlinks);
+
+			if(isRedlink) return;
+
+			String title = key.toString();
+
+			for (String link: set) {
+				if( !link.contains(":") // 1. interwiki
+					//&& !link.matchs("#section name")
+					&& !link.contains("#") // 2. section
+					&& !link.contains("/") // 4. subpage
+					&& !link.equals(title)// not title
+				) { 
+					text.set(link);
+					output.collect(text, key);
+				}
 			}
 		}
 	}
 
+	/** 
+ 	*   input: <title, outlink string> = <Text, Text>
+ 	*   output: <title, string of outlink list> = <Text, Text>
+ 	*/ 
+	public static class RedlinkReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
+		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+			Text outlinks = new Text();
+			StringBuffer sb = new StringBuffer();
+
+			while (values.hasNext()) {
+				String link = values.next().toString();
+				
+				sb.append(link + "\t");
+			}
+			outlinks.set(sb.toString());
+			output.collect(key, outlinks);
+		}
+	}
+	
 	static class Page implements WritableComparable<Page> {
 		String title;
 		double pagerank = 1;

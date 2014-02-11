@@ -93,8 +93,8 @@ file:/root/datascience/david78k-ids/results already exists
 *************************************************************************
 
 contribution division
-- Yifei: job 3,4 (pagerank and sort) 
-- Tae: implemented main() function, workflow, job 1,2,3,4 and merged/deployed/tested the code with EMR on AWS, 
+- Yifei: job 4,5 (pagerank and sort) 
+- Tae: implemented main() function, workflow, job 1,2,3,4,5 and merged/deployed/tested the code with EMR on AWS, 
   drew up the report, parsed XML file, computed the total number of pages,
 pagerank iteration 1 through 8, sorted the results, input/output file management 
 
