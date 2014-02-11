@@ -582,11 +582,11 @@ public class PageRank {
  	*/ 
 	public static class RedlinkFilterReducer extends MapReduceBase implements Reducer<Text, Page, Text, Text> {
 		public void reduce(Text key, Iterator<Page> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+			boolean isRedlink = true;
 			String title = key.toString();
 
 			// remove red link
-			Page redlinkflag = values.next();
-			if(!redlinkflag.title.equals(NOREDLINK)) return;
+			//Page redlinkflag = values.next();
 
 			Set<String> set = new HashSet<String>(); // no duplicate tlink
 			Text outlinks = new Text();
@@ -598,12 +598,19 @@ public class PageRank {
 				if(p !=null && !p.title.equals(key.toString()) // no self-refrence link
 					// no red links
 				) {
-					sb.append(p.title + "\t");
-					set.add(p.title);
+					if(p.title.equals(NOREDLINK))
+						isRedlink = false;
+					else {
+						sb.append(p.title + "\t");
+						set.add(p.title);
+					}
 				}	
 			}
-			outlinks.set(sb.toString());
-			output.collect(key, outlinks);
+			
+			if(!isRedlink) {
+				outlinks.set(sb.toString());
+				output.collect(key, outlinks);
+			}
 		}
 	}
 
