@@ -22,6 +22,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import org.apache.commons.math3.linear.*;
 import org.apache.commons.io.IOUtils;
 
 import org.apache.mahout.classifier.bayes.XmlInputFormat;
@@ -49,7 +50,15 @@ public class PageRank {
 	final static String ITER1 = "PageRank.iter1.out";
 	final static String ITER8 = "PageRank.iter8.out";
 
-	private static final String NOREDLINK = "*I-AM-NO-RED-LINK*";
+	static Hashtable plist = new Hashtable(); // global page list
+
+	RealVector R0; // initially 1
+	RealVector R;
+	RealMatrix A;
+	Hashtable index = new Hashtable(); // page index for matrix and vector
+
+	Logger logger = Logger.getLogger(PageRank.class.getName());
+	Mapper<String, String, String, String> mapper;
 
 	PageRank() {}
 
@@ -85,6 +94,8 @@ public class PageRank {
 		System.out.println("Computing the PageRanks of " + N + " pages ...");
 		pr.pagerank();
 		System.out.println("All jobs complete.");
+
+		//pr.wordcount();
 	}
 	
 	public static class DescendingDoubleComparator extends DoubleWritable.Comparator {
@@ -104,6 +115,7 @@ public class PageRank {
 		conf.setJobName("secondary sort");
 
 		Path src = new Path(outputpath + "/iter" + iter + "-sort/part-00000");
+		//Path dest = new Path(outputpath + "/" + NOUT);
 		Path dest = new Path(outputdir + "/" + ITER1);
 		if(iter == MAX_ITER)
 			dest = new Path(outputdir + "/" + ITER8);
@@ -113,19 +125,23 @@ public class PageRank {
 			fs.delete(dest, true);
 		} catch (FileNotFoundException e) {}
 
+		//conf.setOutputKeyClass(Text.class);
 		conf.setOutputKeyClass(DoubleWritable.class);
 		conf.setOutputValueClass(Text.class);
 
 		conf.setMapperClass(SortMapper.class);
+		//conf.setCombinerClass(Reduce.class);
 		conf.setReducerClass(SortReducer.class);
 
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
                 FileInputFormat.setInputPaths(conf, new Path(outputpath + "/iter" + iter));
+                //FileOutputFormat.setOutputPath(conf, new Path(outputdir + "/" + ITER1));
                 FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/iter" + iter + "-sort"));
 
 		conf.setNumReduceTasks(1);
+		//conf.setSortComparatorClass(LongWritable.DecreasingComparator.class);
 		conf.setOutputKeyComparatorClass(DescendingDoubleComparator.class);
 
 		// read N from file
@@ -154,6 +170,7 @@ public class PageRank {
 		public void map(LongWritable key, Text value, OutputCollector<DoubleWritable, Text> output, Reporter reporter) throws IOException {
 			String line = value.toString();
 			StringTokenizer tok = new StringTokenizer(line);	
+			//System.out.print(line + ",\t");
 			String title = tok.nextToken();
 			word.set(title);
 			double score = Double.parseDouble(tok.nextToken());
@@ -176,6 +193,8 @@ public class PageRank {
 		private Text word = new Text();
 
 		public void reduce(DoubleWritable key, Iterator<Text> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+			//System.out.println(key.toString() + ", " + values.toString());
+			//System.out.println(key.toString());
 			double score = key.get();
 			String title;
 			//sort R by page rank score
@@ -205,23 +224,25 @@ public class PageRank {
 			}
 		}	
 	}
-/*
+
 	public static class CustomPathFilter implements PathFilter {
 	    @Override
 	    public boolean accept(Path path) {
 	        return false; 
 	    }
 	}
-*/
+
 	void iterate() throws Exception {
 		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("iterate" + iter);
+		//conf.setNumReduceTasks(1);
 		
 		conf.setOutputKeyClass(Text.class);
 		conf.setOutputValueClass(Text.class);
 
 		conf.setMapperClass(PageRankMapper.class);
 		conf.setReducerClass(PageRankReducer.class);
+		//conf.setCombinerClass(Reduce.class);
 
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
@@ -229,6 +250,7 @@ public class PageRank {
 	        FileInputFormat.setInputPaths(conf, new Path(outputpath + "/iter" + (iter - 1)));
 	        FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/iter" + iter));
 		if (iter == 1) {
+                	//FileInputFormat.setInputPaths(conf, new Path(outputpath + "/" + OUTLINKOUT));
 	                FileInputFormat.setInputPaths(conf, new Path(outputdir + "/" + OUTLINKOUT));
 		} 
 
@@ -256,6 +278,7 @@ public class PageRank {
 		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			// map phase: read N and compute column sum 
 			// reduce phase: compute rank
+		//	int count = 0;
 			StringBuffer sb = new StringBuffer();
 
 			String line = value.toString();
@@ -275,11 +298,13 @@ public class PageRank {
 				if(!link.equals("")) {
 					links.add(link);
 					sb.append(link + "\t");
+				//	count ++;
 				}
 			}
 
 			// insert itself
 			output.collect(new Text(title), new Text("0\tPageRankPageNode\t" + sb.toString()));
+			//output.collect(new Text(title), new Text((pagerank/count) + "\tPageRankPageNode\t" + sb.toString()));
 			
 			// insert others
 			double share = -1;
@@ -317,7 +342,7 @@ public class PageRank {
 				// next part outlinks
 				while(tok.hasMoreTokens())
 					links.add(tok.nextToken());
-
+				//System.out.print(npr + " ");
 				if (npr != -1)
 					sum += npr;
 			}
@@ -325,6 +350,7 @@ public class PageRank {
 			//p.pagerank = (1 - d)*N + d*sum(p.pagerank/p.columnsum())
 			double pr = (1 - d)/N + d*sum;
 			if(isPage) {
+				//output.collect(new Text("Reducer: " + N + "_" + pr), null);
 				output.collect(key, new Page(key.toString(), pr, links));
 			}
 		}
@@ -340,6 +366,7 @@ public class PageRank {
 		conf.setNumReduceTasks(1);
 		
 		Path src = new Path(outputpath + "/n/part-00000");
+		//Path dest = new Path(outputpath + "/" + NOUT);
 		Path dest = new Path(outputdir + "/" + NOUT);
 		FileSystem fs = FileSystem.get(new URI(outputdir), conf);
 		try {
@@ -351,6 +378,7 @@ public class PageRank {
 
 		conf.setMapperClass(TotalPagesMapper.class);
 		conf.setReducerClass(TotalPagesReducer.class);
+		//conf.setCombinerClass(Reduce.class);
 
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
@@ -373,11 +401,11 @@ public class PageRank {
 		}
 	}
 
+	//public static class TotalPagesReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
 	public static class TotalPagesReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, Text> {
-		private static int sum = 0;
 		public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			//System.out.println(key.toString() + ", " + values);
-		//	int sum = 0;
+			int sum = 0;
 			while (values.hasNext()) {
 				sum += values.next().get();
 			}
@@ -385,6 +413,7 @@ public class PageRank {
 			N = sum;
 			
 			output.collect(key, new Text());
+			//output.collect(key, new IntWritable(sum));
 		}
 	}
 
@@ -393,8 +422,10 @@ public class PageRank {
 		conf.setJobName("parse adjacency graph");
 		conf.setNumReduceTasks(1);
 
+		//Path src = new Path(outputpath + "/inlink/part-00000");
 		Path src = new Path(outputpath + "/part-00000");
 		Path dest = new Path(outputdir + "/" + OUTLINKOUT);
+		//Path dest = new Path(outputpath + "/" + OUTLINKOUT);
 		FileSystem fs = FileSystem.get(new URI(outputdir), conf);
 		try {
 			fs.delete(dest, true);
@@ -408,6 +439,7 @@ public class PageRank {
 
 		conf.setMapperClass(ParseMapper.class);
 		conf.setReducerClass(ParseReducer.class);
+		//conf.setCombinerClass(Reduce.class);
 
 		conf.setInputFormat(XmlInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
@@ -434,18 +466,13 @@ public class PageRank {
 			Document doc = Jsoup.parse(xmlstr);
 	
 			Element e = doc.select("title").first();
-			String title = e.text().replaceAll(" ", "_");
-			Text titleText = new Text(title);
-			//output.collect(titleText, new Page(NOREDLINK, 1));
-			output.collect(titleText, null);
-			//output.collect(titleText, new Page("", 1));
-			/*
+			String title = e.text();
+
 			if (title.startsWith("#top") 	
 				|| title.contains(":") 
 				|| title.contains ("#") 
 				|| title.contains ("/"))
 				return;
-			*/
 
 			e = doc.select("text").first();
 			String text = doc.body().text();
@@ -455,7 +482,6 @@ public class PageRank {
 
 			String content = text;
 			int i = 0;
-			//if (content == null) return;
 			if (content == null || content.length() == 0) return;
 
 			char c = content.charAt(i);
@@ -483,21 +509,19 @@ public class PageRank {
 							}
 						} 
 							
-						String link = sb.toString().replaceAll(" ", "_");
-						//String link = sb.toString(); //.replaceAll(" ", "_");
-						
+						//String link = sb.toString().replaceAll(" ", "_");
+						String link = sb.toString(); //.replaceAll(" ", "_");
 						if(!link.startsWith("#top") // 3. table row
 							&& !link.contains(":") // 1. interwiki
 							//&& !link.matches(".*:.+:.*") // 1. interwiki
 							//&& !link.matchs("#section name")
 							&& !link.contains("#") // 2. section
 							&& !link.contains("/") // 4. subpage
-							&& !link.equals(title)// not title
 							//&& !// no duplicate
-						) 
-						
-							output.collect(titleText, new Page(link, 1));
-							//output.collect(new Text(title.replaceAll(" ", "_")), new Page(link.replaceAll(" ", "_"), 1));
+							&& !link.equals(title)// not title
+						)
+							output.collect(new Text(title.replaceAll(" ", "_")), new Page(pid ++, link.replaceAll(" ", "_"), 1, new ArrayList()));
+							//output.collect(new Text(title.replaceAll(" ", "_")), new Page(pid ++, link, 1, new ArrayList()));
 
 						//System.out.println(link);
 						sb = new StringBuffer();
@@ -507,29 +531,23 @@ public class PageRank {
 		}
 	}
 
-	/** 
- 	*   input: <title, outlink page> = <Text, Page>
- 	*   output: <title, string of outlink list> = <Text, Text>
- 	*/ 
+	//public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
 	public static class ParseReducer extends MapReduceBase implements Reducer<Text, Page, Text, Text> {
-
+		//public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 		public void reduce(Text key, Iterator<Page> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-		//	int sum = 0;
-			String title = key.toString();
+	//		System.out.println(key.toString());
 
-			//if(!title.equals(NOREDLINK)) return;
-
-			Set<String> set = new HashSet<String>(); // no duplicate tlink
+			int sum = 0;
+			Set set = new HashSet();
+			ArrayList list = new ArrayList();
 			Text outlinks = new Text();
 			StringBuffer sb = new StringBuffer();
-
 			while (values.hasNext()) {
 				Page p = values.next();
 				//System.out.println(p.toString());
-				if(p !=null && !p.title.equals(key.toString()) // no self-refrence link
-					// no red links
-				) {
+				if(!list.contains(p.title) && !p.title.equals(key.toString())) {
 					sb.append(p.title + "\t");
+					//list.add(p);
 					set.add(p.title);
 				}	
 			}
@@ -540,6 +558,7 @@ public class PageRank {
 	}
 
 	static class Page implements WritableComparable<Page> {
+		int id;
 		String title;
 		double pagerank = 1;
 		ArrayList<String> links = new ArrayList<String>();
@@ -547,21 +566,31 @@ public class PageRank {
 		Page() {}
 
 		Page (String title, double pagerank) {
+			this.id = 0;
 			this.title = title;
 			this.pagerank = pagerank;
 		}
 
 		Page (String title, double pagerank, ArrayList links) {
+			this.id = 0;
 			this.title = title;
 			this.pagerank = pagerank;
 			this.links = links;
 		}
 
+		Page (int id, String title, double pagerank, ArrayList links) {
+			this.id = id;
+			this.title = title;
+			this.pagerank = pagerank;
+			this.links = links;
+		}
+		
 		public int compareTo(Page p2) {
 			return title.compareTo(p2.title);
 		}
 
 		public void write(DataOutput out) throws IOException {
+         		out.writeInt(id);
 			Text.writeString(out, title);
 			out.writeDouble(pagerank);
 			out.writeInt(links.size());
@@ -570,8 +599,11 @@ public class PageRank {
 	       	}
 
 		public void readFields(DataInput in) throws IOException {
+	        	id = in.readInt();
 			title = Text.readString(in);
+//			System.out.println(title);
 			pagerank = in.readDouble();
+//			System.out.println(pagerank);
 			int size = in.readInt();
 			links = new ArrayList();
 			for(int i = 0; i < size; i ++) {
@@ -587,6 +619,130 @@ public class PageRank {
 			return pagerank + "\t" + sb.toString();
 		}
 	}
-}
 
+	void wordcount() throws Exception {
+		JobConf conf = new JobConf(PageRank.class);
+		conf.setJobName("wordcount");
+
+		conf.setOutputKeyClass(Text.class);
+		conf.setOutputValueClass(IntWritable.class);
+
+		conf.setMapperClass(WordCountMapper.class);
+		//conf.setCombinerClass(Reduce.class);
+		conf.setReducerClass(WordCountReducer.class);
+
+		conf.setInputFormat(TextInputFormat.class);
+		conf.setOutputFormat(TextOutputFormat.class);
+
+                FileInputFormat.setInputPaths(conf, new Path(inputpath));
+                FileOutputFormat.setOutputPath(conf, new Path(outputpath));
+
+		JobClient.runJob(conf);
+	}
+	
+	public static class WordCountMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
+		private final static IntWritable one = new IntWritable(1);
+		private Text word = new Text();
+
+		public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+			//System.out.println(key.toString() + ", " + value);
+			String line = value.toString();
+			StringTokenizer tokenizer = new StringTokenizer(line);
+			while (tokenizer.hasMoreTokens()) {
+				word.set(tokenizer.nextToken());
+				output.collect(word, one);
+			}
+		}
+	}
+
+	public static class WordCountReducer extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
+		public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+			//System.out.println(key.toString() + ", " + values);
+			int sum = 0;
+			while (values.hasNext()) {
+				sum += values.next().get();
+			}
+			output.collect(key, new IntWritable(sum));
+		}
+	}
+
+	class PlainFormatter extends java.util.logging.Formatter {
+		public String format(LogRecord record) {
+			return record.getMessage(); 
+			//return record.getMessage() + System.getProperty("line.separator");
+		}
+	}
+
+	class ScoreComparator implements Comparator<Map.Entry> {
+		public int compare(Map.Entry e1, Map.Entry e2) {
+			double v1 = (Double)e1.getValue(); 
+			double v2 = (Double)e2.getValue();
+			return v1 > v2 ? 1: v1 == v2 ? 0:-1;
+		}
+	}
+
+	static Iterator valueIterator(TreeMap map) {
+		Set set = new TreeSet(new Comparator<Map.Entry<String, Double>>() {
+			public int compare(Map.Entry<String, Double> e1, Map.Entry<String, Double> e2) {
+				return e1.getValue().compareTo(e2.getValue()) > 0 ? 1 : -1;
+			}
+		});
+		set.addAll(map.entrySet());
+		return set.iterator();
+	}
+
+	void rank() {
+		R = R0;
+		if(R == null) System.out.println("R = null");
+		if(R0 == null) System.out.println("R0 = null");
+		if(A == null) System.out.println("A = null");
+		//System.out.println("N = " + N);
+
+		for (int i = 1; i <= MAX_ITER; i ++) {
+			//PR(pi) = (1 - d)/N + d*(sum(PR(pj)/L(pj)));
+			//R = (1 - d)/N + d*A*R;
+			//  = A*R*d + (1 - d)/N;
+			R = A.operate(R).mapMultiply(d).mapAdd((1.0 - d)/N);
+			if (i == 1 || i == MAX_ITER) {
+				try {
+					double[] scores = R.toArray();
+					//sort R by page rank score
+					TreeMap rank = new TreeMap();	
+					for (Map.Entry e: (Set<Map.Entry>)index.entrySet()) {
+						String title = (String)e.getKey();
+						int ind = (Integer)e.getValue();
+						// show pages only with score >= 5/N 
+						double score = scores[ind];
+						if (score >= 5.0/N)
+							rank.put(title, score);
+					}
+
+					String filename = "PageRank.iter" + i + ".out";
+					String filepath = outputdir + "/" + filename;
+					FileHandler fhandler = new FileHandler(filepath);
+					fhandler.setFormatter(new PlainFormatter());
+					logger.addHandler(fhandler);
+
+					//logger.info(rank.toString());
+					//for (Map.Entry e: (Set<Map.Entry>)rank.entrySet()) 
+					Iterator iter = valueIterator(rank);
+					while(iter.hasNext())  {
+						Map.Entry e = (Map.Entry)iter.next();
+						logger.info(e.getKey() + "\t" + e.getValue() + "\n");
+					}
+					//logger.log(Level.INFO, filename);
+					
+					logger.removeHandler(fhandler);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			//normalize R: column stochastic. e.g., column sum = 1
+			// compute the total column sum
+			// for each column 
+			// 	for each row
+			// 		divide each entry by the column sum	
+		}
+	}
+}
 
