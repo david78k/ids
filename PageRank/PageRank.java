@@ -205,14 +205,7 @@ public class PageRank {
 			}
 		}	
 	}
-/*
-	public static class CustomPathFilter implements PathFilter {
-	    @Override
-	    public boolean accept(Path path) {
-	        return false; 
-	    }
-	}
-*/
+
 	void iterate() throws Exception {
 		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("iterate" + iter);
@@ -434,6 +427,7 @@ public class PageRank {
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
+                //FileInputFormat.setInputPaths(conf, new Path(outputdir + "/PageRank.inlink.out"));
                 FileInputFormat.setInputPaths(conf, new Path(outputpath));
                 FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/outlink"));
 
