@@ -178,12 +178,9 @@ public class PageRank {
 		public void reduce(DoubleWritable key, Iterator<Text> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
 			double score = key.get();
 			String title;
-			//sort R by page rank score
-			TreeMap rank = new TreeMap();	
 
 			while (values.hasNext()) {
 				title = values.next().toString();
-				rank.put(title, score);
 				output.collect(new Text(title), new DoubleWritable (score));
 				System.out.println(title + "\t" + score);
 			}
@@ -440,7 +437,6 @@ public class PageRank {
 	 *  input: <file, person tag>
 	 *  output: <title, page> = <Text, Page>
 	 */
-	//public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
 	public static class ParseMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Page> {
 		/** extract Page data structure */
 		public void map(LongWritable key, Text value, OutputCollector<Text, Page> output, Reporter reporter) throws IOException {
@@ -452,26 +448,16 @@ public class PageRank {
 			Element e = doc.select("title").first();
 			String title = e.text().replaceAll(" ", "_");
 			Text titleText = new Text(title);
-			//output.collect(titleText, new Page(NOREDLINK, 1));
-			//output.collect(titleText, null);
+
 			output.collect(titleText, new Page("", 1));
-			/*
-			if (title.startsWith("#top") 	
-				|| title.contains(":") 
-				|| title.contains ("#") 
-				|| title.contains ("/"))
-				return;
-			*/
 
 			e = doc.select("text").first();
 			String text = doc.body().text();
 			text = e.text();
 
-			//System.out.println(title + "\t" + text);
-
 			String content = text;
 			int i = 0;
-			//if (content == null) return;
+
 			if (content == null || content.length() == 0) return;
 
 			char c = content.charAt(i);
@@ -510,8 +496,7 @@ public class PageRank {
 							&& !link.equals(title)// not title
 							//&& !// no duplicate
 						) 
-						
-						output.collect(titleText, new Page(link, 1));
+							output.collect(titleText, new Page(link, 1));
 
 						sb = new StringBuffer();
 					}
@@ -580,7 +565,6 @@ public class PageRank {
 			String title = key.toString();
 
 			// remove red link
-			//Page redlinkflag = values.next();
 
 			Set<String> set = new HashSet<String>(); // no duplicate tlink
 			Text outlinks = new Text();
@@ -595,8 +579,17 @@ public class PageRank {
 					if(p.title.equals(NOREDLINK))
 						isRedlink = false;
 					else {
-						sb.append(p.title + "\t");
-						set.add(p.title);
+						String link = p.title;
+						if( !link.contains(":") // 1. interwiki
+							//&& !link.matchs("#section name")
+							&& !link.contains("#") // 2. section
+							&& !link.contains("/") // 4. subpage
+							&& !link.equals(title)// not title
+							//&& !// no duplicate
+						) { 
+							sb.append(p.title + "\t");
+							set.add(p.title);
+						}
 					}
 				}	
 			}
