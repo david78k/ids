@@ -37,12 +37,10 @@ public class PageRank {
 	
 	final static double d = 0.85;
 	static int N = 0; // total number of pages
-	final static int MAX_ITER = 1;
-	//final static int MAX_ITER = 8;
+	//final static int MAX_ITER = 1;
+	final static int MAX_ITER = 8;
 	final static double THRESHOLD = 5.0; // pagerank score threshold to show top ranked pages 
-	//final static double THRESHOLD = 0.0; // 0 means to show all the pages 
 	private static int iter = 1; // current iteration
-	private static int pid = 0; // unique page id
 
 	final static String OUTLINKOUT = "PageRank.outlink.out";
 	final static String NOUT = "PageRank.n.out";
@@ -508,7 +506,6 @@ public class PageRank {
 						} 
 							
 						String link = sb.toString().replaceAll(" ", "_");
-						//String link = sb.toString(); //.replaceAll(" ", "_");
 						
 						if(!link.startsWith("#top") // 3. table row
 							&& !link.contains(":") // 1. interwiki
@@ -520,10 +517,8 @@ public class PageRank {
 							//&& !// no duplicate
 						) 
 						
-							output.collect(titleText, new Page(link, 1));
-							//output.collect(new Text(title.replaceAll(" ", "_")), new Page(link.replaceAll(" ", "_"), 1));
+						output.collect(titleText, new Page(link, 1));
 
-						//System.out.println(link);
 						sb = new StringBuffer();
 					}
 				}				
@@ -572,7 +567,7 @@ public class PageRank {
 			String title = tok.nextToken();
 			Text titleText = new Text(title);
 			
-			System.out.println(line + ", title = " + title);
+			//System.out.println(line + ", title = " + title);
 			output.collect(titleText, new Page(NOREDLINK, 1));	
 
 			while(tok.hasMoreTokens()) {

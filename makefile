@@ -73,6 +73,11 @@ show:
 	hadoop fs -cat $(basedir)/PageRank.iter1.out | head | nl
 	hadoop fs -cat $(basedir)/PageRank.iter8.out | head | nl
 
+showmore:
+	hadoop fs -cat $(bucket)/results/PageRank.n.out
+	hadoop fs -cat $(basedir)/PageRank.iter1.out | head -20 | nl
+	hadoop fs -cat $(basedir)/PageRank.iter8.out | head -20 | nl
+
 compile:
 	javac -classpath $(jars) -d PageRank PageRank/PageRank.java
 	#javac -classpath $(jars) -d WordCount WordCount/WordCount.java
