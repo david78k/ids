@@ -437,7 +437,7 @@ public class PageRank {
 		conf.setOutputKeyClass(Text.class);
 		conf.setOutputValueClass(Text.class);
 
-		//conf.setMapperClass(RedlinkFilterMapper.class);
+		conf.setMapperClass(RedlinkMapper.class);
 		conf.setReducerClass(RedlinkReducer.class);
 
 		conf.setInputFormat(TextInputFormat.class);
@@ -613,16 +613,38 @@ public class PageRank {
 	}
 
 	/** 
+ 	*   input: <file, (title, string of outlink list)> = <LongWritable, Text>
+ 	*   output: <outlink, title> = <Text, Text>
+ 	*/ 
+
+	public static class RedlinkMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
+		private static final Text NOREDLINKTEXT = new Text(NOREDLINK);
+		/** extract Page data structure */
+		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+			StringTokenizer tok = new StringTokenizer(value.toString());
+			String title = tok.nextToken();
+			Text titleText = new Text(title);
+			String link = tok.nextToken();
+			output.collect(titleText, new Text(link));
+		}	
+	}
+
+	/** 
  	*   input: <title, outlink string> = <Text, Text>
  	*   output: <title, string of outlink list> = <Text, Text>
  	*/ 
 	public static class RedlinkReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
+	//public static class RedlinkReducer extends MapReduceBase implements Reducer<Writable, Text, Text, Text> {
 		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+			//String title = tok.nextToken();
+			//Text titleText = new Text(title);
 			Text outlinks = new Text();
 			StringBuffer sb = new StringBuffer();
 
 			while (values.hasNext()) {
+			//while (tok.hasMoreTokens()) {
 				String link = values.next().toString();
+				//String link = tok.nextToken();
 				
 				sb.append(link + "\t");
 			}
