@@ -6,8 +6,8 @@ bucket = david78k-ids
 basedir = $(bucket)/results
 instance_type = m1.small
 #instance_type = m2.4xlarge # max 20
-#instance_type = m1.medium # max 20
-instance_type = m1.xlarge # max 20
+instance_type = m1.medium # max 20
+#instance_type = m1.xlarge # max 20
 #instance_type = c1.xlarge # max 20
 #instance_type = hi1.4xlarge # max 2
 #instance_type = hs1.8xlarge # max 2
@@ -38,8 +38,9 @@ hadoop2:
 	#hadoop-1.0.3/bin/hadoop dfs -rmr $(bucket)/results
 	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/enwiki.xml
 	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
-	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
-	hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
+	hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
+	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/10000.xml
+	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
 	hadoop/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
 
 emr:

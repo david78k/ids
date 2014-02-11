@@ -1,5 +1,7 @@
 Description
 
+Fixed Java heap space error
+
 *************************************************************************
 
 1. The steps we took to develop the code 

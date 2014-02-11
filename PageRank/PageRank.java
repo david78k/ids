@@ -152,8 +152,7 @@ public class PageRank {
 		private StringBuffer sb = new StringBuffer();
 
 		public void map(LongWritable key, Text value, OutputCollector<DoubleWritable, Text> output, Reporter reporter) throws IOException {
-			String line = value.toString();
-			StringTokenizer tok = new StringTokenizer(line);	
+			StringTokenizer tok = new StringTokenizer(value.toString());	
 			String title = tok.nextToken();
 			word.set(title);
 			double score = Double.parseDouble(tok.nextToken());
@@ -181,7 +180,8 @@ public class PageRank {
 
 			while (values.hasNext()) {
 				title = values.next().toString();
-				output.collect(new Text(title), new DoubleWritable (score));
+				word.set(title);
+				output.collect(word, new DoubleWritable (score));
 				System.out.println(title + "\t" + score);
 			}
 		}
@@ -242,11 +242,12 @@ public class PageRank {
 	 */
 	public static class PageRankMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
 		private int N;
-		ArrayList<String> links = new ArrayList<String>();
+		//ArrayList<String> links = new ArrayList<String>();
 
 		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			// map phase: read N and compute column sum 
 			// reduce phase: compute rank
+			ArrayList<String> links = new ArrayList<String>();
 			StringBuffer sb = new StringBuffer();
 
 			String line = value.toString();
@@ -291,9 +292,10 @@ public class PageRank {
 	 */
 	public static class PageRankReducer extends MapReduceBase implements Reducer<Text, Text, Text, Page> {
 		private int N;
-		ArrayList<String> links = new ArrayList<String>();
+		//ArrayList<String> links = new ArrayList<String>();
 
 		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Page> output, Reporter reporter) throws IOException {
+			ArrayList<String> links = new ArrayList<String>();
 			double sum = 0;
 			boolean isPage = false;
 			while (values.hasNext()) {
@@ -355,8 +357,7 @@ public class PageRank {
 
 	public static class TotalPagesMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
 		private final static IntWritable one = new IntWritable(1);
-		private Text word = new Text();
-		private StringBuffer sb = new StringBuffer();
+		//private Text word = new Text();
 
 		public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
 			output.collect(new Text("N"), one);
@@ -385,7 +386,7 @@ public class PageRank {
 		conf.set("xmlinput.end", "</page>");
 
 		conf.setOutputKeyClass(Text.class);
-		conf.setOutputValueClass(Page.class);
+		conf.setOutputValueClass(Text.class);
 
 		conf.setMapperClass(ParseMapper.class);
 		conf.setReducerClass(ParseReducer.class);
@@ -454,11 +455,13 @@ public class PageRank {
 	 *  input: <file, person tag>
 	 *  output: <title, page> = <Text, Page>
 	 */
-	public static class ParseMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Page> {
+	public static class ParseMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
+		private String link;
+		private Text linkText = new Text();
+
 		/** extract Page data structure */
-		public void map(LongWritable key, Text value, OutputCollector<Text, Page> output, Reporter reporter) throws IOException {
+		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			String xmlstr = value.toString();
-			Page p;
 				
 			Document doc = Jsoup.parse(xmlstr);
 	
@@ -466,7 +469,7 @@ public class PageRank {
 			String title = e.text().replaceAll(" ", "_");
 			Text titleText = new Text(title);
 
-			output.collect(titleText, new Page("", 1));
+			output.collect(titleText, linkText);
 
 			e = doc.select("text").first();
 			String text = doc.body().text();
@@ -502,7 +505,7 @@ public class PageRank {
 							}
 						} 
 							
-						String link = sb.toString().replaceAll(" ", "_");
+						link = sb.toString().replaceAll(" ", "_");
 						
 						if(!link.startsWith("#top") // 3. table row
 							&& !link.contains(":") // 1. interwiki
@@ -512,9 +515,10 @@ public class PageRank {
 							&& !link.contains("/") // 4. subpage
 							&& !link.equals(title)// not title
 							//&& !// no duplicate
-						) 
-							output.collect(titleText, new Page(link, 1));
-
+						) {
+							linkText.set(link);
+							output.collect(titleText, linkText);
+						}
 						sb = new StringBuffer();
 					}
 				}				
@@ -526,25 +530,24 @@ public class PageRank {
  	*   input: <title, outlink page> = <Text, Page>
  	*   output: <title, string of outlink list> = <Text, Text>
  	*/ 
-	public static class ParseReducer extends MapReduceBase implements Reducer<Text, Page, Text, Text> {
+	public static class ParseReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
+		//private	Set<String> set = new HashSet<String>(); // no duplicate link
+		private	Text outlinks = new Text();
+		//private	StringBuffer sb = new StringBuffer();
+
+		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			Set<String> set = new HashSet<String>(); // no duplicate link
-			Text outlinks = new Text();
 			StringBuffer sb = new StringBuffer();
 
-		public void reduce(Text key, Iterator<Page> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-			//Set<String> set = new HashSet<String>(); // no duplicate link
-			//Text outlinks = new Text();
-			//StringBuffer sb = new StringBuffer();
-
 			while (values.hasNext()) {
-				Page p = values.next();
+				String link = values.next().toString();
 				//System.out.println(p.toString());
-				if(p !=null && !p.title.equals("") && p.title != ""
-					&& !p.title.equals(key.toString()) // no self-refrence link
+				if(!link.equals("") && link != ""
+					&& !link.equals(key.toString()) // no self-refrence link
 					// no red links
 				) {
-					sb.append(p.title + "\t");
-					set.add(p.title);
+					sb.append(link + "\t");
+					set.add(link);
 				}	
 			}
 			outlinks.set(sb.toString());
@@ -581,12 +584,11 @@ public class PageRank {
  	*/ 
 	public static class RedlinkFilterReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
 		Text text = new Text();
-		Set<String> set = new HashSet<String>(); // no duplicate tlink
+		String link1;
 
 		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			boolean isRedlink = true;
-
-			String link1;
+			Set<String> set = new HashSet<String>(); // no duplicate tlink
 
 			while (values.hasNext()) {
 				link1 = values.next().toString();
@@ -636,9 +638,9 @@ public class PageRank {
  	*/ 
 	public static class RedlinkReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
 		private Text outlinks = new Text();
-		private StringBuffer sb = new StringBuffer();
 
 		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+			StringBuffer sb = new StringBuffer();
 			while (values.hasNext()) {
 				//String link = values.next().toString();
 				sb.append(values.next().toString() + "\t");
