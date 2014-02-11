@@ -581,10 +581,11 @@ public class PageRank {
  	*/ 
 	public static class RedlinkFilterReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
 		static Text text = new Text();
+		Set<String> set = new HashSet<String>(); // no duplicate tlink
+
 		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			boolean isRedlink = true;
 
-			Set<String> set = new HashSet<String>(); // no duplicate tlink
 			String link1;
 
 			while (values.hasNext()) {
