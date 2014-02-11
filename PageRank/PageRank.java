@@ -634,19 +634,13 @@ public class PageRank {
  	*   output: <title, string of outlink list> = <Text, Text>
  	*/ 
 	public static class RedlinkReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
-	//public static class RedlinkReducer extends MapReduceBase implements Reducer<Writable, Text, Text, Text> {
-		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-			//String title = tok.nextToken();
-			//Text titleText = new Text(title);
-			Text outlinks = new Text();
-			StringBuffer sb = new StringBuffer();
+		private static Text outlinks = new Text();
+		private static StringBuffer sb = new StringBuffer();
 
+		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			while (values.hasNext()) {
-			//while (tok.hasMoreTokens()) {
-				String link = values.next().toString();
-				//String link = tok.nextToken();
-				
-				sb.append(link + "\t");
+				//String link = values.next().toString();
+				sb.append(values.next().toString() + "\t");
 			}
 			outlinks.set(sb.toString());
 			output.collect(key, outlinks);
