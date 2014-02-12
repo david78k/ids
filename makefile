@@ -38,10 +38,10 @@ hadoop2:
 	#hadoop-1.0.3/bin/hadoop dfs -rmr $(bucket)/results
 	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/enwiki.xml
 	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
-	hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
+	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
 	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/10000.xml
-	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
-	hadoop/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
+	hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
+	#hadoop/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
 
 emr:
 	emr-cli/elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \

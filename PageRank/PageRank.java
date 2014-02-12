@@ -80,6 +80,8 @@ public class PageRank {
 		pr.parse();
 		System.out.println("Filtering the red links ...");
 		pr.filter();
+		System.out.println("Merging the non-red links ...");
+		pr.merge();
 		System.out.println("Computing the number of total pages ...");
 		pr.totalpages();
 		System.out.println("Computing the PageRanks of " + N + " pages ...");
@@ -419,9 +421,12 @@ public class PageRank {
                 FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/outlink"));
 
 		JobClient.runJob(conf);
+	}
 
+	// combine the links
+	void merge() throws Exception {
 		// merge the results
-		conf = new JobConf(PageRank.class);
+		JobConf conf = new JobConf(PageRank.class);
 		conf.setJobName("merge filtered links");
 		conf.setNumReduceTasks(1);
 
