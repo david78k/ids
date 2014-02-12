@@ -1,8 +1,8 @@
 /** 
  *  wikilinks version 
- *  v1.7
- *  In this version, we include wikilinks that 
- *  include characters :/#
+ *  v1.6
+ *  In this version, we exclude wikilinks that 
+ *  contain characters :/#
  */
 package PageRank;
 
@@ -464,7 +464,6 @@ public class PageRank {
 							
 						link = sb.toString().replaceAll(" ", "_");
 						
-						/*
 						if(!link.startsWith("#top") // 3. table row
 							&& !link.contains(":") // 1. interwiki
 							//&& !link.matches(".*:.+:.*") // 1. interwiki
@@ -474,7 +473,6 @@ public class PageRank {
 							&& !link.equals(title)// not title
 							//&& !// no duplicate
 						) {
-						*/
 							linkText.set(link);
 							output.collect(titleText, linkText);
 						//}
@@ -583,14 +581,12 @@ public class PageRank {
 			String title = key.toString();
 
 			for (String link: set) {
-				/*
 				if( !link.contains(":") // 1. interwiki
 					//&& !link.matchs("#section name")
 					&& !link.contains("#") // 2. section
 					&& !link.contains("/") // 4. subpage
 					&& !link.equals(title)// not title
 				) { 
-				*/
 					if(link.equals(NOREDLINK)) {
 						text.set(link);
 						output.collect(key, text);
@@ -598,7 +594,7 @@ public class PageRank {
 						text.set(link);
 						output.collect(text, key);
 					}
-				//}
+				}
 			}
 		}
 	}
