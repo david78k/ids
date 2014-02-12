@@ -2,7 +2,7 @@
  *  wikilinks version 
  *  v1.7
  *  In this version, we include wikilinks that 
- *  include characters :/#
+ *  contain characters :/#
  */
 package PageRank;
 

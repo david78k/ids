@@ -6,7 +6,7 @@ bucket = david78k-ids
 basedir = $(bucket)/results
 instance_type = m1.small
 #instance_type = m2.4xlarge # max 20
-instance_type = m1.medium # max 20
+#instance_type = m1.medium # max 20
 #instance_type = m1.xlarge # max 20
 #instance_type = c1.xlarge # max 20
 #instance_type = hi1.4xlarge # max 2
@@ -74,6 +74,7 @@ show:
 	hadoop fs -cat $(bucket)/results/PageRank.n.out
 	hadoop fs -cat $(basedir)/PageRank.iter1.out | head | nl
 	hadoop fs -cat $(basedir)/PageRank.iter8.out | head | nl
+	hadoop fs -cat $(basedir)/PageRank.outlink.out | head | nl
 
 showmore:
 	hadoop fs -cat $(bucket)/results/PageRank.n.out
