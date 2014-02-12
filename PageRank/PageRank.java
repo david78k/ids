@@ -402,60 +402,6 @@ public class PageRank {
 		JobClient.runJob(conf);
 	}
 
-	// filter red links
-	void filter() throws Exception {
-		JobConf conf = new JobConf(PageRank.class);
-		conf.setJobName("filter red links");
-
-		conf.setOutputKeyClass(Text.class);
-		conf.setOutputValueClass(Text.class);
-
-		conf.setMapperClass(RedlinkFilterMapper.class);
-		conf.setReducerClass(RedlinkFilterReducer.class);
-
-		conf.setInputFormat(TextInputFormat.class);
-		conf.setOutputFormat(TextOutputFormat.class);
-
-                //FileInputFormat.setInputPaths(conf, new Path(outputdir + "/PageRank.inlink.out"));
-                FileInputFormat.setInputPaths(conf, new Path(outputpath));
-                FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/outlink"));
-
-		JobClient.runJob(conf);
-	}
-
-	// combine the links
-	void merge() throws Exception {
-		// merge the results
-		JobConf conf = new JobConf(PageRank.class);
-		conf.setJobName("merge filtered links");
-		conf.setNumReduceTasks(1);
-
-		Path src = new Path(outputpath + "/filter/part-00000");
-		Path dest = new Path(outputdir + "/" + OUTLINKOUT);
-
-		FileSystem fs = FileSystem.get(new URI(outputdir), conf);
-		try {
-			fs.delete(dest, true);
-		} catch (FileNotFoundException e) {}
-
-		conf.setOutputKeyClass(Text.class);
-		conf.setOutputValueClass(Text.class);
-
-		conf.setMapperClass(RedlinkMapper.class);
-		conf.setReducerClass(RedlinkReducer.class);
-
-		conf.setInputFormat(TextInputFormat.class);
-		conf.setOutputFormat(TextOutputFormat.class);
-
-                //FileInputFormat.setInputPaths(conf, new Path(outputdir + "/PageRank.inlink.out"));
-                FileInputFormat.setInputPaths(conf, new Path(outputpath + "/outlink"));
-                FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/filter"));
-
-		JobClient.runJob(conf);
-
-		fs.rename(src, dest);
-	}
-
 	/** parse mapper: parses <person> tag from input xml file and produces <title, page> pair
 	 *  input: <file, person tag>
 	 *  output: <title, page> = <Text, Page>
@@ -561,6 +507,27 @@ public class PageRank {
 		}
 	}
 
+	// filter red links
+	void filter() throws Exception {
+		JobConf conf = new JobConf(PageRank.class);
+		conf.setJobName("filter red links");
+
+		conf.setOutputKeyClass(Text.class);
+		conf.setOutputValueClass(Text.class);
+
+		conf.setMapperClass(RedlinkFilterMapper.class);
+		conf.setReducerClass(RedlinkFilterReducer.class);
+
+		conf.setInputFormat(TextInputFormat.class);
+		conf.setOutputFormat(TextOutputFormat.class);
+
+                //FileInputFormat.setInputPaths(conf, new Path(outputdir + "/PageRank.inlink.out"));
+                FileInputFormat.setInputPaths(conf, new Path(outputpath));
+                FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/outlink"));
+
+		JobClient.runJob(conf);
+	}
+
 	/** 
  	*   input: <file, (title, string of outlink list)> = <LongWritable, Text>
  	*   output: <outlink, title> = <Text, Text>
@@ -597,8 +564,9 @@ public class PageRank {
 
 			while (values.hasNext()) {
 				link1 = values.next().toString();
-				if(link1.equals(NOREDLINK))
-					isRedlink = false;
+				if(link1.equals(NOREDLINK)) {
+					isRedlink = false; 
+				}
 				set.add(link1);
 			}
 
@@ -613,11 +581,49 @@ public class PageRank {
 					&& !link.contains("/") // 4. subpage
 					&& !link.equals(title)// not title
 				) { 
-					text.set(link);
-					output.collect(text, key);
+					if(link.equals(NOREDLINK)) {
+						text.set(link);
+						output.collect(key, text);
+					} else	{
+						text.set(link);
+						output.collect(text, key);
+					}
 				}
 			}
 		}
+	}
+
+	// combine the links
+	void merge() throws Exception {
+		// merge the results
+		JobConf conf = new JobConf(PageRank.class);
+		conf.setJobName("merge filtered links");
+		conf.setNumReduceTasks(1);
+
+		Path src = new Path(outputpath + "/filter/part-00000");
+		Path dest = new Path(outputdir + "/" + OUTLINKOUT);
+
+		FileSystem fs = FileSystem.get(new URI(outputdir), conf);
+		try {
+			fs.delete(dest, true);
+		} catch (FileNotFoundException e) {}
+
+		conf.setOutputKeyClass(Text.class);
+		conf.setOutputValueClass(Text.class);
+
+		conf.setMapperClass(RedlinkMapper.class);
+		conf.setReducerClass(RedlinkReducer.class);
+
+		conf.setInputFormat(TextInputFormat.class);
+		conf.setOutputFormat(TextOutputFormat.class);
+
+                //FileInputFormat.setInputPaths(conf, new Path(outputdir + "/PageRank.inlink.out"));
+                FileInputFormat.setInputPaths(conf, new Path(outputpath + "/outlink"));
+                FileOutputFormat.setOutputPath(conf, new Path(outputpath + "/filter"));
+
+		JobClient.runJob(conf);
+
+		fs.rename(src, dest);
 	}
 
 	/** 
@@ -647,8 +653,9 @@ public class PageRank {
 		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			StringBuffer sb = new StringBuffer();
 			while (values.hasNext()) {
-				//String link = values.next().toString();
-				sb.append(values.next().toString() + "\t");
+				String link = values.next().toString();
+				if(!link.equals(NOREDLINK))
+					sb.append(link + "\t");
 			}
 			outlinks.set(sb.toString());
 			output.collect(key, outlinks);

@@ -39,8 +39,8 @@ hadoop2:
 	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/enwiki.xml
 	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
 	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
-	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/10000.xml
-	hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
+	hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/10000.xml
+	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
 	#hadoop/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
 
 emr:
