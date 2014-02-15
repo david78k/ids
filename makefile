@@ -36,8 +36,8 @@ runemr: compile jar s3 emr
 hadoop2: 
 	#rm -rf david78k-ids/results/PageRank.inlink.out
 	#hadoop-1.0.3/bin/hadoop dfs -rmr $(bucket)/results
-	hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/enwiki.xml
-	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
+	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/enwiki.xml
+	hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
 	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
 	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/10000.xml
 	#hadoop/bin/hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
