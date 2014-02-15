@@ -1,0 +1,8 @@
+4. What are the programming lessons? And what are the good resources you found?
+
+5. What is the runtime experience for queries and visualizations?
+
+6. What difficulties you faced and what you learned from this project?
+- The data given to us didn't fit into Hive format as the enron data file
+  contains ^M character which is considered as tab. Hence, we had to remove
+the character before loading to Hive table.
