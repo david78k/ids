@@ -1,0 +1,8 @@
+#!/bin/bash
+# remove ^M
+dir=data
+file=enron.100k
+#file=enron
+
+mkdir $dir/$file
+tr -d $'\r' < $dir/$file.tab > $dir/$file/$file.refined.tab

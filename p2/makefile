@@ -1,6 +1,5 @@
 mainclass = PageRank
 jar = PageRank.jar
-#jars = mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-math3-3.2.jar:mahout-integration-0.8.jar:cloud9-1.5.0.jar
 jars = hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-io.jar:mahout-examples-0.3.jar
 bucket = david78k-ids
 basedir = $(bucket)/results
@@ -14,24 +13,31 @@ instance_type = m1.small
 num_instances = 10
 #num_instances = 3
 #num_instances = 20 # total max quota 20
-#num_instances = 2
-
-#instance_type = c3.4xlarge # not supported, max 20
-#instance_type = i2.2xlarge # not supported, max 8
-#instance_type = i2.4xlarge # not supported, max 4
-#instance_type = i2.8xlarge # not supported, max 2
-#instance_type = c3.8xlarge # not supported
-#instance_type = cr1.8xlarge # not supported
-#instance_type = m3.2xlarge # not supported
-#instance_type = m3.xlarge # not supported
-
-all: run upload
 
 run: compile jar hadoop2
-	#java -classpath .:$(jars) PageRank
-	#java -classpath .:mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank
 
 runemr: compile jar s3 emr
+
+enron:
+
+netflix:
+
+create:
+	#sed -i "s/^M//" data/enron.100/enron.100.refined.tab
+	#tr -d $'\r' < data/enron.100.tab > data/enron.100/enron.100.refined.tab
+	hive -f data/create.enron.sql
+
+show:
+	hive -e 'select * from enron'
+
+show1:
+	hive -e 'select * from enron limit 1'
+
+eid:
+	hive -e 'select eid from enron'
+
+count:
+	hive -e 'select count(*) from enron'
 
 hadoop2: 
 	#rm -rf david78k-ids/results/PageRank.inlink.out
@@ -67,30 +73,22 @@ upload:
 	git push
 
 tar:
-	tar cvf PageRank.tar report.txt PageRank/PageRank.java PageRank.jar
-	#tar cvf PageRank.tar report.txt PageRank/*.java PageRank.jar
+	tar cvf Project2.tar report.pdf presentation.pdf src/*
 
 show:
 	hadoop fs -cat $(bucket)/results/PageRank.n.out
-	hadoop fs -cat $(basedir)/PageRank.iter1.out | head | nl
-	hadoop fs -cat $(basedir)/PageRank.iter8.out | head | nl
-	hadoop fs -cat $(basedir)/PageRank.outlink.out | head | nl
 
 showmore:
 	hadoop fs -cat $(bucket)/results/PageRank.n.out
 	hadoop fs -cat $(basedir)/PageRank.iter1.out | head -20 | nl
-	hadoop fs -cat $(basedir)/PageRank.iter8.out | head -20 | nl
 
 compile:
 	javac -classpath $(jars) -d PageRank PageRank/PageRank.java
 	#javac -classpath $(jars) -d WordCount WordCount/WordCount.java
-	#javac -classpath mtj-1.0.1.jar:hadoop-core-1.0.3.jar:jsoup-1.7.3.jar PageRank.java
 
 jar:
 	#jar -cf WordCount.jar -C WordCount/ . 
 	jar -cf PageRank.jar -C PageRank/ . 
-	#jar -cf PageRank.jar -C PageRank/ . -C commons-math/commons-math3-3.2/commons-math3-3.2/ .
-	#jar -cvf PageRank.jar -C PageRank/ . commons-math3-3.2.jar
 
 wordcount:
 	javac -classpath $(jars) -d WordCount WordCount/WordCount.java
