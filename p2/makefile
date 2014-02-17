@@ -23,9 +23,18 @@ enron:
 netflix:
 
 create:
+	hive -f src/create.enron.sql
+	hive -e "load data local inpath 'data/enron.refined.tab' overwrite into table enron"
+	hive -e 'select * from enron limit 5' | nl
+	hive -e 'select count(*) from enron'
+
+create100:
 	#sed -i "s/^M//" data/enron.100/enron.100.refined.tab
 	#tr -d $'\r' < data/enron.100.tab > data/enron.100/enron.100.refined.tab
-	hive -f data/create.enron.sql
+	hive -f src/create.enron100.sql
+	hive -e "load data local inpath 'data/enron.100.refined.tab' overwrite into table enron100"
+	hive -e 'select * from enron100 limit 5' | nl
+	hive -e 'select count(*) from enron100'
 
 show:
 	hive -e 'select * from enron'
@@ -39,15 +48,8 @@ eid:
 count:
 	hive -e 'select count(*) from enron'
 
-hadoop2: 
-	#rm -rf david78k-ids/results/PageRank.inlink.out
-	#hadoop-1.0.3/bin/hadoop dfs -rmr $(bucket)/results
-	#hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/enwiki.xml
-	#hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
-	#hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
-	hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/10000.xml
-	#hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
-	#hadoop/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
+tar:
+	tar cvf Project2.tar report.pdf presentation.pdf src/*
 
 emr:
 	emr-cli/elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \
@@ -72,28 +74,7 @@ upload:
 	git commit -a -m update
 	git push
 
-tar:
-	tar cvf Project2.tar report.pdf presentation.pdf src/*
-
-show:
-	hadoop fs -cat $(bucket)/results/PageRank.n.out
-
 showmore:
 	hadoop fs -cat $(bucket)/results/PageRank.n.out
 	hadoop fs -cat $(basedir)/PageRank.iter1.out | head -20 | nl
-
-compile:
-	javac -classpath $(jars) -d PageRank PageRank/PageRank.java
-	#javac -classpath $(jars) -d WordCount WordCount/WordCount.java
-
-jar:
-	#jar -cf WordCount.jar -C WordCount/ . 
-	jar -cf PageRank.jar -C PageRank/ . 
-
-wordcount:
-	javac -classpath $(jars) -d WordCount WordCount/WordCount.java
-	jar -cf WordCount.jar -C WordCount/ . 
-	hadoop-1.0.3/bin/hadoop dfs -rmr output
-	hadoop-1.0.3/bin/hadoop jar WordCount.jar WordCount data/100.xml output
-	hadoop-1.0.3/bin/hadoop dfs -cat output/part-00000 | tail
 

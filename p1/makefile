@@ -38,8 +38,8 @@ hadoop2:
 	#hadoop-1.0.3/bin/hadoop dfs -rmr $(bucket)/results
 	#hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/enwiki.xml
 	#hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/5000000.xml
-	#hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
-	hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/10000.xml
+	hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000000.xml
+	#hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/10000.xml
 	#hadoop jar PageRank.jar PageRank.PageRank $(bucket) data/1000.xml
 	#hadoop/bin/hadoop dfs -cat $(bucket)/results/part-00000 | tail
 
