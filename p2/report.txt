@@ -1,4 +1,8 @@
 4. What are the programming lessons? And what are the good resources you found?
+- In the first place, it was too difficult to split a string into multiple
+  rows with Hive. Ever since we realized that Hive provides a numberous
+functions for manipulation of data (e.g., split, explode, trim) everything went well suddenly.
+
 - It was so embarrassing that multiline comments /*..*/ are not supported in Hive scripts. Before I knew this, I kept getting an error message.
 NoViableAltException(15@[])
         at

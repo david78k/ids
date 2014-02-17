@@ -2,7 +2,7 @@ drop table enron100;
 
 CREATE EXTERNAL TABLE enron100 (
   eid STRING,
-  datetime STRING,
+  timestamp STRING,
   frome STRING,
   toe STRING,
   cc STRING,
@@ -18,3 +18,6 @@ STORED AS TEXTFILE;
 
 --select count(*) from enron;
 
+load data local inpath 'data/enron.100.refined.tab' overwrite into table enron100;
+select * from enron100 limit 5;
+select count(*) from enron100;

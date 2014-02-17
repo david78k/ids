@@ -1,26 +1,26 @@
 ----------------------------------------------------------------
-2014-02-17 06:27:29.682 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance a816c00e-0144-3e87-29b2-00000c6f13a8
+2014-02-17 21:36:26.678 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance a816c00e-0144-41c7-54d4-00000c8b0030
 on database directory /root/datascience/p2/metastore_db  
 
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-2014-02-17 06:28:16.800 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance 1c16805c-0144-3e87-29b2-00000c6f13a8
+2014-02-17 21:37:04.030 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance 1c16805c-0144-41c7-54d4-00000c8b0030
 on database directory /root/datascience/p2/TempStatsStore  
 
 Database Class Loader started - derby.database.classpath=''
 
-2014-02-17 06:28:16.870 GMT:
-Shutting down instance 1c16805c-0144-3e87-29b2-00000c6f13a8
+2014-02-17 21:37:04.152 GMT:
+Shutting down instance 1c16805c-0144-41c7-54d4-00000c8b0030
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-2014-02-17 06:28:48.928 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance 7c740060-0144-3e87-29b2-00000c6f13a8
+2014-02-17 21:37:36.004 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance 7c740060-0144-41c7-54d4-00000c8b0030
 on database directory /root/datascience/p2/TempStatsStore  
 
 Database Class Loader started - derby.database.classpath=''
 
-2014-02-17 06:28:49.112 GMT:
-Shutting down instance 7c740060-0144-3e87-29b2-00000c6f13a8
+2014-02-17 21:37:36.218 GMT:
+Shutting down instance 7c740060-0144-41c7-54d4-00000c8b0030
 ----------------------------------------------------------------

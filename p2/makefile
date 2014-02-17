@@ -24,17 +24,17 @@ netflix:
 
 create:
 	hive -f src/create.enron.sql
-	hive -e "load data local inpath 'data/enron.refined.tab' overwrite into table enron"
-	hive -e 'select * from enron limit 5' | nl
-	hive -e 'select count(*) from enron'
+	#hive -e "load data local inpath 'data/enron.refined.tab' overwrite into table enron"
+	#hive -e 'select * from enron limit 5' | nl
+	#hive -e 'select count(*) from enron'
 
 create100:
 	#sed -i "s/^M//" data/enron.100/enron.100.refined.tab
 	#tr -d $'\r' < data/enron.100.tab > data/enron.100/enron.100.refined.tab
 	hive -f src/create.enron100.sql
-	hive -e "load data local inpath 'data/enron.100.refined.tab' overwrite into table enron100"
-	hive -e 'select * from enron100 limit 5' | nl
-	hive -e 'select count(*) from enron100'
+	#hive -e "load data local inpath 'data/enron.100.refined.tab' overwrite into table enron100"
+	#hive -e 'select * from enron100 limit 5' | nl
+	#hive -e 'select count(*) from enron100'
 
 show:
 	hive -e 'select * from enron'
