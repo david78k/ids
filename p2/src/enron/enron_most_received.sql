@@ -4,7 +4,8 @@
 
 --set tname_origin=enron;
 set tname=enron_most_received;
-set tname_origin=enron100;
+--set tname_origin=enron100;
+set tname_origin=enron;
 
 -- create table for the most received people
 drop table ${hiveconf:tname};
@@ -35,6 +36,7 @@ ORDER BY freq DESC;
 
 -- insert into a local file
 INSERT OVERWRITE LOCAL DIRECTORY 'results/${hiveconf:tname}'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 SELECT * 
 FROM ${hiveconf:tname};
 
