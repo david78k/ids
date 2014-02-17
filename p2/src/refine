@@ -4,5 +4,12 @@ dir=data
 file=enron.100k
 #file=enron
 
+src=$dir/$file.tab
+dest=$dir/$file/$file.refined.tab
+
 mkdir $dir/$file
-tr -d $'\r' < $dir/$file.tab > $dir/$file/$file.refined.tab
+#tr -d $'\r' < $dir/$file.tab > $dir/$file/$file.refined.tab
+tr -d $'\r' < $src > $dest
+
+# remove ^A
+#sed 's//\t' $src > $dest
