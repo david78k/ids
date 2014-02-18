@@ -17,17 +17,13 @@ CREATE EXTERNAL TABLE ${hiveconf:tname} (
 -- insert the people with the number of correspondents
 -- order by frequency
 INSERT OVERWRITE TABLE ${hiveconf:tname}
-SELECT frome, count(DISTINCT recip) freq
+SELECT frome, size(collect_set(recip)) freq
 FROM (
-	SELECT frome, recip
-	FROM (
-		SELECT frome, trim(recipient) recip
-		FROM ${hiveconf:tname_origin}
-		LATERAL VIEW explode(split(toe, ',')) t AS recipient
-		WHERE (frome LIKE '%@enron.com')
-	) t1
-	GROUP BY frome, recip
-) t2
+	SELECT frome, trim(recipient) recip
+	FROM ${hiveconf:tname_origin}
+	LATERAL VIEW explode(split(toe, ',')) t AS recipient
+	WHERE (frome LIKE '%@enron.com')
+) t1
 GROUP BY frome
 ORDER BY freq DESC
 ;
