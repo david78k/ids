@@ -1,17 +1,29 @@
 --set tablename=enron;
 set tablename=enron100;
 set tname_origin=enron100;
+--set tname_origin=enron;
 set newtable=enron_most_received;
 
 --select frome, collect_list(toe) from ${hiveconf:tname_origin}
 --select frome, count(toe) from ${hiveconf:tname_origin}
 --select frome, size(collect_set(recipients))
-select frome, collect_set(recipients)
-from (
-select frome, split(toe, ',') recipients from ${hiveconf:tname_origin}
-where frome like '%@enron.com'
-) t
+--select frome, collect_set(recipients)
+--select frome, collect_set(recip)
+--select frome, count(recip) freq
+select frome, size(collect_set(recip))
+from(
+	select frome, recip
+	from (
+	select frome, TRIM(recipient) recip
+	--select frome, count(1) freq
+	from ${hiveconf:tname_origin}
+	LATERAL VIEW explode(split(toe, ',')) t as recipient 
+	where frome like '%@enron.com'
+	) t1
+	group by frome, recip
+) t2
 group by frome
+--order by freq desc
 ;
 
 /*
