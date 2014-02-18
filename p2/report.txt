@@ -1,3 +1,14 @@
+1. What is your data processing pipeline? (Graphs and words description)
+- pipelining tables: enron => enron_most_sent/enron_most_received => enron_most_emails
+  enron => enron_most_corresp => enron_corresp_pair
+  enron => enron_outside_sent/enron_outside_received => enron_outside
+
+2. What kind of analytics do you apply on the dataset? What are the Hive queries?
+- For Hive queries, refer to the attachments.
+
+3. Which visualization do you use on the dataset using Tableau?
+
+
 4. What are the programming lessons? And what are the good resources you found?
 - whenever we found a bug, we needed to rerun the query.
 
