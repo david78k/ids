@@ -1,26 +1,6 @@
 ----------------------------------------------------------------
-2014-02-18 15:20:04.797 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance a816c00e-0144-4595-1e56-00000c938f38
+2014-02-18 16:02:21.945 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance a816c00e-0144-45bb-d52c-00000c5b65f8
 on database directory /root/datascience/p2/metastore_db  
 
 Database Class Loader started - derby.database.classpath=''
-----------------------------------------------------------------
-2014-02-18 15:20:57.220 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance 1c16805c-0144-4595-1e56-00000c938f38
-on database directory /root/datascience/p2/TempStatsStore  
-
-Database Class Loader started - derby.database.classpath=''
-
-2014-02-18 15:20:57.293 GMT:
-Shutting down instance 1c16805c-0144-4595-1e56-00000c938f38
-----------------------------------------------------------------
-----------------------------------------------------------------
-2014-02-18 15:21:29.131 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance 7c740060-0144-4595-1e56-00000c938f38
-on database directory /root/datascience/p2/TempStatsStore  
-
-Database Class Loader started - derby.database.classpath=''
-
-2014-02-18 15:21:29.309 GMT:
-Shutting down instance 7c740060-0144-4595-1e56-00000c938f38
-----------------------------------------------------------------
