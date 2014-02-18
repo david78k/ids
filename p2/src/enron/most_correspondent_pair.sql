@@ -21,8 +21,9 @@ INSERT OVERWRITE TABLE ${hiveconf:tname}
 SELECT frome, trim(recipient), count(1) freq
 FROM ${hiveconf:tname_origin}
 LATERAL VIEW explode(split(toe, ',')) t AS recipient
-WHERE frome != recipient
---WHERE (frome LIKE '%@enron.com')
+WHERE frome != trim(recipient)
+	AND
+	((frome LIKE '%@enron.com%') OR (recipient LIKE '%@enron.com%'))
 GROUP BY frome, trim(recipient)
 ORDER BY freq DESC
 ;

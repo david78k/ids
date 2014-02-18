@@ -23,6 +23,9 @@ FROM (
 	SELECT frome, trim(recipient) recip
 	FROM ${hiveconf:tname_origin}
 	LATERAL VIEW explode(split(toe, ',')) t AS recipient
+ where (((NOT (frome like '%@enron.com%')) AND (trim(recipient) like '%@enron.com%'))
+                OR
+                ((frome like '%@enron.com%') AND (NOT (trim(recipient) like '%@enron.com%'))))
 --	WHERE NOT (frome LIKE '%@enron.com')
 	--WHERE NOT (frome LIKE '%@enron.com' and trim(recipient) LIKE '%@enron.com')
 ) t1
