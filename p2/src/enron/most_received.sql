@@ -28,7 +28,6 @@ FROM (
 		FROM ${hiveconf:tname_origin} 
 	) table1
 ) table2
---group by name
 GROUP BY toe
 ORDER BY freq DESC;
 
@@ -44,7 +43,7 @@ FROM ${hiveconf:tname};
 
 select count(*) from ${hiveconf:tname};
 
-select * from ${hiveconf:tname} limit 5;
+select * from ${hiveconf:tname} limit 10;
 
 --select * from enron where frome = 'steven.kean@enron.com'
 

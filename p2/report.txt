@@ -1,4 +1,11 @@
 4. What are the programming lessons? And what are the good resources you found?
+- collect_set 
+
+- good resource for data manipulation when dealing with rows and columns
+https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF
+- Lateral view:
+  https://cwiki.apache.org/confluence/display/Hive/LanguageManual+LateralView
+
 - In the first place, it was too difficult to split a string into multiple
   rows with Hive. Ever since we realized that Hive provides a numberous
 functions for manipulation of data (e.g., split, explode, trim) everything went well suddenly.
