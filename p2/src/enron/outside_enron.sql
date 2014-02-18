@@ -2,7 +2,7 @@
 -- and insert query results into a new table and a local file
 -- and display the results and the count
 
-set tname=enron_most_corresp;
+set tname=enron_outside;
 --set tname_origin=enron100;
 set tname_origin=enron;
 
@@ -10,22 +10,25 @@ set tname_origin=enron;
 drop table ${hiveconf:tname};
 
 CREATE EXTERNAL TABLE ${hiveconf:tname} (
-  sender STRING,
+  outsider STRING,
   count INT
   );
 
--- insert the people with the number of correspondents
+-- insert the people outside of enron with the number of correspondents
 -- order by frequency
 INSERT OVERWRITE TABLE ${hiveconf:tname}
-SELECT frome, size(collect_set(recip)) freq
+--SELECT frome, size(collect_set(recip)) freq
+SELECT frome, collect_set(recip)
 FROM (
 	SELECT frome, trim(recipient) recip
 	FROM ${hiveconf:tname_origin}
 	LATERAL VIEW explode(split(toe, ',')) t AS recipient
-	WHERE (frome LIKE '%@enron.com%') OR (recipient LIKE '%@enron.com%')
+--	WHERE NOT (frome LIKE '%@enron.com')
+	--WHERE NOT (frome LIKE '%@enron.com' and trim(recipient) LIKE '%@enron.com')
 ) t1
+--WHERE NOT (recip LIKE '%@enron.com')
 GROUP BY frome
-ORDER BY freq DESC
+--ORDER BY freq DESC
 ;
 
 -- insert into a local file
