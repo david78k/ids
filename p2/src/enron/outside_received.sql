@@ -17,14 +17,10 @@ CREATE EXTERNAL TABLE ${hiveconf:tname} (
 -- insert the people outside of enron with the number of correspondents
 -- order by frequency
 INSERT OVERWRITE TABLE ${hiveconf:tname}
-SELECT frome, count
+SELECT toe, count
 FROM ${hiveconf:tname_origin}
 WHERE (NOT (toe like '%enron.com%')) 
 --WHERE ((NOT (frome like '%@enron.com%')) AND (recipient like '%@enron.com%'))
-      --          OR
-        --        ((frome like '%@enron.com%') AND (NOT (recipient like '%@enron.com%'))))
---) t1
---GROUP BY frome
 ORDER BY count DESC
 ;
 

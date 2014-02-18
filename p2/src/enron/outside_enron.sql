@@ -3,8 +3,8 @@
 -- and display the results and the count
 
 set tname=enron_outside;
---set tname_origin=enron100;
-set tname_origin=enron;
+set tname1=enron_outside_sent;
+set tname2=enron_outside_received;
 
 -- create table 
 drop table ${hiveconf:tname};
@@ -22,11 +22,11 @@ SELECT frome, size(collect_set(recip)) freq
 FROM (
 	SELECT frome, trim(recipient) recip
 	FROM ${hiveconf:tname_origin}
-	LATERAL VIEW explode(split(toe, ',')) t AS recipient
-	WHERE (((NOT (frome like '%@enron.com%')) AND (recipient like '%@enron.com%'))
+	WHERE (((NOT (frome like '%enron.com%')) AND (recipient like '%enron.com%'))
                 OR
-                ((frome like '%@enron.com%') AND (NOT (recipient like '%@enron.com%'))))
+                ((frome like '%enron.com%') AND (NOT (recipient like '%enron.com%'))))
 ) t1
+WHERE t1.sender = t2.recipient
 GROUP BY frome
 ORDER BY freq DESC
 ;

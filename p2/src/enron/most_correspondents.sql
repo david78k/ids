@@ -22,9 +22,9 @@ FROM (
 	SELECT frome, trim(recipient) recip
 	FROM ${hiveconf:tname_origin}
 	LATERAL VIEW explode(split(toe, ',')) t AS recipient
-	WHERE (frome LIKE '%@enron.com%') OR (recipient LIKE '%@enron.com%')
+	WHERE (frome LIKE '%enron.com%') OR (recipient LIKE '%enron.com%')
 ) t1
-WHERE (frome LIKE '%@enron.com%')
+WHERE (frome LIKE '%enron.com%')
 GROUP BY frome
 ORDER BY freq DESC
 ;

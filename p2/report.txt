@@ -1,4 +1,6 @@
 4. What are the programming lessons? And what are the good resources you found?
+- whenever we found a bug, we needed to rerun the query.
+
 - collect_set 
 
 - good resource for data manipulation when dealing with rows and columns
@@ -43,8 +45,12 @@ FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
 
 
 5. What is the runtime experience for queries and visualizations?
+- runtime for the enron dataset is short. It usually takes 2-3 minutes for a
+  single query.
 
 6. What difficulties you faced and what you learned from this project?
 - The data given to us didn't fit into Hive format as the enron data file
   contains ^M character which is considered as tab. Hence, we had to remove
 the character before loading to Hive table.
+
+- parsing is the most difficult part.
