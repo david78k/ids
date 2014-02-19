@@ -18,17 +18,10 @@ CREATE EXTERNAL TABLE ${hiveconf:tname} (
 -- order by frequency
 INSERT OVERWRITE TABLE ${hiveconf:tname}
 SELECT sender, (t1.count + t2.count) freq
---	SELECT frome, trim(recipient) recip
 	FROM ${hiveconf:tname1} t1
 	JOIN
 	${hiveconf:tname2} t2
 	ON t1.sender = t2.recipient
-	--WHERE (((NOT (frome like '%enron.com%')) AND (recipient like '%enron.com%'))
-         --       OR
-          --      ((frome like '%enron.com%') AND (NOT (recipient like '%enron.com%'))))
---) t3
---WHERE t1.sender = t2.recipient
---GROUP BY frome
 ORDER BY freq DESC
 ;
 
