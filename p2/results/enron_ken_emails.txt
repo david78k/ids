@@ -1,0 +1,52 @@
+#=========== 4 different email addresses ===========
+kenneth.lay@enron.com   36
+ken.lay-@enron.com      3
+ken.lay@enron.com       2
+ken.lay-.chairman.of.the.board@enron.com        1
+
+#=========== subjects ============
+2001 Special Stock Option Grant
+2001 Special Stock Option Grant Awards
+Executive Committee
+Associate/Analyst Program
+OK, Jeff, you requested that we be candid about Enron...
+OK, Jeff, you requested that we be candid about Enron...
+OK, Jeff, you requested that we be candid about Enron...
+OK, Jeff, you requested that we be candid about Enron...
+Executive Committee
+Re:  Jeff's Leaving
+DELETE KENNETH L. LAY "RTP" - RE: Kenneth, here are four Christmas
+FW: REQUEST FOR SPONSORSHIP
+
+Associate/Analyst Program
+DELETE FROM E-MAIL ADDRESS - RE: Wired Rescues Last-Minute Holiday
+Thank You
+Executive Committee
+RE: Values and  Harassment Prevention
+RE: Media Reports
+FW: Soul food dinner
+FW: Mr. Kenneth L. Lay
+FW: dynergy planned for merger to fail all along
+RE: Sheila and the Trade Promotion Authority
+RE: Rice University - Markets in Transition Symposium:  January 10,
+Executive Committee
+Formation of Enron Management Committee
+Organizational Announcement
+Associate/Analyst Program
+Re: Gerald Smith
+Organizational Announcement
+Associate/Analyst Program
+Associate/Analyst Program
+FW: Salary
+FW: AFL-CIO Press Release
+RE: Sheila and the Trade Promotion Authority
+Associate/Analyst Program
+Associate/Analyst Program
+FW: AFL-CIO Press Release
+RE: Power Trading Group
+Associate/Analyst Program
+RE: Power Trading Group
+2001 Special Stock Option Grant
+
+#=============== Words in the subjects ===============
+

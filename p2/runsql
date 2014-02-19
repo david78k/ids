@@ -1,0 +1,19 @@
+#!/bin/bash
+
+basedir=src/enron
+
+# extract ken lay records
+file=$basedir/ken.sql
+#time hive -f $file
+
+# extract ken lay unique emails
+#time hive -e 'select sender, count(1) freq from enron_ken group by sender order by freq desc'
+
+#time hive -e 'select subject from enron_ken'
+
+# extract frequent word list (word count) from the subjects
+#time hive -e 'select subject from enron_ken'
+
+file=$basedir/ken_words.sql
+#time hive -f $file
+

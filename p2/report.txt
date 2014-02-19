@@ -7,7 +7,8 @@
 - For Hive queries, refer to the attachments.
 
 - Enron dateset: After the recipient list in 'cc' column is included, the rank has changed when comparing to the list without cc.
-  e.g., steven.kean@enron.com takes the 3rd from 4th
+  e.g., steven.kean@enron.com takes the 3rd from 4th in
+enron_most_received.txt
   This may indicate the importance of the person.
 
 3. Which visualization do you use on the dataset using Tableau?
