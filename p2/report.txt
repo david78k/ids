@@ -6,6 +6,10 @@
 2. What kind of analytics do you apply on the dataset? What are the Hive queries?
 - For Hive queries, refer to the attachments.
 
+- Enron dateset: After the recipient list in 'cc' column is included, the rank has changed when comparing to the list without cc.
+  e.g., steven.kean@enron.com takes the 3rd from 4th
+  This may indicate the importance of the person.
+
 3. Which visualization do you use on the dataset using Tableau?
 
 
@@ -56,6 +60,8 @@ FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
 
 
 5. What is the runtime experience for queries and visualizations?
+- it was surprising that inserting the enron dataset which is almost 1GB took only a few minutes.
+
 - runtime for the enron dataset is short. It usually takes 2-3 minutes for a
   single query.
 

@@ -2,7 +2,6 @@
 -- and insert query results into a new table and a local file
 -- and display the results and the count
 
---set tname_origin=enron;
 set tname=enron_most_received;
 --set tname_origin=enron100;
 set tname_origin=enron;
@@ -11,24 +10,20 @@ set tname_origin=enron;
 drop table ${hiveconf:tname};
 
 CREATE EXTERNAL TABLE ${hiveconf:tname} (
-  toe STRING,
+  recipient STRING,
   count INT
   );
 
 -- insert the most received people
 -- order by frequency
 INSERT OVERWRITE TABLE ${hiveconf:tname}
-SELECT toe, count(toe) as freq
---FROM enron100
---FROM ${hiveconf:tname_origin}
+SELECT recipient, count(recipient) as freq
 FROM (
-	SELECT TRIM(name) toe
-	FROM (
-		SELECT EXPLODE(SPLIT(${hiveconf:tname_origin}.toe, ',')) name
-		FROM ${hiveconf:tname_origin} 
-	) table1
+	SELECT TRIM(recip) recipient
+	FROM ${hiveconf:tname_origin}
+	LATERAL VIEW EXPLODE(SPLIT(concat(toe, regexp_replace(cc, '\n', '')), ',')) t AS recip
 ) table2
-GROUP BY toe
+GROUP BY recipient
 ORDER BY freq DESC;
 
 -- hive -e 'select frome, count(*) as countf from enron100 group by frome order by countf desc'
