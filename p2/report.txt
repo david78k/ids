@@ -1,7 +1,7 @@
 1. What is your data processing pipeline? (Graphs and words description)
-- pipelining tables: enron => enron_most_sent/enron_most_received => enron_most_emails
+- pipelining tables (dependencies): enron => enron_most_sent/enron_most_received => enron_most_emails/enron_outside_sent/enron_outside_received => enron_outside
   enron => enron_most_corresp => enron_corresp_pair
-  enron => enron_outside_sent/enron_outside_received => enron_outside
+  enron_most_sent/enron_most_received => enron_outside_sent/enron_outside_received => enron_outside
 
 2. What kind of analytics do you apply on the dataset? What are the Hive queries?
 - For Hive queries, refer to the attachments.
