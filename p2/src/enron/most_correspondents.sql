@@ -3,7 +3,6 @@
 -- and display the results and the count
 
 set tname=enron_most_corresp;
---set tname_origin=enron100;
 set tname_origin=enron;
 
 -- create table 
@@ -21,7 +20,7 @@ SELECT frome, size(collect_set(recip)) freq
 FROM (
 	SELECT frome, trim(recipient) recip
 	FROM ${hiveconf:tname_origin}
-	LATERAL VIEW explode(split(toe, ',')) t AS recipient
+	LATERAL VIEW explode(split(concat(toe, cc), ',')) t AS recipient
 	WHERE (frome LIKE '%enron.com%') OR (recipient LIKE '%enron.com%')
 ) t1
 WHERE (frome LIKE '%enron.com%')
