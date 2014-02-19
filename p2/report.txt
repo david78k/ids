@@ -62,7 +62,7 @@ FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
 5. What is the runtime experience for queries and visualizations?
 - it was surprising that inserting the enron dataset which is almost 1GB took only a few minutes.
 
-- runtime for the enron dataset is short. It usually takes 2-3 minutes for a
+- runtime for the enron dataset is short. It usually takes 1-2 minutes for a
   single query.
 
 6. What difficulties you faced and what you learned from this project?

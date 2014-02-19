@@ -20,7 +20,7 @@ CREATE EXTERNAL TABLE ${hiveconf:tname} (
 INSERT OVERWRITE TABLE ${hiveconf:tname}
 SELECT t1.frome email, (t1.count + t2.count) count 
 FROM enron_most_sent t1 JOIN enron_most_received t2 
-ON t1.frome=t2.toe 
+ON t1.frome=t2.recipient 
 --GROUP BY toe
 ORDER BY count DESC;
 

@@ -21,7 +21,8 @@ SELECT recipient, count(recipient) as freq
 FROM (
 	SELECT TRIM(recip) recipient
 	FROM ${hiveconf:tname_origin}
-	LATERAL VIEW EXPLODE(SPLIT(concat(toe, regexp_replace(cc, '\n', '')), ',')) t AS recip
+	LATERAL VIEW EXPLODE(SPLIT(concat(toe, cc), ',')) t AS recip
+	--LATERAL VIEW EXPLODE(SPLIT(concat(toe, regexp_replace(cc, '\n', '')), ',')) t AS recip
 ) table2
 GROUP BY recipient
 ORDER BY freq DESC;
