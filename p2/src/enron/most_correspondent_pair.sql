@@ -20,7 +20,7 @@ CREATE EXTERNAL TABLE ${hiveconf:tname} (
 INSERT OVERWRITE TABLE ${hiveconf:tname}
 SELECT frome, trim(recipient), count(1) freq
 FROM ${hiveconf:tname_origin}
-LATERAL VIEW explode(split(concat(toe, cc), ',')) t AS recipient
+LATERAL VIEW explode(split(concat_ws(',', toe, cc), ',')) t AS recipient
 WHERE frome != trim(recipient)
 	AND
 	((frome LIKE '%enron.com%') OR (recipient LIKE '%enron.com%'))
