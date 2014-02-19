@@ -15,5 +15,5 @@ file=$basedir/ken.sql
 #time hive -e 'select subject from enron_ken'
 
 file=$basedir/ken_words.sql
-#time hive -f $file
+time hive -f $file
 
