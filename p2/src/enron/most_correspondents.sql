@@ -20,7 +20,7 @@ SELECT frome, size(collect_set(recip)) freq
 FROM (
 	SELECT frome, trim(recipient) recip
 	FROM ${hiveconf:tname_origin}
-	LATERAL VIEW explode(split(concat(toe, cc), ',')) t AS recipient
+	LATERAL VIEW explode(split(concat_ws(',', toe, cc), ',')) t AS recipient
 	WHERE (frome LIKE '%enron.com%') OR (recipient LIKE '%enron.com%')
 ) t1
 WHERE (frome LIKE '%enron.com%')

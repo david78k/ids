@@ -14,7 +14,7 @@
 
 
 4. What are the programming lessons? And what are the good resources you found?
-- whenever we found a bug, we needed to rerun the query.
+- whenever we found a bug, we needed to rerun the relevant queries.
 
 - collect_set 
 
