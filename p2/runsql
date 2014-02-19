@@ -2,6 +2,27 @@
 
 basedir=src/enron
 
+#########################################
+# extract steve kean records
+file=$basedir/steve.sql
+#time hive -f $file
+
+# extract steve kean unique emails
+#time hive -e 'select sender, count(1) freq from enron_steve group by sender order by freq desc'
+
+#time hive -e 'select subject from enron_steve'
+
+file=$basedir/steve_words.sql
+#time hive -f $file
+
+file=$basedir/steve_recipients.sql
+#time hive -f $file
+
+# extract frequent word list (word count) from the subjects
+file=$basedir/steve_subjects.sql
+#time hive -f $file
+
+##########################################
 # extract ken lay records
 file=$basedir/ken.sql
 #time hive -f $file
@@ -11,15 +32,13 @@ file=$basedir/ken.sql
 
 #time hive -e 'select subject from enron_ken'
 
-# extract frequent word list (word count) from the subjects
-#time hive -e 'select subject from enron_ken'
-
 file=$basedir/ken_words.sql
 #time hive -f $file
 
 file=$basedir/ken_recipients.sql
 #time hive -f $file
 
+# extract frequent word list (word count) from the subjects
 file=$basedir/ken_subjects.sql
-time hive -f $file
+#time hive -f $file
 
