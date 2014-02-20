@@ -7,6 +7,15 @@ file=$basedir/create.titles.sql
 
 #file=$basedir/create.ratings100.sql
 file=$basedir/create.ratings.sql
+#time hive -f $file
+
+file=$basedir/most_watched.sql
+#time hive -f $file
+
+file=$basedir/most_watched_periods.sql
+#time hive -f $file
+
+file=$basedir/most_popular_periods.sql
 time hive -f $file
 
 basedir=src/enron

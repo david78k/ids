@@ -3,6 +3,10 @@
   enron => enron_most_corresp => enron_corresp_pair
   enron_most_sent/enron_most_received => enron_outside_sent/enron_outside_received => enron_outside
 
+- netflix_titles/netflix_ratings => netflix_most_watched =>
+  netflix_most_watched_periods
+  netflix_titles/netflix_ratings => netflix_most_popular =>
+
 2. What kind of analytics do you apply on the dataset? What are the Hive queries?
 - For Hive queries, refer to the attachments.
 
@@ -70,6 +74,9 @@ FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
   inserting the netflix movie ratings data took 25.485 seconds.
   select count(*) from ratings took 45.799 seconds.
   select count(distinct cid) from netflix_ratings: 170.97 seconds
+  
+  most watched movies: 138.683 seconds
+  nested query took 3min longer than non-nested query.
 
 6. What difficulties you faced and what you learned from this project?
 - The data given to us didn't fit into Hive format as the enron data file
