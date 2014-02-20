@@ -66,6 +66,8 @@ FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
 - runtime for the enron dataset is short. It usually takes 1-2 minutes for a
   single query.
 
+- inserting the netflix movie titles data took 33 seconds.
+
 6. What difficulties you faced and what you learned from this project?
 - The data given to us didn't fit into Hive format as the enron data file
   contains ^M character which is considered as tab. Hence, we had to remove

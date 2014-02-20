@@ -1,5 +1,9 @@
 #!/bin/bash
 
+basedir=src/netflix
+file=$basedir/create.titles.sql
+time hive -f $file
+
 basedir=src/enron
 
 #########################################
