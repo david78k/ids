@@ -1,24 +1,19 @@
-drop table netflix;
+set path = data/movie_ratings.csv;
+set tname = netflix_ratings;
 
-CREATE EXTERNAL TABLE netflix (
-  eid STRING,
-  timestamp STRING,
-  frome STRING,
-  toe STRING,
-  cc STRING,
-  subject STRING,
-  context STRING
+drop table ${hiveconf:tname};
+
+CREATE EXTERNAL TABLE ${hiveconf:tname} (
+  mid INT,
+  cid INT,
+  rating INT,
+  datetime STRING
   )
 ROW FORMAT DELIMITED
-FIELDS TERMINATED BY '\t'
+FIELDS TERMINATED BY ','
 STORED AS TEXTFILE;
---LOCATION '/root/ids/p2/data/netflix.100'; -- directory
---LOCATION '/user/root/data/netflix.100.refined.tab';
---LOCATION '/root/ids/p2/data/netflix.100k';
 
---select count(*) from netflix;
-
-load data local inpath 'data/netflix.refined.tab' overwrite into table netflix;
-select * from netflix limit 5;
-select count(*) from netflix;
+load data local inpath '${hiveconf:path}' overwrite into table ${hiveconf:tname};
+select count(*) from ${hiveconf:tname};
+select * from ${hiveconf:tname} limit 5;
 

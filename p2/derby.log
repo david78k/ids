@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-2014-02-20 07:36:39.850 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance a816c00e-0144-4e39-9133-00000e2c3e08
+2014-02-20 08:07:49.787 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance a816c00e-0144-4e56-19c7-00000e28f4f0
 on database directory /root/datascience/p2/metastore_db  
 
 Database Class Loader started - derby.database.classpath=''
