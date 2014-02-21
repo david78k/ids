@@ -16,6 +16,9 @@ file=$basedir/most_watched_periods.sql
 #time hive -f $file
 
 file=$basedir/most_popular_periods.sql
+#time hive -f $file
+
+file=$basedir/most_popular_movies.sql
 time hive -f $file
 
 basedir=src/enron
