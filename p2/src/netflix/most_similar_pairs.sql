@@ -2,9 +2,9 @@
 -- and insert query results into a new table and a local file
 -- and display the results and the count
 
-set tname=netflix_popular_periods;
-set tname1=netflix_most_watched_periods;
---set tname2=netflix_ratings;
+set tname=netflix_similar_pairs;
+set tname1=netflix_titles;
+set tname2=netflix_ratings;
 
 -- create table 
 drop table ${hiveconf:tname};
@@ -25,7 +25,7 @@ ${hiveconf:tname1} t1
 --JOIN ${hiveconf:tname2} t2
 --ON t1.mid = t2.mid
 --GROUP BY (year/10)*10
-ORDER BY rating DESC
+--ORDER BY rating DESC
 ;
 
 -- insert into a local file

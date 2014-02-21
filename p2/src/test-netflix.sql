@@ -2,30 +2,30 @@
 -- and insert query results into a new table and a local file
 -- and display the results and the count
 
-set tname=netflix_corresp_pair;
---set tname_origin=netflix100;
-set tname_origin=netflix;
+set tname=netflix_similar_pairs;
+set tname1=netflix_titles;
+set tname2=netflix_ratings;
 
 -- create table 
 drop table ${hiveconf:tname};
 
 CREATE EXTERNAL TABLE ${hiveconf:tname} (
-  sender STRING,
-  recipient STRING,
+  year INT,
+  rating FLOAT,
   count INT
   );
 
--- insert the people-pair with the number of correspondents
+-- insert the data
 -- order by frequency
 INSERT OVERWRITE TABLE ${hiveconf:tname}
-SELECT frome, trim(recipient), count(1) freq
-FROM ${hiveconf:tname_origin}
-LATERAL VIEW explode(split(concat_ws(',', toe, cc), ',')) t AS recipient
-WHERE frome != trim(recipient)
-	AND
-	((frome LIKE '%netflix.com%') OR (recipient LIKE '%netflix.com%'))
-GROUP BY frome, trim(recipient)
-ORDER BY freq DESC
+--SELECT year as [period], avg(rating), count(1) [freqs]
+SELECT *
+FROM 
+${hiveconf:tname1} t1
+--JOIN ${hiveconf:tname2} t2
+--ON t1.mid = t2.mid
+--GROUP BY (year/10)*10
+--ORDER BY rating DESC
 ;
 
 -- insert into a local file
