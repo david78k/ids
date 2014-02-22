@@ -5,7 +5,10 @@
 
 - netflix_titles/netflix_ratings => netflix_most_watched =>
   netflix_most_watched_periods
-  netflix_titles/netflix_ratings => netflix_most_popular =>
+  netflix_most_popular_periods
+  
+  netflix_titles/netflix_ratings => netflix_most_popular_periods
+  netflix_titles/netflix_ratings => netflix_similar_pairs
 
 2. What kind of analytics do you apply on the dataset? What are the Hive queries?
 - For Hive queries, refer to the attachments.
@@ -64,6 +67,8 @@ sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.jav
 FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
 
 
+- remove duplicates of pair such (a, b) and (b, a): set the order rule a < b
+
 5. What is the runtime experience for queries and visualizations?
 - it was surprising that inserting the enron dataset which is almost 1GB took only a few minutes.
 
@@ -77,6 +82,7 @@ FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
   
   most watched movies: 138.683 seconds
   nested query took 3min longer than non-nested query.
+  triple join query to get the list of similar movie pairs took the longest time.
 
 6. What difficulties you faced and what you learned from this project?
 - The data given to us didn't fit into Hive format as the enron data file
@@ -84,3 +90,7 @@ FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
 the character before loading to Hive table.
 
 - parsing is the most difficult part.
+
+- desiging SQL queries is the challenging part.
+
+
