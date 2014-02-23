@@ -1,3 +1,7 @@
+workload division
+- Yifei: visualization of result data using Tableau
+- Tae Seung: SQL queries, data processing using Hive, report, presentation ppt files
+
 1. What is your data processing pipeline? (Graphs and words description)
 - pipelining tables (dependencies): enron => enron_most_sent/enron_most_received => enron_most_emails/enron_outside_sent/enron_outside_received => enron_outside
   enron => enron_most_corresp => enron_corresp_pair
@@ -84,6 +88,39 @@ FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
   nested query took 3min longer than non-nested query.
   triple join query to get the list of similar movie pairs took the longest time.
 
+- netflix similar pairs from 1000 ratings: 670.259 seconds
+  estimated time for all ratings: 670*0.1M seconds = 67M seconds = (1m 7s) * 1M
+  netflix similar pairs from 10000 ratings: 679.054 seconds
+  estimated time for all ratings: 679*0.01M seconds = 11m 19s * 10000 
+  netflix similar pairs from 100000 ratings: 618.11 seconds
+  estimated time for all ratings: 618*0.001M = 10m 18s * 1000 = 10000m + 5h =
+166h 40m + 5h = 171h 40m = 7days 3h 40m
+  netflix similar pairs from 200000 ratings: 727.625 seconds
+  estimated time for all ratings: 728*0.0005M = 12m 8s * 500 = 6000m = 1440m *
+4 = 4 days
+  netflix similar pairs from 300000 ratings: 731.125 seconds
+  estimated time for all ratings: 731*0.0003M = 12m * 300 = 4000m = 1440m * 3
+= 3 days
+  netflix similar pairs from 400000 ratings: 734.332 seconds
+  estimated time for all ratings: 734*0.0002M = 12m * 200 = 2400m = 1440m * 2
+= 2 days
+  netflix similar pairs with greater than 100 votes from 500000 ratings: 1507.353 seconds
+  estimated time for all ratings: 1507*0.0002M = 25m * 200 = 5000m = 1440m * 3
+= 3 days
+  netflix similar pairs with greater than 50 votes from 500000 ratings: 1507.743 seconds
+  estimated time for all ratings: 1508*0.0002M = 25m * 200 = 5000m = 1440m * 3
+= 3 days
+  netflix similar pairs with greater than 4 votes from 500000 ratings: 1273.538 seconds
+  estimated time for all ratings: 1274*0.0002M = 21m * 200 = 4800m = 1440m * 3
+= 3 days
+  netflix similar pairs with greater than 100 votes from 500000 ratings: 372.243 seconds
+  estimated time for all ratings: 372*0.0002M = 7m * 200 = 1400m = 1440m * 1 = 1 day
+
+  netflix similar pairs with greater than 100 votes and rating > 3 from 1M ratings: 918.207 seconds
+  estimated time for all ratings: 734*0.0002M = 12m * 200 = 2400m = 1440m * 2
+  netflix similar pairs with greater than 100 votes from 1M ratings: 1273.538 seconds
+  estimated time for all ratings: 734*0.0002M = 12m * 200 = 2400m = 1440m * 2
+
 6. What difficulties you faced and what you learned from this project?
 - The data given to us didn't fit into Hive format as the enron data file
   contains ^M character which is considered as tab. Hence, we had to remove
@@ -93,4 +130,7 @@ the character before loading to Hive table.
 
 - desiging SQL queries is the challenging part.
 
+- join on large dataset like movies ratings is challenging with respect to
+  runtime. needed to come up with a smart way to deal with the issue. 100M x
+100M 
 
