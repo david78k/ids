@@ -1,11 +1,13 @@
 workload division
-- Yifei: visualization of result data using Tableau
-- Tae Seung: SQL queries, data processing using Hive, report, presentation ppt files
+- Yifei Sun: visualization of result data using Tableau
+- Tae Seung Kang: SQL queries, data processing using Hive, report, presentation ppt files
 
 1. What is your data processing pipeline? (Graphs and words description)
 - pipelining tables (dependencies): enron => enron_most_sent/enron_most_received => enron_most_emails/enron_outside_sent/enron_outside_received => enron_outside
   enron => enron_most_corresp => enron_corresp_pair
   enron_most_sent/enron_most_received => enron_outside_sent/enron_outside_received => enron_outside
+  enron_ken_subjects
+  enron_lay_subjects
 
 - netflix_titles/netflix_ratings => netflix_most_watched =>
   netflix_most_watched_periods
@@ -120,6 +122,15 @@ FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
   estimated time for all ratings: 734*0.0002M = 12m * 200 = 2400m = 1440m * 2
   netflix similar pairs with greater than 100 votes from 1M ratings: 1273.538 seconds
   estimated time for all ratings: 734*0.0002M = 12m * 200 = 2400m = 1440m * 2
+
+  netflix like X pairs with greater than or equal to 100 votes and rating > 3 from 1M ratings: 12m29.844s
+  estimated time for all ratings: 13m * 100 = 13m * 100 = 1300m = 1440m * 1 =
+1 day
+  netflix like X pairs with greater than or equal to 100 votes and rating > 3 from 1M ratings: 34m3.077s
+  estimated time for all ratings: 13m * 100 = 13m * 100 = 1300m = 1440m * 1 =
+1 day
+
+  netflix like X pairs with greater than or equal to 100 votes and rating > 3 from entire ratings: 346m12.899s (13799.264 seconds + 432.975 seconds + 6533.251 seconds) = 5h 46m
 
 6. What difficulties you faced and what you learned from this project?
 - The data given to us didn't fit into Hive format as the enron data file

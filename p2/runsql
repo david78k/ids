@@ -19,8 +19,8 @@ file=$basedir/most_popular_periods.sql
 #time hive -f $file
 
 file=$basedir/most_popular_movies.sql
-file=$basedir/likeX_pairs.sql
-#file=$basedir/most_similar_pairs.sql
+#file=$basedir/likeX_pairs.sql
+file=$basedir/most_similar_pairs.sql
 
 time hive -f $file
 

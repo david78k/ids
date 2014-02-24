@@ -11,13 +11,13 @@ set tname2=netflix_likeX_pairs;
 drop table ${hiveconf:tname};
 
 CREATE EXTERNAL TABLE ${hiveconf:tname} (
-  --title1 STRING,
-  --title2 STRING,
-  mid1 INT,
-  mid2 INT,
- -- similarity FLOAT,
---  r2 FLOAT--,
-  count INT
+  title1 STRING,
+  title2 STRING,
+  --mid1 INT,
+  --mid2 INT,
+  similarity FLOAT,
+  likeXY FLOAT,
+  total INT
   );
 
 -- insert the data
@@ -25,39 +25,39 @@ CREATE EXTERNAL TABLE ${hiveconf:tname} (
 INSERT OVERWRITE TABLE ${hiveconf:tname}
 --SELect t4.title, t5.title, t3.sim, t3.freq from
 --SELect t4.title, t5.title, count(t1.rating > 3 AND t2.rating > 3), t3.freq from
---SELect t4.title, t5.title, count(t1.rating > 3 AND t2.rating > 3), t3.freq from
-SELECT t3.mid1, t3.mid2, likeXY/total sim
+SELECT t6.title, t7.title, likeXY/total sim, likeXY, total
 FROM (
-	SELect
-        --t1.mid mid1, t2.mid mid2, avg(abs(t1.rating - t2.rating)) sim, count(*) freq
-        --t1.mid mid1, t2.mid mid2, count(t1.rating > 3 AND t2.rating > 3) sim, count(t1.rating >= 0) freq
-        --t1.mid mid1, t2.mid mid2, t1.rating r1, t2.rating r2
-        t1.mid1 mid1, t1.mid2 mid2, count (*) total
-	FROM 
-        ${hiveconf:tname2} t1
-        --(select * from ${hiveconf:tname2} limit 1000) t1
-        --JOIN
-	-- ${hiveconf:tname2} t2
-        --ON t1.cid = t2.cid
-        WHERE --t1.mid > t2.mid
-	--AND t1.rating > 3 
-	t2.rating > 3
-	) t3
+	SELECT t2.mid1, t2.mid2, total, likeXY 
+	FROM
+	(SELect
+        	t1.mid1 mid1, t1.mid2 mid2, count (*) total
+		FROM 
+        	${hiveconf:tname2} t1
+        	GROUP BY t1.mid1, t1.mid2
+		HAVING total >= 100
+	) t2
 	JOIN
-	(SELECT t4.mid1, t4.mid2 FROM ${hiveconf:tname2} t4
-	) t5
+	--(SELECT t3.mid1, t3.mid2, count(t3.rating2 > 3) likeXY
+	(SELECT t3.mid1, t3.mid2, count(*) likeXY
+		FROM ${hiveconf:tname2} t3
+		WHERE t3.rating2 > 3
+        	GROUP BY t3.mid1, t3.mid2
+		--HAVING likeXY >= 100
+	) t4
+	ON t2.mid1 = t4.mid1 AND t2.mid2 = t4.mid2
         --GROUP BY t3.mid1, t3.mid2
-	--HAVING freq >= 100
-        --ORDER BY sim DESC
+	--HAVING total >= 100
+) t5
 
-	--LIMIT 100
---) t4
+JOIN ${hiveconf:tname1} t6
+ON t5.mid1 = t6.mid
 
---JOIN ${hiveconf:tname1} t4
---ON t3.mid1 = t4.mid
+JOIN ${hiveconf:tname1} t7
+ON t5.mid2 = t7.mid
 
---JOIN ${hiveconf:tname1} t5
---ON t3.mid2 = t5.mid
+ORDER BY sim DESC
+
+LIMIT 100
 ;
 
 -- insert into a local file

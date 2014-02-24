@@ -1,8 +1,8 @@
 #!/bin/bash
 # remove ^M
 dir=data
-file=enron.100k
-#file=enron
+#file=enron.100k
+file=enron
 
 src=$dir/$file.tab
 dest=$dir/$file/$file.refined.tab
