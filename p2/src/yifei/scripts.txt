@@ -1,0 +1,27 @@
+create external table enron (email_id string, time string, sender string, receiver array<string>, cc array<string>, subject string, context string) row format delimited fields terminated by '\t' collection items terminated by ',' stored as textfile location '/user/hduser/test_table/';
+
+
+insert overwrite local directory '/home/hduser/hive_result'
+select sender, count(*) as total_num from enron
+group by sender order by total_num desc limit 1000;
+
+
+create table mostsend (sender string, total_num int) row format delimited fields terminated by '\t' stored as textfile
+
+insert overwrite table mostsend
+select sender, count(*) as total_num from enron
+group by sender order by total_num;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+create table movie_title (id int, year int, title string)
+row format delimited fields terminated by ',' stored as textfile;
+
+load data local inpath '/home/hduser/hive_test/movie_titles.csv'
+overwrite into table movie_title;
+
+
+insert overwrite local directory '/home/hduser/hive_result'
+select year, count(*) as total_num from movie_title
+group by year order by total_num desc;
+

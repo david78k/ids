@@ -1,13 +1,12 @@
 #!/bin/bash
 
-basedir=src/netflix
+basedir=netflix
 
 file=$basedir/create.titles.sql
 #time hive -f $file
 
 #file=$basedir/create.ratings100.sql
-file=$basedir/create.ratings100000.sql
-#file=$basedir/create.ratings.sql
+file=$basedir/create.ratings.sql
 #time hive -f $file
 
 file=$basedir/most_watched.sql
@@ -19,15 +18,14 @@ file=$basedir/most_watched_periods.sql
 file=$basedir/most_popular_periods.sql
 #time hive -f $file
 
-#file=$basedir/most_popular_movies.sql
+file=$basedir/most_popular_movies.sql
 #file=$basedir/likeX_pairs.sql
-#file=$basedir/most_similar_mid_pairs.sql
 file=$basedir/most_similar_pairs.sql
 
-time hive -f $file
+#time hive -f $file
 
 #########################################
-basedir=src/enron
+basedir=enron
 
 file=$basedir/create.enron.sql
 file=$basedir/most_received.sql

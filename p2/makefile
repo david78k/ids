@@ -49,7 +49,9 @@ count:
 	hive -e 'select count(*) from enron'
 
 tar:
+	cp dropbox/report.pdf dropbox/presentation.pdf ./
 	tar cvf Project2.tar report.pdf presentation.pdf src/*
+	cp Project2.tar dropbox/
 
 emr:
 	emr-cli/elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \

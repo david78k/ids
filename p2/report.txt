@@ -130,7 +130,10 @@ FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
   estimated time for all ratings: 13m * 100 = 13m * 100 = 1300m = 1440m * 1 =
 1 day
 
-  netflix like X pairs with greater than or equal to 100 votes and rating > 3 from entire ratings: 346m12.899s (13799.264 seconds + 432.975 seconds + 6533.251 seconds) = 5h 46m
+  netflix like X pairs with greater than or equal to 100 votes and rating > 3 from entire ratings: 346m12.899s (13799.264 seconds + 432.975 seconds + 6533.251 seconds) = 5h 46m (total of 16708729395 (16.7 billion) records)
+
+  netflix similar pairs with greater than or equal to 100 votes from 1M*100M ratings: 118m36.615s (2h)
+  estimated time for all ratings: 2h*100 = 600h = 25days
 
 6. What difficulties you faced and what you learned from this project?
 - The data given to us didn't fit into Hive format as the enron data file
@@ -145,3 +148,5 @@ the character before loading to Hive table.
   runtime. needed to come up with a smart way to deal with the issue. 100M x
 100M 
 
+- when I drop a table, it doesn't show up in the table list, but the data file
+  still exists in /user/data/warehouse directory. It takes up disk space.
