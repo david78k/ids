@@ -15,5 +15,5 @@ STORED AS TEXTFILE;
 
 load data local inpath '${hiveconf:path}' overwrite into table ${hiveconf:tname};
 select count(*) from ${hiveconf:tname};
-select * from ${hiveconf:tname} limit 5;
+select * from ${hiveconf:tname} limit 10;
 

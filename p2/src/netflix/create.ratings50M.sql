@@ -1,5 +1,5 @@
-set path = data/movie_ratings.csv;
-set tname = netflix_ratings;
+set path = data/movie_ratings.50M.tail.csv;
+set tname = netflix_ratings50M_tail;
 
 drop table ${hiveconf:tname};
 
@@ -14,6 +14,6 @@ FIELDS TERMINATED BY ','
 STORED AS TEXTFILE;
 
 load data local inpath '${hiveconf:path}' overwrite into table ${hiveconf:tname};
-select count(*) from ${hiveconf:tname};
-select * from ${hiveconf:tname} limit 5;
+--select count(*) from ${hiveconf:tname};
+select * from ${hiveconf:tname} limit 10;
 

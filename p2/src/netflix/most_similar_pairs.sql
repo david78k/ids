@@ -2,14 +2,15 @@
 -- and insert query results into a new table and a local file
 -- and display the results and the count
 
---set tname=netflix_similar_pairs_10M;
-set tname=netflix_similar_pairs_1M;
+--set tname=netflix_similar_pairs_1M;
 --set tname=netflix_similar_pairs;
---set tname2=netflix_likeX_pairs;
---set tname2=netflix_ratings10000;
---set tname2=netflix_ratings100000;
---set tname2=netflix_ratings10M;
-set tname1=netflix_ratings1M;
+--set tname=netflix_likeX_pairs;
+--set tname=netflix_ratings100000;
+set tname=netflix_similar_pairs_0M_10M;
+--set tname=netflix_similar_pairs_5M_tail;
+set tname1=netflix_ratings_0M_10M;
+--set tname1=netflix_ratings5M_tail;
+--set tname1=netflix_ratings1M;
 set tname2=netflix_ratings;
 set tname3=netflix_titles;
 
