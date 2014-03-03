@@ -1,25 +1,600 @@
-As Time Goes By: Series 6	Foyle's War: Series 1	0.61383283	347
-The Mechanic	The Manchurian Candidate	0.8386266	1165
-Foyle's War: Series 1	The Manchurian Candidate	0.8409332	943
-Foyle's War: Series 1	Bob Dylan: Don't Look Back	0.89361703	141
-The Manchurian Candidate	Bob Dylan: Don't Look Back	0.9003559	1405
-The Mechanic	Bob Dylan: Don't Look Back	0.9415584	154
-Notting Hill	Earthly Possessions	0.95454544	242
-As Time Goes By: Series 6	The Manchurian Candidate	0.9856115	556
-Notting Hill	The Mechanic	0.9958217	718
-The Mechanic	Foyle's War: Series 1	1.0070922	141
-Notting Hill	The Manchurian Candidate	1.0346326	8749
-The Circle	The Manchurian Candidate	1.0448718	312
-Notting Hill	Foyle's War: Series 1	1.0643564	606
-Notting Hill	Don King: Only in America	1.0661764	136
-Notting Hill	The Circle	1.0678734	221
-A Bright Shining Lie	The Manchurian Candidate	1.0691245	217
-Notting Hill	A Bright Shining Lie	1.0714285	154
-Notting Hill	As Time Goes By: Series 6	1.0949913	579
-Notting Hill	Devil's Pond	1.1381382	333
-Don King: Only in America	The Manchurian Candidate	1.1556886	167
-Devil's Pond	The Manchurian Candidate	1.1885965	228
-September 11	The Manchurian Candidate	1.1897436	195
-Earthly Possessions	The Manchurian Candidate	1.2098765	162
-Notting Hill	Bob Dylan: Don't Look Back	1.2191582	689
-Notting Hill	September 11	1.2605634	142
+The Best of Friends: Vol. 3	The Best of Friends: Vol. 4	0.047630534	8293
+The Lord of the Rings: The Fellowship of the Ring: Extended Edition	Lord of the Rings: The Two Towers: Extended Edition	0.06819692	66220
+Friends: Season 5	The Best of Friends: Season 4	0.07704994	15159
+Lord of the Rings: The Return of the King: Extended Edition	Lord of the Rings: The Two Towers: Extended Edition	0.08058753	63248
+Friends: Season 5	Friends: Season 6	0.08066171	15596
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 37	0.08108108	1480
+Battle Athletes Victory: Vol. 5: No Looking Back	Battle Athletes Victory: Vol. 7: The Last Dance	0.08178439	269
+Lord of the Rings: The Return of the King: Extended Edition	The Lord of the Rings: The Fellowship of the Ring: Extended Edition	0.083345406	62115
+King of New York: Special Edition (Widescreen)	King of New York: Special Edition (Full-screen)	0.084033616	119
+Friends: Season 7	Friends: Season 6	0.08526368	14203
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 18	0.08893957	1754
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 30	0.091090426	1504
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 27	0.09306261	1773
+The Best of Friends: Season 4	Friends: Season 6	0.09325772	14283
+Friends: Season 5	Friends: Season 4	0.093317896	15549
+Dark Shadows: Vol. 16	Dark Shadows: Vol. 13	0.094339624	159
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 36	0.09492848	1538
+Little House on the Prairie: As Long as We Are Together	Little House on the Prairie: I'll Be Waving as You Drive Away	0.09584087	553
+Dragon Ball: Piccolo Jr. Saga: Part 2	Dragon Ball: Piccolo Jr. Saga: Part 1	0.096296296	675
+The Twilight Zone: Vol. 39	The Twilight Zone: Vol. 37	0.09640718	1670
+The Twilight Zone: Vol. 39	The Twilight Zone: Vol. 42	0.097099625	1586
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 39	0.09740932	1930
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 28	0.097576134	1609
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 24	0.09781421	1830
+The Twilight Zone: Vol. 27	The Twilight Zone: Vol. 12	0.097832814	1615
+The Simpsons: Season 4	The Simpsons: Season 5	0.09852437	13418
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 29	0.09894737	1900
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 37	0.0994186	1720
+Dark Shadows: Vol. 4	Dark Shadows: Vol. 5	0.09946237	372
+Star Trek: Voyager: Season 6	Star Trek: Voyager: Season 5	0.09960037	3253
+Battle Athletes Victory: Vol. 5: No Looking Back	Battle Athletes Victory: Vol. 4: Spaceward Ho!	0.099616855	261
+The Best of Friends: Season 4	Friends: Season 4	0.10005929	13492
+The Twilight Zone: Vol. 33	The Twilight Zone: Vol. 27	0.100595236	1680
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 18	0.100657895	1520
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 30	0.100698486	1718
+Dark Shadows: Vol. 16	Dark Shadows: Vol. 17	0.10071942	139
+Dragon Ball: King Piccolo Saga: Part 2	Dragon Ball: Piccolo Jr. Saga: Part 1	0.10085227	704
+Star Trek: The Next Generation: Season 6	Star Trek: The Next Generation: Season 5	0.10104987	6858
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 18	0.10131579	1520
+Star Trek: Voyager: Season 4	Star Trek: Voyager: Season 5	0.101726845	3185
+Stargate SG-1: Season 6	Stargate SG-1: Season 5	0.101840705	5813
+Dragon Ball: King Piccolo Saga: Part 2	Dragon Ball: Red Ribbon Army Saga	0.102564104	702
+Little House on the Prairie: There's No Place Like Home	Little House on the Prairie: I'll Be Waving as You Drive Away	0.1027027	555
+Combat! Season 2: Mission 2	Combat! Season 2: Mission 1	0.10273973	146
+The Twilight Zone: Vol. 37	The Twilight Zone: Vol. 12	0.10315374	1522
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 37	0.10353379	1613
+The Twilight Zone: Vol. 33	The Twilight Zone: Vol. 12	0.10415336	1565
+Friends: Season 5	Friends: Season 7	0.10432588	13870
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 40	0.104644656	1787
+The Best of Friends: Season 4	The Best of Friends: Vol. 4	0.1050111	8561
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 37	0.10526316	1558
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 27	0.105473965	1498
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 35	0.10560206	1553
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 42	0.10621118	1610
+Family Guy: Vol. 1: Seasons 1-2	Family Guy: Vol. 2: Season 3	0.10681574	15831
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 18	0.106974	1692
+The Twilight Zone: Vol. 37	The Twilight Zone: Vol. 27	0.10700637	1570
+The Twilight Zone: Vol. 33	The Twilight Zone: Vol. 37	0.10745891	1582
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 35	0.10748453	1777
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 39	0.10778816	1605
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 39	0.10815047	1914
+Star Trek: The Next Generation: Season 5	Star Trek: The Next Generation: Season 7	0.108612016	6758
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 37	0.108666666	1500
+The Twilight Zone: Vol. 37	The Twilight Zone: Vol. 42	0.10886806	1387
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 29	0.10892388	1524
+Dragon Ball: King Piccolo Saga: Part 2	Dragon Ball: Piccolo Jr. Saga: Part 2	0.1089838	679
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 35	0.109004736	1688
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 39	0.1091992	1511
+Little House on the Prairie: There's No Place Like Home	Little House on the Prairie: As Long as We Are Together	0.109375	896
+The Twilight Zone: Vol. 39	The Twilight Zone: Vol. 12	0.1094265	1517
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 27	0.11015912	1634
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 34	0.11024499	1796
+The Twilight Zone: Vol. 21	The Twilight Zone: Vol. 27	0.110658124	1717
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 13	0.110990204	1838
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 6	0.11147011	1857
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 9	0.11158799	1631
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 13	0.11161218	1774
+The Dick Van Dyke Show: Season 4	The Dick Van Dyke Show: Season 5	0.111633375	851
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 33	0.111862324	1627
+The Best of Friends: Vol. 3	The Best of Friends: Season 4	0.1119295	7603
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 39	0.11194968	1590
+The Best of Friends: Season 4	Friends: Season 7	0.11209158	12579
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 20	0.11244738	1663
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 31	0.112578616	1590
+Stargate SG-1: Season 6	Stargate SG-1: Season 4	0.11268824	5777
+Star Trek: The Next Generation: Season 6	Star Trek: The Next Generation: Season 7	0.112690814	6682
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 12	0.112791434	1587
+Dark Shadows: Vol. 16	Dark Shadows: Vol. 15	0.11304348	115
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 42	0.1130491	1548
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 33	0.113195345	1546
+The Best of Friends: Season 4	The Best of Friends: Season 2	0.1134389	12315
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 33	0.11371841	1662
+Dragon Ball Z: Majin Buu	Dragon Ball Z: Fusion	0.11396012	1053
+The Twilight Zone: Vol. 39	The Twilight Zone: Vol. 27	0.11402947	1561
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 30	0.11406619	1692
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 41	0.114285715	1575
+The Twilight Zone: Vol. 33	The Twilight Zone: Vol. 15	0.11438475	1731
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 42	0.11443662	1704
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 28	0.11470588	1360
+The Best of Friends: Season 4	The Best of Friends: Season 1	0.11481191	12760
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 42	0.11490909	1375
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 39	0.11518916	1771
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 18	0.11547912	1628
+The Twilight Zone: Vol. 37	The Twilight Zone: Vol. 36	0.11582135	1321
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 41	0.115951315	1561
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 27	0.115951315	1561
+The Twilight Zone: Vol. 21	The Twilight Zone: Vol. 33	0.115974985	1759
+The Andy Griffith Show: Vol 1: High Noon at Mayberry / The Loaded Goat	The Andy Griffith Show: Vol 4: The Mountain Wedding / Opie and the Spoiled Child	0.1160221	724
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 38	0.11622419	1695
+The Twilight Zone: Vol. 21	The Twilight Zone: Vol. 12	0.11666667	1620
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 40	0.11672684	1662
+The Twilight Zone: Vol. 10	The Twilight Zone: Vol. 19	0.1167485	1833
+Dark Shadows: Vol. 4	Dark Shadows: Vol. 6	0.116959065	342
+Futurama: Vol. 3	Futurama: Vol. 4	0.11744966	6854
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 19	0.117614575	1811
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 42	0.11787819	1527
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 30	0.11788346	1493
+Star Trek: Voyager: Season 4	Star Trek: Voyager: Season 6	0.11810261	3099
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 30	0.11819887	1599
+The Twilight Zone: Vol. 37	The Twilight Zone: Vol. 15	0.118327975	1555
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 36	0.11841205	1461
+Dragon Ball: Red Ribbon Army Saga	Dragon Ball: Piccolo Jr. Saga: Part 2	0.11844078	667
+Gilmore Girls: Season 2	Gilmore Girls: Season 3	0.118590586	3803
+Battle Athletes Victory: Vol. 7: The Last Dance	Battle Athletes Victory: Vol. 6: Willpower	0.118644066	236
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 19	0.11870155	2064
+The Twilight Zone: Vol. 39	The Twilight Zone: Vol. 36	0.11880516	1473
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 21	0.11881751	1759
+CSI: Season 2	CSI: Season 3	0.11885495	9886
+The Andy Griffith Show: Vol 2: The Big House / A Wife for Andy	The Andy Griffith Show: Vol 4: The Mountain Wedding / Opie and the Spoiled Child	0.11891892	740
+Stargate SG-1: Season 5	Stargate SG-1: Season 7	0.11903823	5074
+The Twilight Zone: Vol. 33	The Twilight Zone: Vol. 39	0.11904762	1596
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 28	0.11915734	1519
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 36	0.1192429	1585
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 12	0.11942257	1524
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 34	0.11954674	1765
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 29	0.119668245	1688
+Dark Shadows: Vol. 3	Dark Shadows: Vol. 5	0.11988304	342
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 18	0.12	1500
+Seinfeld: Season 3	Seinfeld: Seasons 1 & 2	0.1200963	7061
+Little House on the Prairie: Season 4	Little House on the Prairie: Season 3	0.120145634	1648
+Battle Athletes Victory: Vol. 7: The Last Dance	Battle Athletes Victory: Vol. 8: The Human Race!	0.12017167	233
+The Twilight Zone: Vol. 21	The Twilight Zone: Vol. 18	0.120397426	1711
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 41	0.12054208	1402
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 41	0.12057667	1526
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 12	0.12060606	1650
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 13	0.12067956	1707
+Dark Shadows: Vol. 3	Dark Shadows: Vol. 10	0.12109375	256
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 42	0.12118903	1312
+Dark Shadows: Vol. 3	Dark Shadows: Vol. 11	0.12162162	222
+Dark Shadows: Vol. 11	Dark Shadows: Vol. 9	0.12162162	222
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 34	0.122103944	1597
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 13	0.12219851	1874
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 28	0.12243402	1364
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 34	0.12244898	1617
+Friends: Season 1	The Best of Friends: Season 2	0.12248891	15332
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 15	0.12253234	1469
+MASH: Season 5	MASH: Season 6	0.12265893	3791
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 41	0.122671805	1557
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 33	0.1227209	1426
+Battle Athletes Victory: Vol. 8: The Human Race!	Battle Athletes Victory: Vol. 6: Willpower	0.12280702	228
+Transformers: Season 3: Part 2/Season 4	Transformers: Season 3: Part 1	0.12291052	1017
+Red Dwarf: Series 4	Red Dwarf: Series 3	0.12297426	2098
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 33	0.12300208	1439
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 33	0.12319259	1729
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 35	0.123202	1599
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 15	0.12324588	1639
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 12	0.12346477	1547
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 15	0.12347117	1717
+The Twilight Zone: Vol. 37	The Twilight Zone: Vol. 19	0.123498	1498
+Friends: Season 1	Friends: Season 3	0.12395827	16199
+Friends: Season 7	The Best of Friends: Vol. 4	0.12401903	8410
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 17	0.12402167	1661
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 29	0.12406484	1604
+The Twilight Zone: Vol. 21	The Twilight Zone: Vol. 15	0.12465527	1813
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 36	0.12480377	1274
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 12	0.124912284	1425
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 37	0.125	1600
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 27	0.12537856	1651
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 40	0.12537856	1651
+Sanford and Son: Season 3	Sanford and Son: Season 4	0.12543963	853
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 20	0.12550066	1498
+Stargate SG-1: Season 5	Stargate SG-1: Season 3	0.12556905	5272
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 27	0.12560055	1457
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 40	0.12571429	1575
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 20	0.12600537	1492
+Outlaw Star: Vol. 2	Outlaw Star: Vol. 3	0.12608406	1499
+Friends: Season 1	Friends: Season 4	0.12614521	16045
+The Dick Van Dyke Show: Season 4	The Dick Van Dyke Show: Season 3	0.12629162	871
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 38	0.12654924	1533
+Little House on the Prairie: Journey in the Spring	Little House on the Prairie: As Long as We Are Together	0.12689655	725
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 13	0.12702702	1480
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 6	0.12734509	1759
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 12	0.12734865	1437
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 13	0.12744518	1687
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 37	0.12749004	1506
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 9	0.1277027	1480
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 41	0.12802498	1281
+Friends: Season 7	Friends: Season 4	0.12808919	12827
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 40	0.12822208	1513
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 30	0.12825651	1497
+Friends: Season 5	The Best of Friends: Vol. 4	0.12827441	8513
+Stargate SG-1: Season 6	Stargate SG-1: Season 7	0.12834755	5041
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 31	0.12862319	1656
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 12	0.12871927	1546
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 33	0.12881356	1475
+Dragon Ball: Tien Shinhan Saga	Dragon Ball: The Path to Power	0.12884615	520
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 29	0.12893082	1590
+The Best of Friends: Vol. 3	The Best of Friends: Season 2	0.12894174	7484
+G.I. Joe: Season 1: Part 2	G.I. Joe: Season 2: Part 1	0.12912482	697
+Sailor Moon: Vol. 6: Adventure Girls	Sailor Moon: Vol. 10: The Trouble With Rini	0.12927757	263
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 37	0.12928022	1431
+Legend of the Dragon Kings: Black Dragon	Legend of the Dragon Kings: Red Dragon	0.12931034	116
+Little House on the Prairie: There's No Place Like Home	Little House on the Prairie: Journey in the Spring	0.12933333	750
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 39	0.12945166	1769
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 30	0.12953693	1598
+WWE: Royal Rumble 2003	WWE: Summerslam 2003	0.12962963	108
+Friends: Season 5	Friends: Season 3	0.129672	13110
+The Twilight Zone: Vol. 21	The Twilight Zone: Vol. 37	0.12985359	1571
+Battle Athletes Victory: Vol. 5: No Looking Back	Battle Athletes Victory: Vol. 8: The Human Race!	0.12987013	231
+Lord of the Rings: The Return of the King: Extended Edition	Lord of the Rings: The Return of the King	0.12990877	66208
+Dark Shadows: Vol. 3	Dark Shadows: Vol. 4	0.12997347	377
+Dark Shadows: Vol. 3	Dark Shadows: Vol. 7	0.13	300
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 36	0.13001485	1346
+The Andy Griffith Show: Vol 4: The Mountain Wedding / Opie and the Spoiled Child	The Andy Griffith Show: Vol 3: Andy Discovers America / Andy's English Valet	0.1301939	722
+MASH: Season 5	MASH: Season 7	0.13026607	3608
+The Best of Friends: Season 4	Friends: Season 3	0.13029514	11520
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 10	0.13035144	1565
+King of the Hill: Season 2	King of the Hill: Season 3	0.13037893	1557
+The Twilight Zone: Vol. 33	The Twilight Zone: Vol. 36	0.13046815	1303
+SpongeBob SquarePants: Absorbing Favorites	SpongeBob SquarePants: Season 3	0.1305842	291
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 37	0.13060686	1516
+Dark Shadows: Vol. 3	Dark Shadows: Vol. 6	0.13084112	321
+The Andy Griffith Show: Vol 2: The Big House / A Wife for Andy	The Andy Griffith Show: Vol 3: Andy Discovers America / Andy's English Valet	0.13085234	833
+The Twilight Zone: Vol. 36	The Twilight Zone: Vol. 12	0.13087775	1276
+MASH: Season 8	MASH: Season 7	0.1308833	3102
+Xena: Warrior Princess: Season 4	Xena: Warrior Princess: Season 5	0.13095239	1176
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 27	0.13115846	1502
+Dragon Ball: King Piccolo Saga: Part 2	Dragon Ball: Commander Red Saga	0.13117284	648
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 3	0.13126649	1516
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 10	0.13130252	1904
+The Twilight Zone: Vol. 10	The Twilight Zone: Vol. 42	0.1313066	1546
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 33	0.13131313	1485
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 35	0.1313253	1660
+Dragon Ball: Tien Shinhan Saga	Dragon Ball: Piccolo Jr. Saga: Part 1	0.13148789	578
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 27	0.13174492	1427
+Dragon Ball: Tien Shinhan Saga	Dragon Ball: Piccolo Jr. Saga: Part 2	0.13184932	584
+Friends: Season 1	The Best of Friends: Season 1	0.1320403	14488
+Stargate SG-1: Season 6	Stargate SG-1: Season 3	0.1321544	5259
+The Twilight Zone: Vol. 33	The Twilight Zone: Vol. 42	0.13238594	1337
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 21	0.1324228	1684
+Seinfeld: Season 3	Seinfeld: Season 4	0.13244584	4432
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 35	0.1327609	1514
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 24	0.13277742	1559
+Battle Athletes Victory: Vol. 5: No Looking Back	Battle Athletes Victory: Vol. 6: Willpower	0.13278009	241
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 28	0.13285199	1385
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 37	0.13285807	1543
+The Best of Friends: Season 1	The Best of Friends: Vol. 4	0.13287131	8369
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 12	0.13293651	1512
+The Twilight Zone: Vol. 10	The Twilight Zone: Vol. 37	0.13298272	1331
+The Best of Friends: Vol. 3	Friends: Season 5	0.1331049	7588
+The Best of Friends: Vol. 3	Friends: Season 7	0.13312693	7429
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 33	0.13315217	1472
+Friends: Season 5	The Best of Friends: Season 2	0.1332709	12816
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 29	0.13329615	1793
+The Best of Friends: Vol. 3	Friends: Season 6	0.13344139	7404
+The Twilight Zone: Vol. 10	The Twilight Zone: Vol. 27	0.13348247	1341
+Friends: Season 5	The Best of Friends: Season 1	0.13361645	13187
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 9	0.13365735	1646
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 3	0.13376206	1555
+Dragon Ball: Red Ribbon Army Saga	Dragon Ball: Piccolo Jr. Saga: Part 1	0.13383459	665
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 24	0.13392857	1456
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 34	0.13401477	1761
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 41	0.13425253	1378
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 27	0.13431834	1489
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 3	0.13438937	1957
+The Twilight Zone: Vol. 21	The Twilight Zone: Vol. 28	0.13451087	1472
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 4	0.13463463	1998
+The Twilight Zone: Vol. 39	The Twilight Zone: Vol. 15	0.13466334	1604
+The Twilight Zone: Vol. 6	The Twilight Zone: Vol. 34	0.13483831	1639
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 39	0.1349353	1623
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 12	0.13497652	1704
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 18	0.13504611	1518
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 19	0.13516676	1709
+The Twilight Zone: Vol. 36	The Twilight Zone: Vol. 27	0.13544892	1292
+As Time Goes By: Series 6	As Time Goes By: Series 7	0.13549832	893
+The Twilight Zone: Vol. 10	The Twilight Zone: Vol. 18	0.13555713	1409
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 4	0.13569131	1555
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 3	0.13569322	1356
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 24	0.13585156	1509
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 6	0.13591671	1729
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 14	0.13596004	1802
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 26	0.13603662	1529
+The Andy Griffith Show: Vol 1: High Noon at Mayberry / The Loaded Goat	The Andy Griffith Show: Vol 3: Andy Discovers America / Andy's English Valet	0.13605443	735
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 17	0.13607189	1558
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 39	0.13651648	1487
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 36	0.13660783	1303
+The Twilight Zone: Vol. 9	The Twilight Zone: Vol. 15	0.13672923	1492
+The Twilight Zone: Vol. 31	The Twilight Zone: Vol. 10	0.1367801	1528
+Dragon Ball: Tien Shinhan Saga	Dragon Ball: Red Ribbon Army Saga	0.1369637	606
+Dr. Quinn	Dr. Quinn	0.1369863	584
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 39	0.13714285	1575
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 23	0.13724463	1909
+The Andy Griffith Show: Vol 1: High Noon at Mayberry / The Loaded Goat	The Andy Griffith Show	0.13740458	786
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 20	0.1378866	1552
+The Dick Van Dyke Show: Season 4	The Dick Van Dyke Show: Season 2	0.13797468	790
+Friends: Season 1	The Best of Friends: Season 4	0.13804741	12445
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 15	0.1381042	1593
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 7	0.1381748	1556
+The Twilight Zone: Vol. 21	The Twilight Zone: Vol. 39	0.13824604	1642
+The Twilight Zone: Vol. 21	The Twilight Zone: Vol. 29	0.13833746	1612
+The Best of Friends: Vol. 3	The Best of Friends: Season 1	0.1384106	7550
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 18	0.1384708	1661
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 35	0.13857678	1602
+The Twilight Zone: Vol. 21	The Twilight Zone: Vol. 30	0.13872135	1658
+Futurama: Vol. 3	Futurama: Vol. 2	0.13882081	6937
+Lain #3: Deus	Lain #2: Knights	0.1388753	2045
+Dark Shadows: Vol. 16	Dark Shadows: Vol. 11	0.1388889	144
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 36	0.13902271	1453
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 18	0.13913043	1610
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 5	0.13928182	1838
+Star Trek: Voyager: Season 4	Star Trek: Voyager: Season 7	0.13930674	3058
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 41	0.13933237	1378
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 29	0.13937753	1478
+Star Trek: Deep Space Nine: Season 4	Star Trek: Deep Space Nine: Season 3	0.13947536	3126
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 20	0.13971014	1725
+Dark Shadows: Vol. 16	Dark Shadows: Vol. 6	0.14012739	157
+The Simpsons: Season 4	The Simpsons: Season 3	0.14016351	13577
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 33	0.14017595	1705
+Xena: Warrior Princess: Season 4	Xena: Warrior Princess: Season 3	0.14025778	1319
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 15	0.1407855	1655
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 34	0.14082767	1619
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 28	0.14098135	1447
+Dark Shadows: Vol. 4	Dark Shadows: Vol. 7	0.14106584	319
+Star Trek: Deep Space Nine: Season 4	Star Trek: Deep Space Nine: Season 5	0.14120588	3201
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 19	0.14155771	1759
+Dragon Ball: Red Ribbon Army Saga	Dragon Ball: Tournament Saga	0.14159292	678
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 9	0.14165498	1426
+Friends: Season 1	Friends: Season 5	0.14174965	14060
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 34	0.14184397	1692
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 20	0.14190012	1642
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 28	0.14206897	1450
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 40	0.14223057	1596
+Family Guy: Vol. 2: Season 3	Family Guy: Freakin' Sweet Collection	0.142296	7892
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 36	0.1424196	1306
+The Twilight Zone: Vol. 25	The Twilight Zone: Vol. 27	0.14242424	1650
+The Andy Griffith Show: Vol 1: High Noon at Mayberry / The Loaded Goat	The Andy Griffith Show: Vol 2: The Big House / A Wife for Andy	0.1424767	751
+Highlander: Season 2	Highlander: Season 3	0.1425031	1614
+Dragon Ball: Piccolo Jr. Saga: Part 2	Dragon Ball: Tournament Saga	0.14285715	623
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 28	0.14285715	1344
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 29	0.1430429	1538
+Gilmore Girls: Season 2	Gilmore Girls: Season 1	0.14316745	5064
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 6	0.14318442	1746
+Ranma 1/2: Ranma Forever: Vol. 4: Rock a Bye Ranma	Ranma 1/2: Ranma Forever: Vol. 8: Someday	0.14320987	405
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 19	0.14326854	1389
+Battle Athletes Victory: Vol. 3: Tragedy & Triumph	Battle Athletes Victory: Vol. 8: The Human Race!	0.14349777	223
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 36	0.14355628	1226
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 13	0.14357683	1588
+The Simpsons: Season 4	The Simpsons: Season 6	0.14367394	6821
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 3	0.14376996	1565
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 13	0.14380826	1502
+The Twilight Zone: Vol. 39	The Twilight Zone: Vol. 19	0.14391354	1758
+The Best of Friends: Vol. 3	Friends: Season 4	0.14407352	7399
+Dragon Ball: King Piccolo Saga: Part 2	Dragon Ball: Tien Shinhan Saga	0.1442786	603
+Dark Shadows: Vol. 4	Dark Shadows: Vol. 11	0.14468086	235
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 21	0.14485459	1788
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 42	0.14503263	1379
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 31	0.14510834	1523
+Stargate SG-1: Season 5	Stargate SG-1: Season 2	0.14525248	5129
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 23	0.14528508	1824
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 40	0.14545454	1430
+Dark Shadows: Vol. 4	Dark Shadows: Vol. 10	0.14559387	261
+Spin City: Michael J. Fox: His All-Time Favorites: Vol. 1	Spin City: Michael J. Fox: His All-Time Favorites: Vol. 2	0.14572865	597
+Saved by the Bell: Season 2	Saved by the Bell: Season 1	0.14617315	1594
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 17	0.14625446	1682
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 4	0.14640199	1612
+Buffy the Vampire Slayer: Season 3	Buffy the Vampire Slayer: Season 2	0.14640976	8927
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 6	0.14650537	1488
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 13	0.1468254	1512
+That '70s Show: Season 2	That '70s Show: Season 1	0.14689265	3186
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 41	0.14735226	1303
+Dark Shadows: Vol. 3	Dark Shadows: Vol. 2	0.14736842	380
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 38	0.14737599	1391
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 27	0.14752117	1654
+CSI: Season 2	CSI: Season 1	0.14771351	10737
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 15	0.14774282	1462
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 40	0.14785479	1515
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 21	0.14788345	1819
+Dragon Ball: King Piccolo Saga: Part 2	Dragon Ball: Tournament Saga	0.1482602	661
+Dragon Ball: King Piccolo Saga: Part 2	Dragon Ball: The Path to Power	0.14827587	580
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 19	0.14850843	1542
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 3	0.14864865	1480
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 41	0.14867763	1399
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 42	0.14909092	1375
+Battle Athletes Victory: Vol. 7: The Last Dance	Battle Athletes Victory: Vol. 3: Tragedy & Triumph	0.14932127	221
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 21	0.14993307	1494
+Dr. Quinn	Dr. Quinn	0.15	620
+Smallville: Season 3	Smallville: Season 2	0.15028009	5177
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 14	0.15028177	1597
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 25	0.15056023	1428
+Lord of the Rings: The Return of the King	Lord of the Rings: The Two Towers: Extended Edition	0.15058316	68248
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 3	0.15075034	1466
+Dragon Ball Z: Fusion	Dragon Ball Z: World Tournament	0.15126051	952
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 15	0.1512792	1798
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 4	0.15128206	1560
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 15	0.15141752	1552
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 3	0.15162721	1352
+Lord of the Rings: The Return of the King	The Lord of the Rings: The Fellowship of the Ring: Extended Edition	0.15194716	66918
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 25	0.15209581	1670
+Gundam Movie II	Gundam Movie III	0.15267175	131
+Star Trek: Voyager: Season 2	Star Trek: Voyager: Season 1	0.15270671	3713
+Burn Up Excess: Vol. 4: The Case of the Black Diamonds	Burn Up Excess: Vol. 3: Under the Gun	0.15272728	275
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 30	0.15286195	1485
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 30	0.15299878	1634
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 42	0.15328994	1383
+Frasier: Season 4	Frasier: Season 3	0.15347722	1668
+The Twilight Zone: Vol. 33	The Twilight Zone: Vol. 19	0.15347886	1466
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 14	0.15366146	1666
+Little House on the Prairie: Journey in the Spring	Little House on the Prairie: I'll Be Waving as You Drive Away	0.15368421	475
+Sex and the City: Season 6: Part 1	Sex and the City: Season 6: Part 2	0.15371391	22685
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 38	0.15384616	1508
+Case Closed: Season 4	Case Closed: Season 5	0.15384616	104
+Friends: Season 7	The Best of Friends: Season 2	0.15410249	11103
+The Twilight Zone: Vol. 20	The Twilight Zone: Vol. 10	0.15412186	1395
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 21	0.15424497	1543
+The John Wayne Collection: Vol. 4: Lawless Frontier / Randy Rides Alone	The John Wayne Collection: Vol. 3: The Dawn Rider / The Trail Beyond	0.15450644	233
+Battle Athletes Victory: Vol. 5: No Looking Back	Battle Athletes Victory: Vol. 3: Tragedy & Triumph	0.15450644	233
+Will & Grace: Season 2	Will & Grace: Season 3	0.15473978	4304
+Friends: Season 1	Friends: Season 6	0.15476467	12897
+Stargate SG-1: Season 6	Stargate SG-1: Season 2	0.15478535	5078
+Hercules: The Legendary Journeys: Season 5	Hercules: The Legendary Journeys: Season 4	0.15503876	645
+Dark Shadows: Vol. 2	Dark Shadows: Vol. 10	0.15537849	251
+Dragon Ball: Fortune Teller Baba Saga	Dragon Ball: Red Ribbon Army Saga	0.15559158	617
+The Best of Friends: Vol. 3	Friends: Season 9	0.15560603	6163
+Dr. Quinn	Dr. Quinn	0.15568863	835
+Dark Shadows: Vol. 3	Dark Shadows: Vol. 12	0.1557789	199
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 17	0.155902	1796
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 36	0.15592204	1334
+Babylon 5: Season 3	Babylon 5: Season 2	0.15649241	2965
+Sailor Moon: Vol. 6: Adventure Girls	Sailor Moon: Vol. 9: The Return of the Doom Tree	0.15708812	261
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 42	0.15773116	1287
+Friends: Season 7	Friends: Season 3	0.1578761	11300
+The X-Files: Season 6	The X-Files: Season 7	0.15843107	5201
+The Twilight Zone: Vol. 25	The Twilight Zone: Vol. 33	0.15855107	1684
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 29	0.15884928	1599
+Beast Wars Transformers: Season 3	Beast Wars Transformers: Season 2	0.15885417	384
+Futurama: Vol. 2	Futurama: Vol. 1	0.15886636	7692
+Little House on the Prairie: Season 1	Little House on the Prairie: Season 2	0.15894797	1749
+The John Wayne Collection: Vol. 4: Lawless Frontier / Randy Rides Alone	The John Wayne Collection: Vol. 1: Man from Utah / Sagebrush Trail	0.1590909	220
+Dark Shadows: Vol. 3	Dark Shadows: Vol. 9	0.15918367	245
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 19	0.15969843	1459
+The Twilight Zone: Vol. 25	The Twilight Zone: Vol. 12	0.15976714	1546
+La Femme Nikita: Season 2	La Femme Nikita: Season 3	0.15992293	519
+Dragon Ball: Piccolo Jr. Saga: Part 1	Dragon Ball: Tournament Saga	0.16006339	631
+SpongeBob SquarePants: Lost at Sea	SpongeBob SquarePants: Tales From the Deep	0.16013253	1811
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 1	0.1601976	1417
+Babylon 5: Season 3	Babylon 5: Season 4	0.16041979	2668
+Xena: Warrior Princess: Season 5	Xena: Warrior Princess: Season 6	0.16071428	952
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 38	0.16088766	1442
+The Twilight Zone: Vol. 38	The Twilight Zone: Vol. 25	0.16098227	1466
+SpongeBob SquarePants: Lost at Sea	SpongeBob SquarePants: The Seascape Capers	0.1609925	1733
+The Best of Friends: Vol. 3	Friends: Season 3	0.16120422	6743
+Lain #3: Deus	Lain #4: Reset	0.16169155	2010
+South Park: Season 3	South Park: Season 2	0.16178463	9593
+The Shield: Season 2	The Shield: Season 3	0.16194905	4946
+Frasier: Season 2	Frasier: Season 3	0.16217566	2004
+Rumpole of the Bailey: Series 3	Rumpole of the Bailey: Series 4	0.16230367	191
+The Twilight Zone: Vol. 25	The Twilight Zone: Vol. 37	0.16234198	1503
+Battle Athletes Victory: Vol. 7: The Last Dance	Battle Athletes Victory: Vol. 4: Spaceward Ho!	0.16269842	252
+Friends: Season 7	The Best of Friends: Season 1	0.16293788	11219
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 13	0.16312917	1649
+The John Wayne Collection: Vol. 4: Lawless Frontier / Randy Rides Alone	The John Wayne Collection: Vol. 2: Riders of Destiny / The Star Packer	0.16317992	239
+Friends: Season 1	The Best of Friends: Vol. 4	0.16331418	8352
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 25	0.16352879	1859
+The Twilight Zone: Vol. 28	The Twilight Zone: Vol. 1	0.16355811	1394
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 6	0.16385704	1483
+Married... with Children: The Most Outrageous Episodes: Vol. 1	Married... with Children: The Most Outrageous Episodes: Vol. 2	0.16397999	1799
+The Best of Friends: Vol. 3	Friends: Season 1	0.16401485	7542
+Three Stooges: Stooges and the Law	Three Stooges: Stooges at Work	0.1641266	853
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 19	0.16432866	1497
+Dragon Ball: Tien Shinhan Saga	Dragon Ball: Fortune Teller Baba Saga	0.16433567	572
+Friends: Season 1	Friends: Season 7	0.16436791	12253
+The Twilight Zone: Vol. 29	The Twilight Zone: Vol. 25	0.16476552	1578
+Dragon Ball: General Blue Saga	Dragon Ball: Fortune Teller Baba Saga	0.16491228	570
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 10	0.16493313	1346
+The Vicar of Dibley: Series 3	The Vicar of Dibley: Series 2 and Specials	0.16527446	1676
+The Lord of the Rings: The Fellowship of the Ring: Extended Edition	Lord of the Rings: The Fellowship of the Ring	0.16549058	66747
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 5	0.16553007	1613
+Sharpe 11: Sharpe's Mission	Sharpe 10: Sharpe's Siege	0.16555661	1051
+The Twilight Zone: Vol. 25	The Twilight Zone: Vol. 39	0.16603535	1584
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 8	0.16607773	1415
+Family Guy: Vol. 1: Seasons 1-2	Family Guy: Freakin' Sweet Collection	0.16619898	7840
+The Twilight Zone: Vol. 16	The Twilight Zone: Vol. 33	0.1664692	1688
+Battle Athletes Victory: Vol. 8: The Human Race!	Battle Athletes Victory: Vol. 4: Spaceward Ho!	0.16666667	228
+Now and Then	Now and Then	0.16666667	606
+Hercules: The Legendary Journeys: Season 1	Hercules: The Legendary Journeys: Season 2	0.16689847	719
+The Twilight Zone: Vol. 32	The Twilight Zone: Vol. 10	0.16762178	1396
+Star Trek: Voyager: Season 2	Star Trek: Voyager: Season 4	0.16778934	3266
+SpongeBob SquarePants: Lost at Sea	SpongeBob SquarePants: Tide and Seek	0.16795154	1816
+Little House on the Prairie: Journey in the Spring	Little House on the Prairie: Season 8	0.16848674	641
+The Twilight Zone: Vol. 25	The Twilight Zone: Vol. 15	0.1685327	1697
+Little House on the Prairie: Season 1	Little House on the Prairie: Season 4	0.16903915	1686
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 32	0.1692726	1471
+King of the Hill: Season 2	King of the Hill: Season 1	0.16938111	1842
+Battle Athletes Victory: Vol. 3: Tragedy & Triumph	Battle Athletes Victory: Vol. 4: Spaceward Ho!	0.16949153	236
+Sex and the City: Season 6: Part 1	Sex and the City: Season 5	0.16975015	25296
+Gilmore Girls: Season 4	Gilmore Girls: Season 3	0.1700864	1852
+The Twilight Zone: Vol. 5	The Twilight Zone: Vol. 19	0.17054752	1589
+The X-Files: Season 5	The X-Files: Season 6	0.17059463	5516
+I Love Lucy: Season 4	I Love Lucy: Season 2	0.17062937	1430
+Dragon Ball: Tien Shinhan Saga	Dragon Ball: Mystical Adventure	0.17063493	504
+The Twilight Zone: Vol. 25	The Twilight Zone: Vol. 42	0.17067833	1371
+Red Green: Stuffed and Mounted 6	Red Green: Stuffed and Mounted 4	0.17090909	275
+Ranma 1/2: Ranma Forever: Vol. 4: Rock a Bye Ranma	Ranma 1/2: Ranma Forever: Vol. 5: Wretched Rice Cakes of Love	0.17162472	437
+The X-Files: Season 5	The X-Files: Season 3	0.17175975	5694
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 23	0.17208672	1476
+Star Trek: Voyager: Season 2	Star Trek: Voyager: Season 5	0.17234333	2936
+Dark Shadows: Vol. 2	Dark Shadows: Vol. 11	0.17289719	214
+Dark Shadows: Vol. 16	Dark Shadows: Vol. 10	0.17333333	150
+Arrested Development: Season 2	Arrested Development: Season 1	0.17348154	5038
+Dark Shadows: Vol. 2	Dark Shadows: Vol. 6	0.17419355	310
+The Twilight Zone: Vol. 43	The Twilight Zone: Vol. 39	0.17451523	361
+The Twilight Zone: Vol. 16	The Twilight Zone: Vol. 27	0.17473435	1694
+The Twilight Zone: Vol. 43	The Twilight Zone: Vol. 33	0.17507419	337
+The Simpsons: Season 4	The Simpsons: Season 2	0.17541206	12559
+The King of Queens: Season 3	The King of Queens: Season 2	0.17583333	1200
+The Twilight Zone: Vol. 43	The Twilight Zone: Vol. 18	0.17595308	341
+Dragon Ball: Fortune Teller Baba Saga	Dragon Ball: Piccolo Jr. Saga: Part 2	0.17657343	572
+The Twilight Zone: Vol. 16	The Twilight Zone: Vol. 15	0.17660293	1778
+Dragon Ball Z: Cooler's Revenge	Dragon Ball Z: The Return of Cooler	0.17689015	701
+Marmalade Boy: Ultimate Scrapbook: Vol. 2	Marmalade Boy: Ultimate Scrapbook: Vol. 3	0.17730497	141
+The Twilight Zone: Vol. 43	The Twilight Zone: Vol. 41	0.17746478	355
+The Twilight Zone: Vol. 43	The Twilight Zone: Vol. 42	0.17836258	342
+Friends: Season 1	Friends: Season 9	0.17845859	10445
+Cheers: Season 2	Cheers: Season 1	0.17852929	2543
+A Touch of Frost: Season 5	A Touch of Frost: Season 6	0.17886178	123
+ECW: Wrestlepalooza '97	ECW: Cyberslam '99	0.17948718	117
+Friends: Season 1	Friends: Season 2	0.17993334	15000
+The Twilight Zone: Vol. 16	The Twilight Zone: Vol. 12	0.18	1600
+Dragon Ball Z: Great Saiyaman: Final Round	Dragon Ball Z: Captain Ginyu Saga	0.1802935	477
+More Treasures of the Twilight Zone	The Twilight Zone: Vol. 1	0.18097754	1514
+South Park: Season 3	South Park: Season 1	0.18097837	9526
+I Love Lucy: Season 4	I Love Lucy: Season 5	0.18246686	981
+21 Jump Street: Season 1	21 Jump Street: Season 2	0.18317358	939
+The Twilight Zone: Vol. 43	The Twilight Zone: Vol. 30	0.18318318	333
+Dragon Ball: Tien Shinhan Saga	Dragon Ball: Tournament Saga	0.18360071	561
+The Twilight Zone: Vol. 43	The Twilight Zone: Vol. 25	0.18397626	337
+Lord of the Rings: The Return of the King: Extended Edition	Lord of the Rings: The Two Towers	0.18419676	66885
+Space Ghost Coast to Coast: Vol. 3	Space Ghost Coast to Coast: Vol. 2	0.18470149	536
+Strangers with Candy: Season 2	Strangers with Candy: Season 3	0.18501921	1562
+Dragon Ball: Fortune Teller Baba Saga	Dragon Ball: Piccolo Jr. Saga: Part 1	0.18650089	563
+The Inspector Lynley Mysteries: A Cry for Justice	The Inspector Lynley Mysteries: If Wishes Were Horses	0.18691589	214
+Prime Suspect 4	Prime Suspect 5	0.18739054	1713
+The Twilight Zone: Vol. 16	The Twilight Zone: Vol. 37	0.1884715	1544
+Cheers: Season 2	Cheers: Season 4	0.18924618	1897
+Lord of the Rings: The Return of the King: Extended Edition	Lord of the Rings: The Fellowship of the Ring	0.18991521	66040
+The Twilight Zone: Vol. 43	The Twilight Zone: Vol. 37	0.19088319	351
+The Best of Friends: Season 1	Friends: Season 2	0.19274628	12628
+Curb Your Enthusiasm: Season 2	Curb Your Enthusiasm: Season 3	0.19303404	8843
+Degrassi Junior High: Season 2	Degrassi Junior High: Season 3	0.19333333	150
+Battle Athletes Victory: Vol. 3: Tragedy & Triumph	Battle Athletes Victory: Vol. 6: Willpower	0.1936937	222
+Jem & The Holograms: Season 3: Part 1	Jem & The Holograms: Seasons 1 & 2	0.19393939	165
+VeggieTales: Dave and the Giant Pickle	VeggieTales Classics: Where's God When I'm Scared?	0.19434932	1168
+Stargate SG-1: Season 5	Stargate SG-1: Season 8	0.19456068	1434
+Inspector Morse 13: The Sins of the Father	Inspector Morse 30: The Daughters of Cain	0.19464286	560
+Prime Suspect 4	Prime Suspect 3	0.19517668	1783
+George Carlin Again!	George Carlin: Playing with Your Head	0.19576271	1180
+Ranma 1/2: Ranma Forever: Vol. 2: The Depths of Despair	Ranma 1/2: Ranma Forever: Vol. 8: Someday	0.19602978	403
+ECW: Extreme Evolution: Extreme Championship Wrestling	ECW: Hardcore History	0.19626169	107
+ER: Season 2	ER: Season 3	0.1963037	2002
+SpongeBob SquarePants: Tales From the Deep	SpongeBob SquarePants: The Seascape Capers	0.19742991	1712
+The John Wayne Collection: Vol. 1: Man from Utah / Sagebrush Trail	The John Wayne Collection: Vol. 2: Riders of Destiny / The Star Packer	0.19758065	248
+The Twilight Zone: Vol. 43	The Twilight Zone: Vol. 36	0.19808307	313
+The Twilight Zone: Vol. 43	The Twilight Zone: Vol. 29	0.19836956	368
+Yu-Gi-Oh!: Season 3	Yu-Gi-Oh!	0.1984127	126
+Married... with Children: Season 4	Married... with Children: Season 3	0.19911504	904
+The Twilight Zone: Vol. 16	The Twilight Zone: Vol. 39	0.19988173	1691
+ECW: Wrestlepalooza '97	ECW: Anarchy Rulz '99	0.2	130
+George Carlin Again!	George Carlin: On Location With George Carlin	0.20159362	1255
+Dark Shadows: Vol. 17	Dark Shadows: Vol. 6	0.2016129	124
+Dark Shadows: Vol. 3	Dark Shadows: Vol. 16	0.20253165	158
+The Fresh Prince of Bel Air: Season 1	The Fresh Prince of Bel Air: Season 2	0.2043551	597
+SpongeBob SquarePants: Tales From the Deep	SpongeBob SquarePants: Sea Stories	0.20533182	1763
+Nazca: Eternal Power	Nazca: Betrayal of Humanity	0.20535715	112
+Lain #4: Reset	Lain #2: Knights	0.20537525	1972
+Strangers with Candy: Season 2	Strangers with Candy: Season 1	0.20548712	1786
+ECW: Extreme Evolution: Extreme Championship Wrestling	ECW: Anarchy Rulz '99	0.20588236	102
+All in the Family: Season 4	All in the Family: Season 3	0.20620438	548
+Dark Shadows: Vol. 3	Dark Shadows: Vol. 14	0.20670392	179
+The Twilight Zone: Vol. 16	The Twilight Zone: Vol. 3	0.2071256	1656
+The Twilight Zone: Vol. 43	The Twilight Zone: Vol. 13	0.20821919	365
+The Inspector Lynley Mysteries: A Cry for Justice	The Inspector Lynley Mysteries: In the Presence of the Enemy	0.20833333	216
+Punky Brewster: Season 2	Punky Brewster: Season 1	0.20841683	499
+The Twilight Zone: Vol. 16	The Twilight Zone: Vol. 25	0.20842773	2207
+Sex and the City: Season 1	Sex and the City: Season 3	0.20868887	26954
+The Twilight Zone: Vol. 16	The Twilight Zone: Vol. 41	0.20891365	1436
+Babylon 5: Thirdspace	Babylon 5: The River of Souls	0.20958903	1460
+Dark Shadows: Vol. 3	Dark Shadows: Vol. 13	0.20987654	162
+The Twilight Zone: Vol. 43	The Twilight Zone: Vol. 12	0.21003135	319
+Babylon 5: In the Beginning	Babylon 5: A Call to Arms	0.21040724	1768
+Northern Exposure: Season 2	Northern Exposure: Season 3	0.21092832	1702
