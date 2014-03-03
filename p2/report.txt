@@ -136,7 +136,10 @@ FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
   estimated time for all ratings: 5h40m*100 = 600h = 25days
   netflix similar pairs with greater than or equal to 100 votes from 1M*100M ratings: 118m36.615s (2h)
   estimated time for all ratings: 2h*100 = 600h = 25days
-  netflix similar pairs with greater than or equal to 100 votes from 500M*100M ratings (failed; checksum error): 232m0.231s (4h)
+  netflix similar pairs with greater than or equal to 100 votes from 50M*100M ratings (failed; checksum error): 232m0.231s (4h)
+  netflix similar pairs with greater than or equal to 100 votes from 10M*100M ratings: 451m25.725s (7h 32m)
+  estimated time for all ratings: 7h 32m * 10 = 70h + 3h20m = 73h 20m = 3
+days
 
 6. What difficulties you faced and what you learned from this project?
 - The data given to us didn't fit into Hive format as the enron data file

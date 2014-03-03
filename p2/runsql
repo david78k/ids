@@ -9,8 +9,8 @@ file=$basedir/create.titles.sql
 #file=$basedir/create.ratings100000.sql
 #file=$basedir/create.ratings.sql
 #file=$basedir/create.ratings50M.sql
-#file=$basedir/create.ratings10M.sql
-file=$basedir/create.ratings5M.sql
+file=$basedir/create.ratings10M.sql
+#file=$basedir/create.ratings5M.sql
 #time hive -f $file
 
 file=$basedir/most_watched.sql

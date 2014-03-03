@@ -1,5 +1,7 @@
-set path = data/movie_ratings.0M_10M.csv;
-set tname = netflix_ratings_0M_10M;
+--set path = data/movie_ratings.0M_10M.csv;
+set path = data/movie_ratings.70_80m.csv;
+--set tname = netflix_ratings_0M_10M;
+set tname = netflix_ratings_70_80m;
 
 drop table ${hiveconf:tname};
 
