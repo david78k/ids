@@ -6,9 +6,9 @@
 
 --set tname=netflix_similar_pairs;
 --set tname=netflix_likeX_pairs;
-set tname=netflix_similar_pairs_30_40m; 
+set tname=netflix_similar_pairs_35_40m; 
 --set tname=netflix_similar_pairs_5M_tail;
-set tname1=netflix_ratings_30_40m; 
+set tname1=netflix_ratings_35_40m; 
 --set tname1=netflix_ratings5M_tail;
 set tname2=netflix_ratings;
 set tname3=netflix_titles;
