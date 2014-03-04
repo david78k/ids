@@ -2,15 +2,14 @@
 -- and insert query results into a new table and a local file
 -- and display the results and the count
 
---set tname=netflix_similar_pairs;
-set tname=netflix_similar_pairs_95m;
---set tname=netflix_similar_pairs_5M_tail;
-set tname0=netflix_similar_pairs_90m;
+set tname=netflix_similar_pairs;
+--set tname=netflix_similar_pairs_95m;
+set tname0=netflix_similar_pairs_95m;
 set tname1=netflix_similar_pairs_0m_10m;
 set tname2=netflix_similar_pairs_10_20m;
 set tname3=netflix_similar_pairs_20_30m;
 --set tname4=netflix_similar_pairs_30_40m; -- failed
-set tname4=netflix_similar_pairs_30_35m; 
+set tname4=netflix_similar_pairs_35_40m; 
 set tname5=netflix_similar_pairs_40_50m;
 set tname6=netflix_similar_pairs_50_60m;
 set tname7=netflix_similar_pairs_60_70m; 
