@@ -5,14 +5,14 @@
 --set tname=netflix_similar_pairs;
 set tname=netflix_similar_pairs_90m;
 --set tname=netflix_similar_pairs_5M_tail;
-set tname0=netflix_similar_pairs_70m;
+set tname0=netflix_similar_pairs_80m;
 set tname1=netflix_similar_pairs_0m_10m;
 set tname2=netflix_similar_pairs_10_20m;
 set tname3=netflix_similar_pairs_20_30m;
-set tname4=netflix_similar_pairs_30_40m; 
+--set tname4=netflix_similar_pairs_30_40m; -- failed
 set tname5=netflix_similar_pairs_40_50m;
 set tname6=netflix_similar_pairs_50_60m;
--- set tname7=netflix_ratings_60_70m; -- failed
+set tname7=netflix_similar_pairs_60_70m; 
 set tname8=netflix_similar_pairs_70_80m;
 set tname9=netflix_similar_pairs_80_90m;
 set tname10=netflix_similar_pairs_90_95m;
@@ -39,14 +39,14 @@ FROM (
 --	SELECT * FROM ${hiveconf:tname2} t2
 --	UNION ALL 
 --	SELECT * FROM ${hiveconf:tname3} t3
-	UNION ALL 
-	SELECT * FROM ${hiveconf:tname4} t4  
+--	UNION ALL 
+--	SELECT * FROM ${hiveconf:tname4} t4  
 --	UNION ALL 
 --	SELECT * FROM ${hiveconf:tname5} t5
 --	UNION ALL 
 --	SELECT * FROM ${hiveconf:tname6} t6
---	UNION ALL 
---	SELECT * FROM ${hiveconf:tname7} t7  -- failed
+	UNION ALL 
+	SELECT * FROM ${hiveconf:tname7} t7  
 --	UNION ALL 
 --	SELECT * FROM ${hiveconf:tname8} t8
 --	UNION ALL 
