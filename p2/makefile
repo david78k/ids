@@ -13,8 +13,8 @@ instance_type = m1.small
 #instance_type = c1.xlarge # max 20
 #instance_type = hi1.4xlarge # max 2
 #instance_type = hs1.8xlarge # max 2
-#num_instances = 10
-num_instances = 3
+num_instances = 10
+#num_instances = 3
 #num_instances = 20 # total max quota 20
 
 run: compile 
@@ -53,13 +53,13 @@ tar:
 	tar cvf Project2.tar report.pdf presentation.pdf src/*
 	cp Project2.tar dropbox/
 
-emr:
+emr: s3
 	../p1/emr-cli/elastic-mapreduce --create --name "Hive" --hive-script \
 	s3n://$(basedir)/most_similar_pairs.q \
+	--instance-type $(instance_type) --num-instances $(num_instances) \
 	--args -d,INPUT=s3n://$(basedir)/movie_ratings.30_40m/,\
 	-d,OUTPUT=s3n://$(outdir)/
 
-#	--instance-type $(instance_type) --num-instances $(num_instances) \
 
 emr-test:
 	../p1/emr-cli/elastic-mapreduce --create --name "Hive" --hive-script \

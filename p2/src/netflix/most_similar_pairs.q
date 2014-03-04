@@ -65,7 +65,7 @@ FROM
         SELECT t1.mid mid1, t2.mid mid2, avg(abs(t1.rating - t2.rating)) sim, count(*) freq
         FROM
         netflix_ratings_30_40m t1
-        JOIN netflix_ratings t2
+        JOIN netflix_ratings_30_40m t2
         ON t1.cid = t2.cid
         WHERE t1.mid > t2.mid
         GROUP BY t1.mid, t2.mid
@@ -74,10 +74,10 @@ FROM
         LIMIT 100
 ) t5
 
-JOIN ${hiveconf:tname3} t3
+JOIN netflix_titles t3
 ON t5.mid1 = t3.mid
 
-JOIN ${hiveconf:tname3} t4
+JOIN netflix_titles t4
 ON t5.mid2 = t4.mid
 ;
 
