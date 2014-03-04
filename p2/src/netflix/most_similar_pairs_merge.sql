@@ -3,10 +3,10 @@
 -- and display the results and the count
 
 --set tname=netflix_similar_pairs;
-set tname=netflix_similar_pairs_60m;
+set tname=netflix_similar_pairs_70m;
 --set tname=netflix_similar_pairs_30_40m; -- failed
 --set tname=netflix_similar_pairs_5M_tail;
-set tname0=netflix_similar_pairs_55m;
+set tname0=netflix_similar_pairs_60m;
 set tname1=netflix_similar_pairs_0m_10m;
 set tname2=netflix_similar_pairs_10_20m;
 set tname3=netflix_similar_pairs_20_30m;
@@ -48,12 +48,12 @@ FROM (
 --	SELECT * FROM ${hiveconf:tname6} t6
 --	UNION ALL 
 --	SELECT * FROM ${hiveconf:tname7} t7  -- failed
---	UNION ALL 
---	SELECT * FROM ${hiveconf:tname8} t8
+	UNION ALL 
+	SELECT * FROM ${hiveconf:tname8} t8
 --	UNION ALL 
 --	SELECT * FROM ${hiveconf:tname9} t9
-	UNION ALL 
-	SELECT * FROM ${hiveconf:tname10} t10
+--	UNION ALL 
+--	SELECT * FROM ${hiveconf:tname10} t10
 --	UNION ALL 
 --	SELECT * FROM ${hiveconf:tname11} t11
 ) u
