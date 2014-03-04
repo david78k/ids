@@ -55,9 +55,9 @@ tar:
 
 emr:
 	../p1/emr-cli/elastic-mapreduce --create --name "Hive" --hive-script \
-	s3n://$(basedir)/most_similar_pairs.sql \
-	--args -d,INPUT=s3n://$(basedir)/input/most_movie_ratings.csv,\
-	-d,OUTPUT=s3n://$(basadir)/results/
+	s3n://$(basedir)/most_similar_pairs.q \
+	--args -d,INPUT=s3n://$(basedir)/movie_ratings.30_40m/,\
+	-d,OUTPUT=s3n://$(outdir)/
 
 #	--instance-type $(instance_type) --num-instances $(num_instances) \
 
@@ -77,7 +77,7 @@ emr-test:
 	#--args $(bucket),s3://$(bucket)/input/100.xml
 
 s3:
-	s3cmd put PageRank.jar s3://$(bucket)/job/PageRank.jar 
+	s3cmd put src/netflix/most_similar_pairs.q s3://david78k-ids/input/most_similar_pairs.q
 
 upload:
 	git add .

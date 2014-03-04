@@ -7,12 +7,10 @@
 --set tname=netflix_similar_pairs;
 --set tname=netflix_likeX_pairs;
 --set tname=netflix_similar_pairs_30_40m; -- failed
---set tname=netflix_similar_pairs_60_70m; -- failed
-set tname=netflix_similar_pairs_80_90m;
+set tname=netflix_similar_pairs_60_70m;
 --set tname=netflix_similar_pairs_5M_tail;
 --set tname1=netflix_ratings_30_40m; -- failed
---set tname1=netflix_ratings_60_70m; -- failed
-set tname1=netflix_ratings_80_90m; 
+set tname1=netflix_ratings_60_70m; 
 --set tname1=netflix_ratings5M_tail;
 set tname2=netflix_ratings;
 set tname3=netflix_titles;
@@ -23,8 +21,6 @@ drop table ${hiveconf:tname};
 CREATE EXTERNAL TABLE ${hiveconf:tname} (
   title1 STRING,
   title2 STRING,
-  --mid1 INT,
-  --mid2 INT,
   similarity FLOAT,
   total INT
   );
