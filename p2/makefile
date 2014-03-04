@@ -1,8 +1,11 @@
-mainclass = PageRank
-jar = PageRank.jar
-jars = hadoop-core-1.0.3.jar:jsoup-1.7.3.jar:commons-io.jar:mahout-examples-0.3.jar
+#https://s3.amazonaws.com/spring-2014-ds/movie_dataset/movie_ratings/movie_ratings.csv
+movie_ratings=/spring-2014-ds/movie_dataset/movie_ratings/movie_ratings.csv
+#movie_titles
+
 bucket = david78k-ids
-basedir = $(bucket)/results
+basedir = $(bucket)/input
+outdir = $(bucket)/results
+
 instance_type = m1.small
 #instance_type = m2.4xlarge # max 20
 #instance_type = m1.medium # max 20
@@ -10,13 +13,13 @@ instance_type = m1.small
 #instance_type = c1.xlarge # max 20
 #instance_type = hi1.4xlarge # max 2
 #instance_type = hs1.8xlarge # max 2
-num_instances = 10
-#num_instances = 3
+#num_instances = 10
+num_instances = 3
 #num_instances = 20 # total max quota 20
 
-run: compile jar hadoop2
+run: compile 
 
-runemr: compile jar s3 emr
+runemr: compile s3 emr
 
 enron:
 
@@ -42,9 +45,6 @@ show:
 show1:
 	hive -e 'select * from enron limit 1'
 
-eid:
-	hive -e 'select eid from enron'
-
 count:
 	hive -e 'select count(*) from enron'
 
@@ -54,12 +54,20 @@ tar:
 	cp Project2.tar dropbox/
 
 emr:
-	emr-cli/elastic-mapreduce --create --name "PageRank" --ami-version 2.4.2 \
-	--instance-type $(instance_type) --num-instances $(num_instances) \
-	--jar s3n://$(bucket)/job/PageRank.jar \
-	--main-class PageRank.PageRank \
-	--log-uri s3n://$(bucket)/logs \
-	--arg $(bucket) 
+	../p1/emr-cli/elastic-mapreduce --create --name "Hive" --hive-script \
+	s3n://$(basedir)/most_similar_pairs.sql \
+	--args -d,INPUT=s3n://$(basedir)/input/most_movie_ratings.csv,\
+	-d,OUTPUT=s3n://$(basadir)/results/
+
+#	--instance-type $(instance_type) --num-instances $(num_instances) \
+
+emr-test:
+	../p1/emr-cli/elastic-mapreduce --create --name "Hive" --hive-script \
+	s3n://elasticmapreduce/samples/hive-ads/libs/model-build.q \
+	--args -d,LIBS=s3n://elasticmapreduce/samples/hive-ads/libs,\
+	-d,INPUT=s3n://elasticmapreduce/samples/hive-ads/tables,\
+	-d,OUTPUT=s3n://$(bucket)/hive-ads/output/
+
 	#--arg $(bucket) \
 	#--arg s3://$(bucket)/input/5000000.xml 
 	#--arg s3://$(bucket)/input/1000000.xml 
