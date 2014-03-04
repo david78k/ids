@@ -143,6 +143,7 @@ FAILED: ParseException line 3:0 cannot recognize input near '/' '*' 'drop'
   estimated time for all ratings: 6h 53m * 20 = 120h + 1060m = 120h 18h = 138h
 = 5days 18h
   70-80m: 115m33.626s
+  80-90m: 2h 25m
   the running time depends on the number of ratings of similar movie pairs
 (smaller number of similar movie pairs result in short running time)
   the running time vary from less than 2 hours to more than 10 hours

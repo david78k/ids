@@ -2,7 +2,7 @@
 -- and insert query results into a new table and a local file
 -- and display the results and the count
 
-set hive.auto.convert.join=false
+--set hive.auto.convert.join=false
 
 --set tname=netflix_similar_pairs;
 --set tname=netflix_likeX_pairs;
