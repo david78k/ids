@@ -1,5 +1,5 @@
 test:
-	gcc -fopenmp -o test.o test.c
+	g++ -fopenmp -o test.o test.cpp
 
 reduction:
 	gcc -fopenmp -o pi-private-reduction.o pi-private-reduction.c
