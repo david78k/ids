@@ -42,7 +42,7 @@ void pagerank() {
 		readFiles();
 	}
 
-	print_list();
+//	print_list();
 
 	// initialize to a normalized identity vector
 	
