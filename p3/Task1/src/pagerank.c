@@ -55,6 +55,8 @@ void pagerank() {
 	compute();
 	
 	// rank edges circles
+
+	// sort
 }
 
 void init() {
@@ -101,6 +103,7 @@ void init() {
 		//printf("i = %d, j = %d\n", i, j);
 		//printf("i = %d, j = %d, A[i][j] = %f\n", i, j, A[i][j]);
 		A[i][j] = 1.0;
+		A[j][i] = 1.0;
 
 		/*
 		if (lineno == 1) {
@@ -118,16 +121,34 @@ void init() {
 void compute() {
 	int i, j; // row and column index
 	double sum;
+	double totalsum = 0;
+	double diff;
+	double epsilon = 0.01;
 
 	#pragma omp parallel for default(none) \
-		private(i,j,sum) shared(N, A, R)
+		private(i,j,sum) shared(N, A, R, totalsum)
 	for (i = 0; i < N; i ++) {
 		sum = 0.0;
 		for (j = 0; j < N; j ++) {
 			sum += A[i][j]*R[j];
 		}
 		R[i] = sum;
+		totalsum += sum;
+		//printf("%f\t", R[i]);
 	}
+	// normalize?
+	/*
+	for (i = 0; i < N; i ++) {
+		totalsum += R[i];
+		printf("%f ", totalsum);
+	}
+	printf("\n");
+	*/
+	for (i = 0; i < N; i ++) {
+		R[i] /= totalsum;
+		printf("%f ", R[i]);
+	}
+	printf("\n");
 }
 
 bool isunique() {
