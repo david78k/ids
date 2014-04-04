@@ -58,38 +58,76 @@ void pagerank() {
 }
 
 void init() {
+	printf("initializing ...\n");
+
 	// iterate over the linked list 
 	// to initialize the matrix A and vector R
-    struct number *ptr = head;
-    struct number *tmp = NULL;
+	A = malloc(N*N*sizeof(double));
+	R = malloc(N*sizeof(double));
+	int i, j;
+	double R0 = 1.0/N;
 
-	A = malloc(N*sizeof(int));
-    //printf("\n Searching the list for value [%d] \n",val);
-	int i =0;
-//    while(ptr != NULL)
-//    {
 	for (i = 0; i < N; i++) {
-		A[i++] = 0;
-		//A[i++] = ptr->val;
+		R[i] = R0;
+		A[i] = malloc(N*sizeof(double));
+		for (j = 0; j < N; j++) {
+			A[i][j] = 0;
+		}
 	}
-       // tmp = ptr;
-       // ptr = ptr->next;
-//    }
+
+	FILE * fp;
+       char * line = NULL;
+       size_t len = 0;
+       ssize_t read;
+	int lineno = 0;
+
+	printf("%s\n", input);
+
+       fp = fopen(input, "r");
+       if (fp == NULL)
+           exit(EXIT_FAILURE);
+
+	int size = 0;
+	
+	int source, dest;
+	char *token;
+	
+	// insert link edge info into matrix and vector
+       while ((read = getline(&line, &len, fp)) != -1) {
+		token = strtok(line, " ");
+		i = atoi(token);
+		j = atoi(strtok(NULL, "\0"));
+	
+		//printf("i = %d, j = %d\n", i, j);
+		//printf("i = %d, j = %d, A[i][j] = %f\n", i, j, A[i][j]);
+		A[i][j] = 1.0;
+
+		/*
+		if (lineno == 1) {
+           		printf("[%d] Retrieved line of length %zu : ", lineno, read);
+           		printf("%s\n", line);
+	   		printf("row data = %d %d\n", source, dest);
+	   	}
+		*/
+	   	lineno ++;
+       }
+	
+	fclose(fp);
 }
 
 void compute() {
 	int i, j; // row and column index
-/*
+	double sum;
+
 	#pragma omp parallel for default(none) \
-		private(i,j,sum) shared(m, n, a, b, c)
-	for (i = 0; i < m; i ++) {
+		private(i,j,sum) shared(N, A, R)
+	for (i = 0; i < N; i ++) {
 		sum = 0.0;
-		for (j = 0; j < n; j ++) {
-			sum += b[i][j]*c[j];
+		for (j = 0; j < N; j ++) {
+			sum += A[i][j]*R[j];
 		}
-		a[i] = sum;
+		R[i] = sum;
 	}
-*/
 }
 
 bool isunique() {
