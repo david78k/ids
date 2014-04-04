@@ -12,6 +12,8 @@ static double damp = 0.85;
 char *input = "data/facebook_combined.txt";
 
 int **mat;
+double **A;
+double *R;
 int N = 0;
 
 void pagerank();
@@ -29,6 +31,8 @@ struct number* add_to_list(int val, bool add_to_end);
 struct number* search_in_list(int val, struct number **prev);
 int delete_from_list(int val);
 void print_list(void);
+void init();
+void compute();
 
 void main() {
 	pagerank();
@@ -45,12 +49,48 @@ void pagerank() {
 //	print_list();
 
 	// initialize to a normalized identity vector
-	
+	init();	
+
 	// R = (1-d)/N + AR
+	compute();
 	
 	// rank edges circles
 }
 
+void init() {
+	// iterate over the linked list 
+	// to initialize the matrix A and vector R
+    struct number *ptr = head;
+    struct number *tmp = NULL;
+
+	A = malloc(N*sizeof(int));
+    //printf("\n Searching the list for value [%d] \n",val);
+	int i =0;
+//    while(ptr != NULL)
+//    {
+	for (i = 0; i < N; i++) {
+		A[i++] = 0;
+		//A[i++] = ptr->val;
+	}
+       // tmp = ptr;
+       // ptr = ptr->next;
+//    }
+}
+
+void compute() {
+	int i, j; // row and column index
+/*
+	#pragma omp parallel for default(none) \
+		private(i,j,sum) shared(m, n, a, b, c)
+	for (i = 0; i < m; i ++) {
+		sum = 0.0;
+		for (j = 0; j < n; j ++) {
+			sum += b[i][j]*c[j];
+		}
+		a[i] = sum;
+	}
+*/
+}
 
 bool isunique() {
 	struct number tmp;
@@ -59,6 +99,7 @@ bool isunique() {
 
 // read file while counting the number of lines
 // and the number of nodes
+// and create a linked list
 void readFiles() {
 	FILE * fp;
        char * line = NULL;
@@ -72,17 +113,6 @@ void readFiles() {
        if (fp == NULL)
            exit(EXIT_FAILURE);
 
-	// count the number of lines
-	//while (EOF != (scanf("%*[^\n]"), scanf("%*c"))) 
-    	//	++lineno;
-	//int ch;
-	//while (EOF != (ch=getchar()))
-	//    if (ch=='\n')
-       // 	++lineno;
-/*       while ((read = getline(&line, &len, fp)) != -1) 
-		lineno ++;
-	fclose(fp);
-*/
 	int data[lineno][2];	
 
 	lineno = 0;
@@ -123,7 +153,8 @@ void readFiles() {
        if (line)
            free(line);
 
-	printf("total number of nodes = %d\n", size);
+	N = size;
+	printf("total number of nodes = %d\n", N);
 }
 
 void test() {

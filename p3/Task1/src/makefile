@@ -1,5 +1,10 @@
-default:
+default: compile run
+
+compile:
 	gcc -fopenmp -o pagerank.o pagerank.c
+
+run:
+	./pagerank.o
 
 test:
 	g++ -fopenmp -o test.o test.cpp
