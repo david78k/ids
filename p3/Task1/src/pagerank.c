@@ -2,14 +2,17 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 #define NUM_THREADS 4
 
-static long num_steps = 100000;
 static double d = 0.85;
+static double epsilon = 0.0001; // 10K-30K iter, 21 iter without omp
+//static double epsilon = 0.0005; // 20-30 iter, 11 iter without omp
+//static double epsilon = 0.001; // 9-11 iter, 8 iter without omp
 
 //char *input = "data/facebook";
-char *input = "data/facebook_combined.txt";
+char *input = "facebook_combined.txt";
 
 int **mat;
 double **A;
@@ -33,6 +36,7 @@ int delete_from_list(int val);
 void print_list(void);
 void init();
 void compute();
+void sort();
 
 void main() {
 	pagerank();
@@ -51,16 +55,23 @@ void pagerank() {
 	// initialize to a normalized identity vector
 	init();	
 
+	// rank edges circles
 	// R = (1-d)/N + AR
 	compute();
 	
-	// rank edges circles
-
 	// sort
+	//sort();
+	
+	// write output to file
+	
+}
+
+void sort() {
+	printf("\nsorting ...\n");
 }
 
 void init() {
-	printf("initializing ...\n");
+	printf("\ninitializing ...\n");
 
 	// iterate over the linked list 
 	// to initialize the matrix A and vector R
@@ -93,6 +104,7 @@ void init() {
 	
 	int source, dest;
 	char *token;
+	double colsum[N];
 	
 	// insert link edge info into matrix and vector
        while ((read = getline(&line, &len, fp)) != -1) {
@@ -104,6 +116,8 @@ void init() {
 		//printf("i = %d, j = %d, A[i][j] = %f\n", i, j, A[i][j]);
 		A[i][j] = 1.0;
 		A[j][i] = 1.0;
+		colsum[i] += A[i][j];
+		colsum[j] = colsum[i];
 
 		/*
 		if (lineno == 1) {
@@ -116,41 +130,79 @@ void init() {
        }
 	
 	fclose(fp);
+	
+	// column stochastic: normalize columns
+	for (i = 0; i < N; i ++) {
+		for (j = 0; j < N; j ++) {
+			A[i][j] /= colsum[i];
+		}
+	}	
 }
 
 void compute() {
 	int i, j; // row and column index
 	double sum;
 	double totalsum = 0;
+	double squaresum = 0;
+	double R_prev[N];
+	int iter = 0;
 	double diff;
-	double epsilon = 0.01;
 
-		
-	// R = (1 - d)/N + d*A*R
-	#pragma omp parallel for default(none) \
-		private(i,j,sum) shared(N, A, R, totalsum, d)
-	for (i = 0; i < N; i ++) {
-		sum = 0.0;
-		for (j = 0; j < N; j ++) {
-			sum += A[i][j]*R[j];
+	printf("\niterating ...\n");
+	// |Rn+1 - Rn| < epsilon
+	// abs(R_prev[i] - R[i]) < epsilon
+	while(1) {	
+		totalsum = 0;
+		squaresum = 0;
+		// R = (1 - d)/N + d*A*R
+//		#pragma omp parallel for default(none) \
+//			private(i,j,sum) shared(N, A, R, totalsum, d)
+		for (i = 0; i < N; i ++) {
+			sum = 0.0;
+			for (j = 0; j < N; j ++) {
+				sum += A[i][j]*R[j];
+			}
+			//R[i] = sum;
+			R[i] = (1 - d)/N + d*sum;
+			totalsum += R[i];
+			//printf("%f\t", R[i]);
 		}
-		//R[i] = sum;
-		R[i] = (1 - d)/N + d*sum;
-		totalsum += R[i];
-		//printf("%f\t", R[i]);
-	}
-	// normalize?
-	for (i = 0; i < N; i ++) {
-		//R[i] = ((1 - d)/N + d*R[i])/totalsum;
-		R[i] = R[i]/totalsum;
-		printf("%f ", R[i]);
-	}
-	printf("\n");
-}
+	
+		// normalize
+		for (i = 0; i < N; i ++) {
+			//R[i] = ((1 - d)/N + d*R[i])/totalsum;
+			R[i] = R[i]/totalsum;
+			squaresum += pow(R_prev[i] - R[i], 2);
+			R_prev[i] = R[i];
+	//		printf("%f ", R[i]);
+		}
+		//printf("\n");
 
-bool isunique() {
-	struct number tmp;
-		
+		// check convergence
+		diff = sqrt(squaresum);
+		if (diff < epsilon) {
+			FILE *fp;
+			fp=fopen("Output_Task1.txt", "wb");
+			char x[20]="nodeid pagerank";
+			fwrite(x, sizeof(x[0]), sizeof(x)/sizeof(x[0]), fp);
+
+			for (i = 0; i < N; i ++) {
+				//R_prev[i] = R[i];
+				sprintf(x, "%d %f\n", i, R[i]);
+				printf(x);
+				//printf("%d %f\n", i, R[i]);
+				fwrite(x, sizeof(x[0]), sizeof(x)/sizeof(x[0]), fp);
+			}
+			printf("iter = %d, diff = %f, epsilon = %f\n", iter, diff, epsilon);
+			break;
+		}
+		// display info every 100 iterations
+		if(iter%100 == 0) {
+			printf("iter = %d, diff = %f, epsilon = %f\n", iter, diff, epsilon);
+		}
+		iter ++;
+	}
+	//printf("\n");
 }
 
 // read file while counting the number of lines
@@ -197,11 +249,13 @@ void readFiles() {
 			size ++;
         	}
 
+		/*
 		if (lineno == 1) {
            		printf("[%d] Retrieved line of length %zu : ", lineno, read);
            		printf("%s\n", line);
 	   		printf("row data = %d %d\n", row[0], row[1]);
 	   	}
+		*/
 	   	lineno ++;
        }
 	
@@ -214,6 +268,7 @@ void readFiles() {
 }
 
 void test() {
+	static long num_steps = 100000;
 	int i; // global variable i
 	double pi, sum[NUM_THREADS] = {0};
 	double delta = 1.0/num_steps;
@@ -258,7 +313,7 @@ void test() {
 
 struct number* create_list(int val)
 {
-    printf("\n creating list with headnode as [%d]\n",val);
+    //printf("\n creating list with headnode as [%d]\n",val);
     struct number *ptr = (struct number*)malloc(sizeof(struct number));
     if(NULL == ptr)
     {

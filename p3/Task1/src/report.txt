@@ -1,3 +1,6 @@
+Questions
+- what is the input argument? web graph file? isn't it hardcoded?
+
 How to compile and run
 - type 'make' in the current directory
 
@@ -5,10 +8,18 @@ implementation methods, experimental settings, outputs and corresponding
 conclusions
 
 implementation methods
-- Facebook graph is used and I'm assuming it an undirected graph.
+- Undirected Facebook graph is used. I consider the edge "a - b" as both "a -> b" and "b -> a" links.
 
 experimental settings
 - damping factor = 0.85
-- conversion condition: epsilon = 0.01
+- conversion condition: epsilon = 0.001
 
 outputs and corresponding conclusions
+
+
+- What are you looking for regarding performance results in the project
+  report?
+Mainly refer to the output results, and based on this you need to give some
+analysis of advantages using corresponding parallel computing method (not need
+too much). Additionally for the implementation, you need to give more details.
+
