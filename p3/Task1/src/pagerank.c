@@ -183,16 +183,18 @@ void compute() {
 		if (diff < epsilon) {
 			FILE *fp;
 			fp=fopen("Output_Task1.txt", "wb");
-			char x[20]="nodeid pagerank";
-			fwrite(x, sizeof(x[0]), sizeof(x)/sizeof(x[0]), fp);
+			//char x[20]="nodeid pagerank\n";
+			char x[] ="nodeid\tpagerank\n";
+			fputs(x, fp);
 
 			for (i = 0; i < N; i ++) {
 				//R_prev[i] = R[i];
-				sprintf(x, "%d %f\n", i, R[i]);
-				printf(x);
+				sprintf(x, "%d\t%f\n", i, R[i]);
+				//printf(x);
 				//printf("%d %f\n", i, R[i]);
-				fwrite(x, sizeof(x[0]), sizeof(x)/sizeof(x[0]), fp);
+				fputs(x, fp);
 			}
+			fclose(fp);
 			printf("iter = %d, diff = %f, epsilon = %f\n", iter, diff, epsilon);
 			break;
 		}
