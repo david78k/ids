@@ -15,7 +15,12 @@ experimental settings
 - conversion condition: epsilon = 0.001
 
 outputs and corresponding conclusions
+- weird results: without openmp and with openmp gave different results. Also, every
+  time I run with openmp, different results come out.
 
+- the running time was also significantly different. For conversion condition epsilon 0.0001, without openmp it took
+  few seconds with less than 30 iterations whereas it took few minutes with
+30K iterations to run with openmp. I thought that something was wrong.
 
 - What are you looking for regarding performance results in the project
   report?

@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #define VECLEN 100
 
+//#define NUM_THREADS 4
+
 float a[VECLEN], b[VECLEN], sum;
 
 float dotprod ()
@@ -29,6 +31,8 @@ tid = omp_get_thread_num();
 
 int main (int argc, char *argv[]) {
 int i;
+
+//omp_set_num_threads(NUM_THREADS);
 
 for (i=0; i < VECLEN; i++)
   a[i] = b[i] = 1.0 * i;

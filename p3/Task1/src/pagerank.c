@@ -7,7 +7,8 @@
 #define NUM_THREADS 4
 
 static double d = 0.85;
-static double epsilon = 0.0001; // 10K-30K iter, 21 iter without omp
+static double epsilon = 0.00001; // 10K-30K iter, 21 iter without omp
+//static double epsilon = 0.0001; // 10K-30K iter, 21 iter without omp
 //static double epsilon = 0.0005; // 20-30 iter, 11 iter without omp
 //static double epsilon = 0.001; // 9-11 iter, 8 iter without omp
 
@@ -155,8 +156,8 @@ void compute() {
 		totalsum = 0;
 		squaresum = 0;
 		// R = (1 - d)/N + d*A*R
-//		#pragma omp parallel for default(none) \
-//			private(i,j,sum) shared(N, A, R, totalsum, d)
+		//#pragma omp parallel for default(none) \
+		//	private(i,j,sum) shared(N, A, R, d) reduction(+:totalsum)
 		for (i = 0; i < N; i ++) {
 			sum = 0.0;
 			for (j = 0; j < N; j ++) {
