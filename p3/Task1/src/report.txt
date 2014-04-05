@@ -1,0 +1,11 @@
+How to compile and run
+- type 'make' in the current directory
+
+implementation methods, experimental settings, outputs and corresponding
+conclusions
+
+implementation methods
+
+experimental settings
+
+outputs and corresponding conclusions

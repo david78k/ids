@@ -6,7 +6,7 @@
 #define NUM_THREADS 4
 
 static long num_steps = 100000;
-static double damp = 0.85;
+static double d = 0.85;
 
 //char *input = "data/facebook";
 char *input = "data/facebook_combined.txt";
@@ -125,18 +125,27 @@ void compute() {
 	double diff;
 	double epsilon = 0.01;
 
+	
+	// R = (1 - d)/N + d*A*R
 	#pragma omp parallel for default(none) \
-		private(i,j,sum) shared(N, A, R, totalsum)
+		private(i,j,sum) shared(N, A, R, totalsum, d)
 	for (i = 0; i < N; i ++) {
 		sum = 0.0;
 		for (j = 0; j < N; j ++) {
 			sum += A[i][j]*R[j];
 		}
-		R[i] = sum;
-		totalsum += sum;
+		//R[i] = sum;
+		R[i] = (1 - d)/N + d*sum;
+		totalsum += R[i];
 		//printf("%f\t", R[i]);
 	}
 	// normalize?
+	for (i = 0; i < N; i ++) {
+		//R[i] = ((1 - d)/N + d*R[i])/totalsum;
+		R[i] = R[i]/totalsum;
+		printf("%f ", R[i]);
+	}
+	printf("\n");
 	/*
 	for (i = 0; i < N; i ++) {
 		totalsum += R[i];
@@ -144,11 +153,6 @@ void compute() {
 	}
 	printf("\n");
 	*/
-	for (i = 0; i < N; i ++) {
-		R[i] /= totalsum;
-		printf("%f ", R[i]);
-	}
-	printf("\n");
 }
 
 bool isunique() {
