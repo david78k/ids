@@ -125,7 +125,7 @@ void compute() {
 	double diff;
 	double epsilon = 0.01;
 
-	
+		
 	// R = (1 - d)/N + d*A*R
 	#pragma omp parallel for default(none) \
 		private(i,j,sum) shared(N, A, R, totalsum, d)
@@ -146,13 +146,6 @@ void compute() {
 		printf("%f ", R[i]);
 	}
 	printf("\n");
-	/*
-	for (i = 0; i < N; i ++) {
-		totalsum += R[i];
-		printf("%f ", totalsum);
-	}
-	printf("\n");
-	*/
 }
 
 bool isunique() {

@@ -5,7 +5,10 @@ implementation methods, experimental settings, outputs and corresponding
 conclusions
 
 implementation methods
+- Facebook graph is used and I'm assuming it an undirected graph.
 
 experimental settings
+- damping factor = 0.85
+- conversion condition: epsilon = 0.01
 
 outputs and corresponding conclusions
