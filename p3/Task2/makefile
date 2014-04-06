@@ -1,5 +1,8 @@
 test:
-	g++ -fopenmp -o test.o test.cpp
+	mpic++ -o test.o test.cpp
+	#g++ -fopenmp -o test.o test.cpp
+	mpirun -np 16 ./test.o
+	#mpirun ./test.o
 
 reduction:
 	gcc -fopenmp -o pi-private-reduction.o pi-private-reduction.c

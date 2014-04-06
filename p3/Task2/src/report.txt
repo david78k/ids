@@ -4,8 +4,10 @@ Questions
 Todo list
 
 
-How to compile
-
+How to compile and run
+- mpicc -foepnmp -std=c99 -o out file
+- mpirun [--nolocal] [-np 4] [-machinefile machinefile] out
+	where -np is the number of processors
 
 implementation methods, experimental settings, outputs and corresponding
 conclusions
