@@ -1,0 +1,26 @@
+Questions
+
+
+Todo list
+
+
+How to compile
+
+
+implementation methods, experimental settings, outputs and corresponding
+conclusions
+
+implementation methods
+- 
+
+experimental settings
+-
+
+outputs and corresponding conclusions
+-
+
+- What are you looking for regarding performance results in the project
+  report?
+Mainly refer to the output results, and based on this you need to give some
+analysis of advantages using corresponding parallel computing method (not need
+too much). Additionally for the implementation, you need to give more details.

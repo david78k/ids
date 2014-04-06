@@ -7,7 +7,12 @@ Todo list
 - partition parallel sections by threadID
 
 How to compile and run
+- files: pagerank.c, makefile
+	pagerank.c: all functions including main() function
 - type 'make' in the current directory
+- you can separately compile and run
+  make compile
+  make run
 
 implementation methods, experimental settings, outputs and corresponding
 conclusions
