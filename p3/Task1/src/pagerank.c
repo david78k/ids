@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
+#include <omp.h>
 
 #define NUM_THREADS 4
 
@@ -12,6 +13,7 @@ static double epsilon = 0.001; // 9-11 iter, 8 iter without omp
 //static double epsilon = 0.0001; // 10K-30K iter, 21 iter without omp
 //static double epsilon = 0.00001; // K-K iter, 36 iter without omp
 //static double epsilon = 0.000001; // K-K iter, 53 iter without omp
+//static double epsilon = 1e-8; // K-K iter, 87 iter without omp
 
 //char *input = "data/facebook";
 char *input = "facebook_combined.txt";
@@ -139,8 +141,8 @@ void init() {
 		A[j][i] = 1.0;
 		colsum[i] += A[i][j];
 		colsum[j] = colsum[i];
-		rowsum[i] += 1.0;
-		rowsum[j] += 1.0;
+		//rowsum[i] += 1.0;
+		//rowsum[j] += 1.0;
 
 		/*
 		if (lineno == 1) {
@@ -168,7 +170,7 @@ void compute() {
 	double sum;
 	double totalsum = 0;
 	double squaresum = 0;
-	N = 11;
+	//N = 11;
 	double R_prev[N];
 	int iter = 0;
 	double diff;
@@ -185,18 +187,29 @@ void compute() {
 		#pragma omp parallel for default(none) \
 			private(i,j,sum) shared(N, A, R, d, T) reduction(+:totalsum)
 		for (i = 0; i < N; i ++) {
+			//printf("Number of threads: %d\n", omp_get_num_threads());
 			sum = 0.0;
+			//#pragma omp critical 
+			//#pragma omp ordered 
+			{
 			for (j = 0; j < N; j ++) {
 				//printf("A[i][j] = %f, R[i] = %f\n", A[i][j], R[i]);
-				//sum += A[i][j]*R[j];
-				sum += T[i][j]*R[j];
+				//#pragma omp critical 
+				sum += A[i][j]*R[j];
+				//sum += T[i][j]*R[j];
 			}
+			//#pragma omp atomic
+			//#pragma omp critical 
+			//{
+			//#pragma omp barrier
 			R[i] = (1 - d)/N + d*sum;
 			totalsum += R[i];
+			}
 			//printf("%f\t", R[i]);
 		}
 	
-		printf ("total sum = %f\n", totalsum);
+		//#pragma omp barrier
+		//printf ("total sum = %f\n", totalsum);
 
 		// normalize
 		for (i = 0; i < N; i ++) {

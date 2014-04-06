@@ -1,0 +1,26 @@
+total sum = 0.264098
+iter = 0, diff = 18222.705346, epsilon = 0.001000
+total sum = 0.301169
+total sum = 0.318392
+total sum = 0.330514
+total sum = 0.339142
+total sum = 0.345454
+total sum = 0.350210
+total sum = 0.353487
+total sum = 0.355854
+total sum = 0.361650
+total sum = 0.364774
+total sum = 0.367077
+total sum = 0.368564
+total sum = 0.364178
+total sum = 0.362457
+total sum = 0.365474
+total sum = 0.366695
+total sum = 0.363702
+total sum = 0.369205
+total sum = 0.371141
+total sum = 0.365743
+total sum = 0.362779
+total sum = 0.362628
+total sum = 0.360890
+iter = 23, diff = 0.000791, epsilon = 0.001000

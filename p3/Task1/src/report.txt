@@ -1,6 +1,11 @@
 Questions
 - what is the input argument? web graph file? isn't it hardcoded?
 
+Todo list
+- input argument
+- synchronization totalsum
+- partition parallel sections by threadID
+
 How to compile and run
 - type 'make' in the current directory
 
@@ -17,6 +22,9 @@ experimental settings
 outputs and corresponding conclusions
 - weird results: without openmp and with openmp gave different results. Also, every
   time I run with openmp, different results come out.
+  => This is because of roundoff errors and the order of computation.
+deterministic with a single thread and nondeterministic with openmp
+multi-threads
 
 - the running time was also significantly different. For conversion condition epsilon 0.0001, without openmp it took
   few seconds with less than 30 iterations whereas it took few minutes with

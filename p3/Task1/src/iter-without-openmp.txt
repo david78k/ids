@@ -1,0 +1,11 @@
+total sum = 0.268982
+iter = 0, diff = 18219.195214, epsilon = 0.001000
+total sum = 0.303072
+total sum = 0.321076
+total sum = 0.333422
+total sum = 0.342105
+total sum = 0.348215
+total sum = 0.352509
+total sum = 0.355530
+total sum = 0.357663
+iter = 8, diff = 0.000881, epsilon = 0.001000
