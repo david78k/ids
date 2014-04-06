@@ -7,10 +7,11 @@
 #define NUM_THREADS 4
 
 static double d = 0.85;
-static double epsilon = 0.00001; // 10K-30K iter, 21 iter without omp
-//static double epsilon = 0.0001; // 10K-30K iter, 21 iter without omp
+static double epsilon = 0.001; // 9-11 iter, 8 iter without omp
 //static double epsilon = 0.0005; // 20-30 iter, 11 iter without omp
-//static double epsilon = 0.001; // 9-11 iter, 8 iter without omp
+//static double epsilon = 0.0001; // 10K-30K iter, 21 iter without omp
+//static double epsilon = 0.00001; // K-K iter, 36 iter without omp
+//static double epsilon = 0.000001; // K-K iter, 53 iter without omp
 
 //char *input = "data/facebook";
 char *input = "facebook_combined.txt";
@@ -38,6 +39,23 @@ void print_list(void);
 void init();
 void compute();
 void sort();
+
+// test matrix 11x11
+double T[][11] = {
+   {0.09091,   0.00000,   0.00000,   0.50000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   1.00000,   0.50000,   0.33333,   0.50000,   0.50000,   0.50000,   0.50000,   0.00000 ,  0.00000},
+   {0.09091,   1.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.33333,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,  0.00000,    0.50000,   0.50000,   0.50000,   0.50000,  1.00000 ,  1.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.33333,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000}};
+
+double TR[] = {0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091 };
+//double *TR;
 
 void main() {
 	pagerank();
@@ -83,6 +101,7 @@ void init() {
 
 	for (i = 0; i < N; i++) {
 		R[i] = R0;
+		//TR[i] = R0;
 		A[i] = malloc(N*sizeof(double));
 		for (j = 0; j < N; j++) {
 			A[i][j] = 0;
@@ -106,6 +125,7 @@ void init() {
 	int source, dest;
 	char *token;
 	double colsum[N];
+	double rowsum[N];
 	
 	// insert link edge info into matrix and vector
        while ((read = getline(&line, &len, fp)) != -1) {
@@ -119,6 +139,8 @@ void init() {
 		A[j][i] = 1.0;
 		colsum[i] += A[i][j];
 		colsum[j] = colsum[i];
+		rowsum[i] += 1.0;
+		rowsum[j] += 1.0;
 
 		/*
 		if (lineno == 1) {
@@ -134,6 +156,7 @@ void init() {
 	
 	// column stochastic: normalize columns
 	for (i = 0; i < N; i ++) {
+		
 		for (j = 0; j < N; j ++) {
 			A[i][j] /= colsum[i];
 		}
@@ -145,9 +168,12 @@ void compute() {
 	double sum;
 	double totalsum = 0;
 	double squaresum = 0;
+	N = 11;
 	double R_prev[N];
 	int iter = 0;
 	double diff;
+
+	//A = T;
 
 	printf("\niterating ...\n");
 	// |Rn+1 - Rn| < epsilon
@@ -156,28 +182,29 @@ void compute() {
 		totalsum = 0;
 		squaresum = 0;
 		// R = (1 - d)/N + d*A*R
-		//#pragma omp parallel for default(none) \
-		//	private(i,j,sum) shared(N, A, R, d) reduction(+:totalsum)
+		#pragma omp parallel for default(none) \
+			private(i,j,sum) shared(N, A, R, d, T) reduction(+:totalsum)
 		for (i = 0; i < N; i ++) {
 			sum = 0.0;
 			for (j = 0; j < N; j ++) {
-				sum += A[i][j]*R[j];
+				//printf("A[i][j] = %f, R[i] = %f\n", A[i][j], R[i]);
+				//sum += A[i][j]*R[j];
+				sum += T[i][j]*R[j];
 			}
-			//R[i] = sum;
 			R[i] = (1 - d)/N + d*sum;
 			totalsum += R[i];
 			//printf("%f\t", R[i]);
 		}
 	
+		printf ("total sum = %f\n", totalsum);
+
 		// normalize
 		for (i = 0; i < N; i ++) {
 			//R[i] = ((1 - d)/N + d*R[i])/totalsum;
 			R[i] = R[i]/totalsum;
 			squaresum += pow(R_prev[i] - R[i], 2);
 			R_prev[i] = R[i];
-	//		printf("%f ", R[i]);
 		}
-		//printf("\n");
 
 		// check convergence
 		diff = sqrt(squaresum);
@@ -189,10 +216,8 @@ void compute() {
 			fputs(x, fp);
 
 			for (i = 0; i < N; i ++) {
-				//R_prev[i] = R[i];
 				sprintf(x, "%d\t%f\n", i, R[i]);
-				//printf(x);
-				//printf("%d %f\n", i, R[i]);
+				// write the results to file
 				fputs(x, fp);
 			}
 			fclose(fp);
@@ -205,7 +230,6 @@ void compute() {
 		}
 		iter ++;
 	}
-	//printf("\n");
 }
 
 // read file while counting the number of lines

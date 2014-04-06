@@ -22,6 +22,18 @@ outputs and corresponding conclusions
   few seconds with less than 30 iterations whereas it took few minutes with
 30K iterations to run with openmp. I thought that something was wrong.
 
+epsilon = 0.001
+iter = 0, diff = 18222.705571, epsilon = 0.001000
+iter = 8, diff = 0.000881, epsilon = 0.001000
+
+epsilon = 0.005
+iter = 0, diff = 18222.705571, epsilon = 0.000500
+iter = 11, diff = 0.000477, epsilon = 0.000500
+
+- give some analysis of advantages using corresponding parallel computing
+  method (not need too much). Additionally for the implementation, you need to
+give more details.
+
 - What are you looking for regarding performance results in the project
   report?
 Mainly refer to the output results, and based on this you need to give some
