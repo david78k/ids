@@ -16,9 +16,11 @@ using namespace std;
 #define OUTFILE "Output_Task2.txt"
 
 unordered_map<int, int> table;
-//string lines[];
+//int pairs[]; // key, value pairs
+//vector<int[2]> pairs; // key, value pairs
+vector<vector<int>> pairs; // key, value pairs
 vector<string> lines;
-int nprocs, myrank; 
+int nprocs, myrank, blocksize; 
 
 void init();
 void init(int argc, char **argv);
@@ -61,6 +63,9 @@ void multiple(int argc, char **argv) {
 		init(argc, argv);
 		assign();
 	}
+	
+	//cout << "line size = " << lines.size() << endl;
+	//cout << "Block size = " << blocksize << endl;
 	reduce();
 	//writeFile();
 }
@@ -72,9 +77,17 @@ void reduce() {
 	//int i, num_procs, myrank, left, right, Nsteps = 100;
 	//string line;
 	char line[100];
+	blocksize = 100000/nprocs;
+	int data[blocksize][2];
+
+	//cout << "line size = " << lines.size() << endl;
+	//cout << "Block size = " << blocksize << endl;
+	//cout << "nprocs = " << nprocs << endl;
 	MPI_Recv(line, 100, MPI_CHAR, 0, 1, MPI_COMM_WORLD, NULL);
+	//MPI_Recv(&data[0][0], blocksize*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
 	
-	cout << "Processor " << myrank << " received " << line << endl;
+	cout << "Processor " << myrank << " received " << data << endl;
+	//cout << "Processor " << myrank << " received " << line << endl;
 /*
 	MPI_Status status;
 
@@ -96,7 +109,8 @@ void assign() {
 	// nproc; // number of processors
 	int begin, end;
 	int N = lines.size();
-	int blocksize = N/nprocs;
+	blocksize = N/nprocs;
+
 	for(int i = 0; i < nprocs; i++) {
 		begin = i * blocksize;
 		end = begin + blocksize - 1; 
@@ -107,9 +121,20 @@ void assign() {
 		cout << "Processor " << i << ": " << begin << "-" << end << endl;		
 		// int MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest,
 		//     int tag, MPI_Comm comm)
-		MPI_Send(&lines[0], lines[0].size(), MPI_CHAR, i, 1, MPI_COMM_WORLD);
-		cout << "Message " <<  lines[0] << " sent to processor " << i << endl;
-		// MPI_Send(a, 10, MPI_INT, (myrank + 1)%nprocs, 1, MPI_COMM_WORLD);
+		//cout << "MPI_send " << lines[i] << endl;
+		char *cstr = new char[lines[i].length() + 1];
+		strcpy(cstr, lines[i].c_str());
+		cout << "MPI_send " << cstr << endl;
+
+		//MPI_Send(&pairs[begin][0], blocksize*2, MPI_INT, i, 1, MPI_COMM_WORLD);
+		MPI_Send(cstr, strlen(cstr), MPI_CHAR, i, 1, MPI_COMM_WORLD);
+		//MPI_Send(&lines[i], lines[i].size(), MPI_CHAR, i, 1, MPI_COMM_WORLD);
+	//	cout << "MPI message " << cstr << endl;
+	//	cout << cstr;
+	//	cout << " sent to processor " << i << endl;
+		//cout << "Message " << cstr << " sent to processor " << i << endl;
+		//cout << "Message " << lines[i] << " sent to processor " << i << endl;
+		delete [] cstr;
 	}
 }
 
@@ -125,25 +150,34 @@ void init(int argc, char **argv) {
 	int i, Nsteps = 100;
 	char *token;
 
-    while ( getline (myfile,line) )
-    {
-	lines.push_back(line);	
+	while ( getline (myfile,line) )
+    	{
+		lines.push_back(line);	
 
-	char *cstr = new char[line.length() + 1];
-	strcpy(cstr, line.c_str());
-	token = strtok(cstr, ",");
-        int key = atoi(token);
-        int value = atoi(strtok(NULL, "\0"));
-	delete [] cstr;
+//	for (auto it = lines.begin(); it != lines.end(); ++it) {
+		//myfile << it->first << '\t' << it->second << endl;
+	//	line = *it;
+		char *cstr = new char[line.length() + 1];
+		strcpy(cstr, line.c_str());
+		token = strtok(cstr, ",");
+        	int key = atoi(token);
+        	int value = atoi(strtok(NULL, "\0"));
+		delete [] cstr;
 
-//	cout << key << ", " << value << endl;
-	table[key] += value;
-	
-    }
-    myfile.close();
+	//	cout << key << ", " << value << endl;
+		table[key] += value;
+
+/*
+		vector<int> pair;
+		pair.push_back(key);
+		pair.push_back(value);
+		pairs.push_back(pair);
+*/
+	}
 
 	cout << "number of lines = " << lines.size() << endl;
 	cout << "number of keys = " << table.size() << endl;
+	myfile.close();
   }
 
   else cout << "Unable to open file";
