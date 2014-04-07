@@ -13,6 +13,7 @@ implementation methods, experimental settings, outputs and corresponding
 conclusions
 
 implementation methods
+- c++ standard library (stl) is used.
 - unordered_map is used for hash tables.
 
 experimental settings

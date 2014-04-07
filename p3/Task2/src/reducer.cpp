@@ -16,7 +16,9 @@ using namespace std;
 #define OUTFILE "Output_Task2.txt"
 
 unordered_map<int, int> table;
-string lines[];
+//string lines[];
+vector<string> lines;
+int nprocs, myrank; 
 
 void init();
 void init(int argc, char **argv);
@@ -33,7 +35,16 @@ int main(int argc, char **argv) {
 	//single();
 	
 	// MPI with multiprocessors
+	MPI_Status status;
+	MPI_Request req_recv, req_send;
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
+	cout << "nprocs = " << nprocs << ", myrank = " << myrank << endl;
+
 	multiple(argc, argv);
+
+	MPI_Finalize();
 
 	return EXIT_SUCCESS;
 }
@@ -45,9 +56,12 @@ void single() {
 }
 
 void multiple(int argc, char **argv) {
-	init(argc, argv);
-	assign();
-	//reduce();
+	// only master runs this
+	if(myrank == 0) {
+		init(argc, argv);
+		assign();
+	}
+	reduce();
 	//writeFile();
 }
 
@@ -55,28 +69,47 @@ void reduce() {
 	// partitioned table for each processor
 	unordered_map<int, int> partable;
 
-	int i, num_procs, ID, left, right, Nsteps = 100;
-
-	readFile();
-
+	//int i, num_procs, myrank, left, right, Nsteps = 100;
+	//string line;
+	char line[100];
+	MPI_Recv(line, 100, MPI_CHAR, 0, 1, MPI_COMM_WORLD, NULL);
+	
+	cout << "Processor " << myrank << " received " << line << endl;
+/*
 	MPI_Status status;
 
 	MPI_Request req_recv, req_send;
 
 //	MPI_Init(&argc, &argv);
-	MPI_Comm_rank(MPI_COMM_WORLD, &ID);
+	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
 	MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
 	MPI_Finalize();
+*/
 }
 
 // assign lines to processors
 void assign() {
-	// partition lines
+	// partition and send lines processors
 	// 1-(n-1)th processors: N/n
 	// nth processor: N - (n - 1)*N/n
-	for(line: lines) {
-		
+	// nproc; // number of processors
+	int begin, end;
+	int N = lines.size();
+	int blocksize = N/nprocs;
+	for(int i = 0; i < nprocs; i++) {
+		begin = i * blocksize;
+		end = begin + blocksize - 1; 
+		// send the rest to the last proc
+		if (i == nprocs - 1) {
+			end = N - 1;	
+		}
+		cout << "Processor " << i << ": " << begin << "-" << end << endl;		
+		// int MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest,
+		//     int tag, MPI_Comm comm)
+		MPI_Send(&lines[0], lines[0].size(), MPI_CHAR, i, 1, MPI_COMM_WORLD);
+		cout << "Message " <<  lines[0] << " sent to processor " << i << endl;
+		// MPI_Send(a, 10, MPI_INT, (myrank + 1)%nprocs, 1, MPI_COMM_WORLD);
 	}
 }
 
@@ -89,18 +122,12 @@ void init(int argc, char **argv) {
 
   if (myfile.is_open())
   {
-	int i, num_procs, ID, left, right, Nsteps = 100;
+	int i, Nsteps = 100;
 	char *token;
-
-	MPI_Status status;
-	MPI_Request req_recv, req_send;
-	MPI_Init(&argc, &argv);
-	MPI_Comm_rank(MPI_COMM_WORLD, &ID);
-	MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
     while ( getline (myfile,line) )
     {
-	lines.add(line);	
+	lines.push_back(line);	
 
 	char *cstr = new char[line.length() + 1];
 	strcpy(cstr, line.c_str());
@@ -115,9 +142,8 @@ void init(int argc, char **argv) {
     }
     myfile.close();
 
-	MPI_Finalize();
-
-	cout << table.size() << endl;
+	cout << "number of lines = " << lines.size() << endl;
+	cout << "number of keys = " << table.size() << endl;
   }
 
   else cout << "Unable to open file";
@@ -157,7 +183,7 @@ void readFile() {
     }
     myfile.close();
 	
-	cout << table.size() << endl;
+	cout << "number of keys = " << table.size() << endl;
   }
 
   else cout << "Unable to open file";
