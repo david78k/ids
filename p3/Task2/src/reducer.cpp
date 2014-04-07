@@ -16,27 +16,42 @@ using namespace std;
 #define OUTFILE "Output_Task2.txt"
 
 unordered_map<int, int> table;
+string lines[];
 
 void init();
+void init(int argc, char **argv);
 void readFile();
 void writeFile();
 void reduce();
-void reduceMPI();
+void single();
+void multiple();
+void multiple(int argc, char **argv);
+void assign();
 
 int main(int argc, char **argv) {
-	readFile();
-	init();
-	reduce();
-	writeFile();
+	// for single processor
+	//single();
+	
+	// MPI with multiprocessors
+	multiple(argc, argv);
 
 	return EXIT_SUCCESS;
 }
 
-void reduce() {
-
+void single() {
+	// for single processor
+	readFile();
+	writeFile();
 }
 
-void reduceMPI() {
+void multiple(int argc, char **argv) {
+	init(argc, argv);
+	assign();
+	//reduce();
+	//writeFile();
+}
+
+void reduce() {
 	// partitioned table for each processor
 	unordered_map<int, int> partable;
 
@@ -55,10 +70,60 @@ void reduceMPI() {
 	MPI_Finalize();
 }
 
-void init() {
-
+// assign lines to processors
+void assign() {
+	// partition lines
+	// 1-(n-1)th processors: N/n
+	// nth processor: N - (n - 1)*N/n
+	for(line: lines) {
+		
+	}
 }
 
+// multi-processors
+// read pairs from the file and calculate the number of pairs
+// assign lines to processors
+void init(int argc, char **argv) {
+  ifstream myfile (INFILE);
+  string line;
+
+  if (myfile.is_open())
+  {
+	int i, num_procs, ID, left, right, Nsteps = 100;
+	char *token;
+
+	MPI_Status status;
+	MPI_Request req_recv, req_send;
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &ID);
+	MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
+
+    while ( getline (myfile,line) )
+    {
+	lines.add(line);	
+
+	char *cstr = new char[line.length() + 1];
+	strcpy(cstr, line.c_str());
+	token = strtok(cstr, ",");
+        int key = atoi(token);
+        int value = atoi(strtok(NULL, "\0"));
+	delete [] cstr;
+
+//	cout << key << ", " << value << endl;
+	table[key] += value;
+	
+    }
+    myfile.close();
+
+	MPI_Finalize();
+
+	cout << table.size() << endl;
+  }
+
+  else cout << "Unable to open file";
+}
+
+// single processor
 // read pairs from the file and calculate the number of pairs
 void readFile() {
   ifstream myfile (INFILE);
