@@ -3,7 +3,7 @@ SHELL := /bin/bash
 default: compile run
 
 compile:
-	mpic++ -o reducer.o reducer.cpp
+	mpic++ -o reducer.o reducer.cpp -std=c++0x
 	#mpicc -std=c99 -o reducer.o reducer.cpp
 
 run:
