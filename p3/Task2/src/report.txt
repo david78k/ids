@@ -13,13 +13,13 @@ implementation methods, experimental settings, outputs and corresponding
 conclusions
 
 implementation methods
-- 
+- unordered_map is used for hash tables.
 
 experimental settings
 -
 
 outputs and corresponding conclusions
--
+- output format: key and sum of values are separated by a tab
 
 - What are you looking for regarding performance results in the project
   report?

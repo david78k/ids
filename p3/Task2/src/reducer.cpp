@@ -11,19 +11,23 @@
 
 using namespace std;
 
+#define INFILE "100000_key-value_pairs.csv"
+//string infile ("100000_key-value_pairs.csv");
+#define OUTFILE "Output_Task2.txt"
+
 unordered_map<int, int> table;
 
 void init();
 void readFile();
+void writeFile();
 void reduce();
 void reduceMPI();
-
-string infile ("100000_key-value_pairs.csv");
 
 int main(int argc, char **argv) {
 	readFile();
 	init();
 	reduce();
+	writeFile();
 
 	return EXIT_SUCCESS;
 }
@@ -57,8 +61,8 @@ void init() {
 
 // read pairs from the file and calculate the number of pairs
 void readFile() {
-  //ifstream myfile ("example.txt");
-  ifstream myfile (infile.c_str());
+  ifstream myfile (INFILE);
+  //ifstream myfile (infile.c_str());
   string line;
 
   if (myfile.is_open())
@@ -73,8 +77,9 @@ void readFile() {
         int value = atoi(strtok(NULL, "\0"));
 	delete [] cstr;
 
-	cout << key << ", " << value << '\n';
-     // cout << line << '\n';
+//	cout << key << ", " << value << endl;
+	table[key] += value;
+	
 	/*
 	vector<int> tokens;
 	 istringstream iss(line);
@@ -84,9 +89,10 @@ void readFile() {
 	for (vector<int>::iterator it = tokens.begin(); it != tokens.end(); ++it)
 		cout << ' ' << *it;
 	*/
-	//cout << '\n';
     }
     myfile.close();
+	
+	cout << table.size() << endl;
   }
 
   else cout << "Unable to open file";
@@ -94,8 +100,14 @@ void readFile() {
 
 void writeFile() {
 	ofstream myfile;
-	myfile.open ("example.txt");
-	myfile << "Writing this to a file.\n";
+	myfile.open (OUTFILE);
+	//myfile << "Writing this to a file.\n";
+		
+	for (auto it = table.begin(); it != table.end(); ++it) 
+		myfile << it->first << '\t' << it->second << endl;
+	//for (int i = 0; i < table.size(); i ++) 
+		//myfile << i << ' ' << table[i] << endl;
+
 	myfile.close();
 }
 
