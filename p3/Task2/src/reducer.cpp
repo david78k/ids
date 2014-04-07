@@ -90,15 +90,15 @@ void reduce() {
 
 	int data[nlines][2];
 
-	MPI_Recv(&data[0][0], NPAIRS*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
-	//MPI_Recv(&data[0][0], nlines*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
+	//MPI_Recv(&data[0][0], NPAIRS*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
+	MPI_Recv(&data[0][0], nlines*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
 	//MPI_Recv(&b[0][0], 128*32, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD, NULL);
 	
 	//cout << "Processor " << myrank << " received " << b << endl;
 	cout << "Processor " << myrank << " received " << data << endl;
 	//cout << "Processor " << myrank << " received " << line << endl;
 	
-	//for(int i = 0; i < blocksize; i ++) {
+	//for(int i = 0; i < nlines; i ++) {
 	for(int i = 0; i < 10; i ++) {
 		cout << data[i][0] << " " << data[i][1] << endl;
 		//cout << b[i][0] << " " << b[i][1] << endl;
@@ -155,9 +155,11 @@ void assign() {
 		cout << "pairs[begin + 1][0]: "  << pairs[begin + 1][0] << endl;
 
 		int nlines = end - begin + 1;
+		nlines = 20; // max lines: 16000
 		MPI_Send(&nlines, 1, MPI_INT, i, 1, MPI_COMM_WORLD);
 		//MPI_Send(&a[0][0], 128*32, MPI_DOUBLE, i, 1, MPI_COMM_WORLD);
-		MPI_Send(&data[begin + 1][0], NPAIRS*2, MPI_INT, i, 1, MPI_COMM_WORLD);
+		MPI_Send(&data[begin][0], nlines*2, MPI_INT, i, 1, MPI_COMM_WORLD);
+		//MPI_Send(&data[begin + 1][0], NPAIRS*2, MPI_INT, i, 1, MPI_COMM_WORLD);
 		//MPI_Send(&pairs[begin + 1][0], NPAIRS*2, MPI_INT, i, 1, MPI_COMM_WORLD);
 		//MPI_Send(&pairs[begin][0], nlines*2, MPI_INT, i, 1, MPI_COMM_WORLD);
 		//MPI_Send(cstr, strlen(cstr), MPI_CHAR, i, 1, MPI_COMM_WORLD);
