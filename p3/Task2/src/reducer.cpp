@@ -74,17 +74,18 @@ void reduce() {
 	// partitioned table for each processor
 	unordered_map<int, int> partable;
 
-	//int i, num_procs, myrank, left, right, Nsteps = 100;
 	//string line;
-	char line[100];
-	blocksize = 100000/nprocs;
+	//char line[100];
+	//char data[100];
+	blocksize = 100001/nprocs;
+	//blocksize = 100000/nprocs;
 	int data[blocksize][2];
 
 	//cout << "line size = " << lines.size() << endl;
 	//cout << "Block size = " << blocksize << endl;
 	//cout << "nprocs = " << nprocs << endl;
-	MPI_Recv(line, 100, MPI_CHAR, 0, 1, MPI_COMM_WORLD, NULL);
-	//MPI_Recv(&data[0][0], blocksize*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
+	//MPI_Recv(data, 100, MPI_CHAR, 0, 1, MPI_COMM_WORLD, NULL);
+	MPI_Recv(&data[0][0], blocksize*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
 	
 	cout << "Processor " << myrank << " received " << data << endl;
 	//cout << "Processor " << myrank << " received " << line << endl;
@@ -127,8 +128,8 @@ void assign() {
 		cout << "MPI_send " << cstr << endl;
 
 		//MPI_Send(&pairs[begin][0], blocksize*2, MPI_INT, i, 1, MPI_COMM_WORLD);
-		MPI_Send(cstr, strlen(cstr), MPI_CHAR, i, 1, MPI_COMM_WORLD);
-		//MPI_Send(&lines[i], lines[i].size(), MPI_CHAR, i, 1, MPI_COMM_WORLD);
+		//MPI_Send(cstr, strlen(cstr), MPI_CHAR, i, 1, MPI_COMM_WORLD);
+		MPI_Send(&lines[i], lines[i].size(), MPI_CHAR, i, 1, MPI_COMM_WORLD);
 	//	cout << "MPI message " << cstr << endl;
 	//	cout << cstr;
 	//	cout << " sent to processor " << i << endl;
@@ -167,12 +168,10 @@ void init(int argc, char **argv) {
 	//	cout << key << ", " << value << endl;
 		table[key] += value;
 
-/*
 		vector<int> pair;
 		pair.push_back(key);
 		pair.push_back(value);
 		pairs.push_back(pair);
-*/
 	}
 
 	cout << "number of lines = " << lines.size() << endl;
