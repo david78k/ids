@@ -14,6 +14,7 @@ using namespace std;
 #define INFILE "100000_key-value_pairs.csv"
 //string infile ("100000_key-value_pairs.csv");
 #define OUTFILE "Output_Task2.txt"
+#define NPAIRS 10
 
 unordered_map<int, int> table;
 //int pairs[]; // key, value pairs
@@ -75,31 +76,32 @@ void reduce() {
 	// partitioned table for each processor
 	unordered_map<int, int> partable;
 
-	//string line;
 	//char line[100];
 //	blocksize = 100001/nprocs;
-	//blocksize = 100000/nprocs;
-	//int data[blocksize][2];
-	char data[100];
+	//char data[100];
 	double b[128][32];
-	int i, j, blocksize, blocks;
+	int i, j, blocksize, nlines;
 
 	cout << "line size = " << lines.size() << endl;
 	cout << "nprocs = " << nprocs << endl;
 	//MPI_Recv(data, 100, MPI_CHAR, 0, 1, MPI_COMM_WORLD, NULL);
-	//MPI_Recv(&data[0][0], blocksize*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
-	MPI_Recv(&blocks, 1, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
-	cout << "Block size = " << blocks << endl;
-	MPI_Recv(&b[0][0], 128*32, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD, NULL);
+	MPI_Recv(&nlines, 1, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
+	cout << "num of lines = " << nlines << endl;
+
+	int data[nlines][2];
+
+	MPI_Recv(&data[0][0], NPAIRS*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
+	//MPI_Recv(&data[0][0], nlines*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
+	//MPI_Recv(&b[0][0], 128*32, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD, NULL);
 	
-	cout << "Processor " << myrank << " received " << b << endl;
-	//cout << "Processor " << myrank << " received " << data << endl;
+	//cout << "Processor " << myrank << " received " << b << endl;
+	cout << "Processor " << myrank << " received " << data << endl;
 	//cout << "Processor " << myrank << " received " << line << endl;
 	
 	//for(int i = 0; i < blocksize; i ++) {
 	for(int i = 0; i < 10; i ++) {
-		//cout << data[i][0] << " " << data[i][1] << endl;
-		cout << b[i][0] << " " << b[i][1] << endl;
+		cout << data[i][0] << " " << data[i][1] << endl;
+		//cout << b[i][0] << " " << b[i][1] << endl;
 	}
 }
 
@@ -123,8 +125,19 @@ void assign() {
         	    a[i][j] = 1000 * i + j;
         	    //a[i][j] = 1000 * i + j + 32 * rank;
 
+	int data[N][2];
+	i = 0;
+	for (auto it = pairs.begin(); it != pairs.end(); ++it) {
+		vector<int> v = *it;
+		data[i][0] = v[0];
+		data[i][1] = v[1];
+		i ++;
+	}
+		
 	cout << "Block size = " << blocksize << endl;
 	cout << "number of pairs = " << pairs.size() << endl;
+	cout << "assign data[1][0] = " << data[1][0] << endl;
+	cout << "assign data[1][1] = " << data[1][1] << endl;
 	for(int i = 0; i < nprocs; i++) {
 		begin = i * blocksize;
 		end = begin + blocksize - 1; 
@@ -141,15 +154,17 @@ void assign() {
 		cout << "MPI_send " << cstr << endl;
 		cout << "pairs[begin + 1][0]: "  << pairs[begin + 1][0] << endl;
 
-		int blocks = end - begin + 1;
-		MPI_Send(&blocks, 1, MPI_INT, i, 1, MPI_COMM_WORLD);
-		MPI_Send(&a[0][0], 128*32, MPI_DOUBLE, i, 1, MPI_COMM_WORLD);
-		//MPI_Send(&pairs[begin][0], blocksize*2, MPI_INT, i, 1, MPI_COMM_WORLD);
+		int nlines = end - begin + 1;
+		MPI_Send(&nlines, 1, MPI_INT, i, 1, MPI_COMM_WORLD);
+		//MPI_Send(&a[0][0], 128*32, MPI_DOUBLE, i, 1, MPI_COMM_WORLD);
+		MPI_Send(&data[begin + 1][0], NPAIRS*2, MPI_INT, i, 1, MPI_COMM_WORLD);
+		//MPI_Send(&pairs[begin + 1][0], NPAIRS*2, MPI_INT, i, 1, MPI_COMM_WORLD);
+		//MPI_Send(&pairs[begin][0], nlines*2, MPI_INT, i, 1, MPI_COMM_WORLD);
 		//MPI_Send(cstr, strlen(cstr), MPI_CHAR, i, 1, MPI_COMM_WORLD);
 		//MPI_Send(&lines[i], lines[i].size(), MPI_CHAR, i, 1, MPI_COMM_WORLD);
 	//	cout << "MPI message " << cstr << endl;
 	//	cout << cstr;
-	//	cout << " sent to processor " << i << endl;
+		cout << "Message sent to processor " << i << endl;
 		//cout << "Message " << cstr << " sent to processor " << i << endl;
 		//cout << "Message " << lines[i] << " sent to processor " << i << endl;
 		delete [] cstr;
