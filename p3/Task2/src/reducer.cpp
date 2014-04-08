@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 
 	//multiple(argc, argv);
 
-	/******************** read file and insert pairs into a table *****************/
+	/******************** INITIALIZE: read file and insert pairs into a table *****************/
   	ifstream myfile (INFILE);
   	string line;
 
@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
 	cout << "number of pairs = " << pairs.size() << endl;
 	}
 
-	/************************* partition and local reduce on own table **************************/
+	/*********************** FIRST STEP: partition and local reduce on own table ***********************/
 	// partition lines for each processor
 	// 1-(n-1)th processors: N/n
 	// nth processor: N - (n - 1)*N/n
@@ -95,7 +95,6 @@ int main(int argc, char **argv) {
 	int begin, end;
 	int N = lines.size();
 	blocksize = N/nprocs;
-	double a[128][32];
 	int i, j;
 
 	// partitioned table for each processor
@@ -111,17 +110,22 @@ int main(int argc, char **argv) {
 	cout << "lines[0]: "  << lines[0] << endl;
 	cout << "pairs[begin][0]: "  << pairs[begin][0] << endl;
 
+	// calculate the sum of pairs
 	for(i = begin; i < end; i ++) {
 		partable[pairs[i][0]] += pairs[i][1];
 	}
 
 	cout << "Paritioned table size = " << partable.size() << endl;
 
-	/********************** send the results of local reduction ********************/
+	/********************** SECOND STEP: send the results of local reduction ********************/
+	// send the results to other processors
+	
 	// int MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest,
 	//     int tag, MPI_Comm comm)
 	//cout << "MPI_send " << lines[i] << endl;
-	
+
+	/********************** FINAL STEP: send the results of local reduction ********************/
+
 	MPI_Finalize();
 
 	return EXIT_SUCCESS;
