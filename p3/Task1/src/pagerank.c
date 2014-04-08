@@ -8,12 +8,12 @@
 #define NUM_THREADS 4
 
 static double d = 0.85;
-//static double epsilon = 0.001; // 9-11 iter, 8 iter without omp
+static double epsilon = 0.001; // 9-11 iter, 8 iter without omp
+//static double epsilon = 1e-7; // K-K iter, 87 iter without omp
 //static double epsilon = 0.0005; // 20-30 iter, 11 iter without omp
 //static double epsilon = 0.0001; // 10K-30K iter, 21 iter without omp
 //static double epsilon = 0.00001; // K-K iter, 36 iter without omp
 //static double epsilon = 0.000001; // K-K iter, 53 iter without omp
-static double epsilon = 1e-7; // K-K iter, 87 iter without omp
 //static double epsilon = 1e-8; // K-K iter, 87 iter without omp
 
 //char *input = "data/facebook";
@@ -60,11 +60,84 @@ double T[][11] = {
 double TR[] = {0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091 };
 //double *TR;
 
-void main() {
+void main(int argc, char **argv) {
+	// master reads files
+	// calculate the number of nodes N
+	#pragma omp master
+	{
+		FILE * fp;
+        	char * line = NULL;
+       		size_t len = 0;
+       		ssize_t read;
+		int lineno = 0;
+		int i;
+
+		if(argc > 1) {
+	        	fp = fopen(argv[1], "r");
+			for(i = 0; i < argc; i++)
+                        	printf("argv[%d] = %s\n", i, argv[i]);	
+		} else {
+	        	fp = fopen(input, "r");
+			printf("%s\n", input);
+		}
+
+       		if (fp == NULL)
+        		exit(EXIT_FAILURE);
+
+		int data[lineno][2];	
+
+		lineno = 0;
+		int size = 0;
+	
+		struct number *ptr = NULL;
+		int row[2];
+		char *token;
+       		while ((read = getline(&line, &len, fp)) != -1) {
+			token = strtok(line, " ");
+			row[0] = atoi(token);
+			row[1] = atoi(strtok(NULL, "\0"));
+
+			ptr = search_in_list(row[0], NULL);
+        		if(NULL == ptr)
+        		{
+        			//printf("\n Search [val = %d] failed, no such element found\n",row[0]);
+		  		add_to_list(row[0], true);
+				size ++;
+        		}
+			ptr = search_in_list(row[1], NULL);
+        		if(NULL == ptr)
+        		{
+        			//printf("\n Search [val = %d] failed, no such element found\n",row[1]);
+		  		add_to_list(row[1], true);
+				size ++;
+	        	}
+
+		/*
+		if (lineno == 1) {
+           		printf("[%d] Retrieved line of length %zu : ", lineno, read);
+           		printf("%s\n", line);
+	   		printf("row data = %d %d\n", row[0], row[1]);
+	   	}
+		*/
+	   		lineno ++;
+       		}
+	
+		fclose(fp);
+       		if (line)
+			free(line);
+
+		N = size;
+		printf("total number of nodes = %d\n", N);
+	}
+
+//	print_list();
+
+	// initialize to a normalized identity vector
 	pagerank();
 }
 
 void pagerank() {
+	/*
 	// master reads files
 	// calculate the number of nodes N
 	#pragma omp master
@@ -73,7 +146,7 @@ void pagerank() {
 	}
 
 //	print_list();
-
+*/
 	// initialize to a normalized identity vector
 	init();	
 
@@ -352,6 +425,7 @@ void test() {
 	}
 }
 
+/*************************** Linked list functions *********************************/
 struct number* create_list(int val)
 {
     //printf("\n creating list with headnode as [%d]\n",val);

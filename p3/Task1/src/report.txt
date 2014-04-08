@@ -5,6 +5,7 @@ Todo list
 - input argument
 - synchronization totalsum
 - partition parallel sections by threadID
+- sort the output
 
 How to compile and run
 - files: pagerank.c, makefile
@@ -22,7 +23,7 @@ implementation methods
 
 experimental settings
 - damping factor = 0.85
-- conversion condition: epsilon = 0.001
+- varying conversion conditions: epsilon = 0.001-1e-8
 
 outputs and corresponding conclusions
 - weird results: without openmp and with openmp gave different results. Also, every
