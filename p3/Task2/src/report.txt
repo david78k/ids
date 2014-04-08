@@ -21,10 +21,14 @@ implementation methods
 - maximum number of message (int array): 16375*2 = 32760 (integers)
 
 experimental settings
--
+- output order messy without synchronization: needed barrier
+- compare single processor and multiprocessors
 
 outputs and corresponding conclusions
 - output format: key and sum of values are separated by a tab
+- single processor is faster than multiprocessors. this is because the dataset
+  size is too small to take advantage of parallel processing. Rather,
+communicaion overhead would've dominate the running time.
 
 - What are you looking for regarding performance results in the project
   report?
