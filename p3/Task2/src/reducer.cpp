@@ -206,7 +206,9 @@ int main(int argc, char **argv) {
 				MPI_INT, i, 1,
 				MPI_COMM_WORLD, NULL	
 			);
-	
+				
+			cout << "[Proc" << myrank << "] from proc " << i << ": recv[0][0] = " << recv[0][0] << 
+				", recv[0][1] = " << recv[0][1] << endl;
 		}
 	}
 	
