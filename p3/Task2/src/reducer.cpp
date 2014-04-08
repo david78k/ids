@@ -226,7 +226,7 @@ int main(int argc, char **argv) {
 	//	exit(1);
 	}
 
-	MPI_Barrier(MPI_COMM_WORLD);
+	//MPI_Barrier(MPI_COMM_WORLD);
 
 	while(turn < nprocs) {
 		MPI_Barrier(MPI_COMM_WORLD);

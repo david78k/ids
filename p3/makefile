@@ -1,19 +1,3 @@
-#https://s3.amazonaws.com/spring-2014-ds/movie_dataset/movie_ratings/movie_ratings.csv
-movie_ratings=/spring-2014-ds/movie_dataset/movie_ratings/movie_ratings.csv
-#movie_titles
-
-bucket = david78k-ids
-basedir = $(bucket)/input
-outdir = $(bucket)/results
-
-instance_type = m1.small
-num_instances = 10
-#num_instances = 3
-#num_instances = 20 # total max quota 20
-
-run: compile 
-
-runemr: compile s3 emr
 
 create:
 	hive -f src/create.enron.sql
@@ -29,7 +13,7 @@ count:
 
 tar:
 	cp dropbox/Report.pdf ./
-	tar cvf Project3_Kang_TaeSeung.tar Report.pdf Task1/src/pagerank.c Task1/src/makefile Task1/src/facebook_combined.txt Task2/src
+	tar cvf Project3_Kang_TaeSeung.tar Report.pdf Task1/src/pagerank.c Task1/src/makefile Task1/src/facebook_combined.txt Task2/src/reducer.cpp Task2/src/makefile
 	cp Project3_Kang_TaeSeung.tar dropbox/
 
 upload:
