@@ -136,7 +136,19 @@ int main(int argc, char **argv) {
 		end = max;	
 	cout << "Processor " << myrank << " key range: " << begin << "-" << end << endl;		
 
-	//MPI_SendRecv();
+	int data[begin - min][2];
+	i = 0;
+	for (j = min; j < begin; j ++) {
+		data[i][0] = pairs[j][0];
+		data[i][1] = pairs[j][1];
+		i ++;
+	}
+
+	for (i = 0; i < nprocs; i ++) {
+		if (i != myrank) {
+			//MPI_SendRecv();
+		}
+	}
 	
 	// int MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest,
 	//     int tag, MPI_Comm comm)
