@@ -234,11 +234,6 @@ int main(int argc, char **argv) {
 
 	while(turn < nprocs) {
 		if(turn == myrank) {
-			/*
-			while(outfile.is_open()) {
-				sleep(10);
-			}
-			*/
 			outfile.open (OUTFILE, ios::app);
 		
 			for (auto it = partable.begin(); it != partable.end(); ++it) {
@@ -250,7 +245,6 @@ int main(int argc, char **argv) {
 				if (myrank == nprocs - 1) last = range;
 				if (first <= key && key <= last)
 					outfile << key << '\t' << value << endl;
-				//	results[myrank].push_back(key);
 			}
 	
 			outfile.close();
