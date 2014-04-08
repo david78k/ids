@@ -46,48 +46,81 @@ int main(int argc, char **argv) {
 	cout << "nprocs = " << nprocs << ", myrank = " << myrank << endl;
 
 	//multiple(argc, argv);
-	
+
+	/******************** read file and insert pairs into a table *****************/
   	ifstream myfile (INFILE);
   	string line;
 
-  	if (myfile.is_open())
-  	{
-		char *token;
-		while ( getline (myfile,line) )
-	    	{
-			lines.push_back(line);	
+  	if (!myfile.is_open()) {
+		cout << "Unable to open file";
+		exit(1);
+	}
 
-	//	for (auto it = lines.begin(); it != lines.end(); ++it) {
-			//myfile << it->first << '\t' << it->second << endl;
-		//	line = *it;
-			char *cstr = new char[line.length() + 1];
-			strcpy(cstr, line.c_str());
-			token = strtok(cstr, ",");
-	        	int key = atoi(token);
-	        	int value = atoi(strtok(NULL, "\0"));
-			delete [] cstr;
+	char *token;
+	while ( getline (myfile,line) ) {
+		if (line.find("key,value") != string::npos) continue;
+		lines.push_back(line);	
 
-		//	cout << key << ", " << value << endl;
-			table[key] += value;
+		char *cstr = new char[line.length() + 1];
+		strcpy(cstr, line.c_str());
+		token = strtok(cstr, ",");
 
-			vector<int> pair;
-			pair.push_back(key);
-			pair.push_back(value);
-			//cout << "pair: "  << pair[0] << ", " << pair[1] << endl;
-			pairs.push_back(pair);
-		}
+        	int key = atoi(token);
+        	int value = atoi(strtok(NULL, "\0"));
+		delete [] cstr;
 
-		cout << "number of lines = " << lines.size() << endl;
-		cout << "number of keys = " << table.size() << endl;
-		cout << "number of pairs = " << pairs.size() << endl;
-		cout << "lines[0]: "  << lines[0] << endl;
-		//cout << "pairs[1]: "  << pairs[1] << endl;
-		cout << "pairs[1][0]: "  << pairs[1][0] << endl;
+	//	cout << key << ", " << value << endl;
+		table[key] += value;
 
-		myfile.close();
+		vector<int> pair;
+		pair.push_back(key);
+		pair.push_back(value);
+		//cout << "pair: "  << pair[0] << ", " << pair[1] << endl;
+		pairs.push_back(pair);
+	}
+
+	myfile.close();
 	
-		cout << "number of keys = " << table.size() << endl;
-	} else cout << "Unable to open file";
+	if(myrank == 0) {
+	cout << "number of lines = " << lines.size() << endl;
+	cout << "number of keys = " << table.size() << endl;
+	cout << "number of pairs = " << pairs.size() << endl;
+	}
+
+	/************************* partition and local reduce on own table **************************/
+	// partition lines for each processor
+	// 1-(n-1)th processors: N/n
+	// nth processor: N - (n - 1)*N/n
+	// nprocs; // number of processors
+	int begin, end;
+	int N = lines.size();
+	blocksize = N/nprocs;
+	double a[128][32];
+	int i, j;
+
+	// partitioned table for each processor
+	unordered_map<int, int> partable;
+
+	begin = myrank * blocksize;
+	end = begin + blocksize - 1; 
+	// assign the rest to the last proc
+	if (myrank == nprocs - 1) {
+		end = N - 1;	
+	}
+	cout << "Processor " << myrank << ": " << begin << "-" << end << endl;		
+	cout << "lines[0]: "  << lines[0] << endl;
+	cout << "pairs[begin][0]: "  << pairs[begin][0] << endl;
+
+	for(i = begin; i < end; i ++) {
+		partable[pairs[i][0]] += pairs[i][1];
+	}
+
+	cout << "Paritioned table size = " << partable.size() << endl;
+
+	/********************** send the results of local reduction ********************/
+	// int MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest,
+	//     int tag, MPI_Comm comm)
+	//cout << "MPI_send " << lines[i] << endl;
 	
 	MPI_Finalize();
 
