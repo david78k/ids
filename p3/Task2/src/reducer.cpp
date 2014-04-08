@@ -227,7 +227,11 @@ int main(int argc, char **argv) {
 	}
 
 	//MPI_Barrier(MPI_COMM_WORLD);
+	int first = min + myrank * keyrange;
+	int last = first + keyrange - 1;
+	if (myrank == nprocs - 1) last = range;
 
+	// does not gaurantee the order of keys
 	while(turn < nprocs) {
 		MPI_Barrier(MPI_COMM_WORLD);
 		if(turn == myrank) {
@@ -237,9 +241,6 @@ int main(int argc, char **argv) {
 				key = it->first;
 				value = it->second;
 
-				int first = min + myrank * keyrange;
-				int last = first + keyrange - 1;
-				if (myrank == nprocs - 1) last = range;
 				if (first <= key && key <= last)
 					outfile << key << '\t' << value << endl;
 			}
@@ -248,6 +249,20 @@ int main(int argc, char **argv) {
 		}
 		turn ++;
 		//MPI_Barrier(MPI_COMM_WORLD);
+	}
+
+	MPI_Gather(&partable[0][0], 1, &partable[0][0], 1, MPI_INT, 1, MPI_COMM_WORLD);
+
+	if(myrank == 0) {
+		outfile.open (OUTFILE);
+		// write to file	
+		for (auto it = partable.begin(); it != partable.end(); ++it) {
+			key = it->first;
+			value = it->second;
+
+			if (first <= key && key <= last)
+				outfile << key << '\t' << value << endl;
+		}
 	}
 
 	MPI_Finalize();
