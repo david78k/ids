@@ -45,8 +45,50 @@ int main(int argc, char **argv) {
 	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
 	cout << "nprocs = " << nprocs << ", myrank = " << myrank << endl;
 
-	multiple(argc, argv);
+	//multiple(argc, argv);
+	
+  	ifstream myfile (INFILE);
+  	string line;
 
+  	if (myfile.is_open())
+  	{
+		char *token;
+		while ( getline (myfile,line) )
+	    	{
+			lines.push_back(line);	
+
+	//	for (auto it = lines.begin(); it != lines.end(); ++it) {
+			//myfile << it->first << '\t' << it->second << endl;
+		//	line = *it;
+			char *cstr = new char[line.length() + 1];
+			strcpy(cstr, line.c_str());
+			token = strtok(cstr, ",");
+	        	int key = atoi(token);
+	        	int value = atoi(strtok(NULL, "\0"));
+			delete [] cstr;
+
+		//	cout << key << ", " << value << endl;
+			table[key] += value;
+
+			vector<int> pair;
+			pair.push_back(key);
+			pair.push_back(value);
+			//cout << "pair: "  << pair[0] << ", " << pair[1] << endl;
+			pairs.push_back(pair);
+		}
+
+		cout << "number of lines = " << lines.size() << endl;
+		cout << "number of keys = " << table.size() << endl;
+		cout << "number of pairs = " << pairs.size() << endl;
+		cout << "lines[0]: "  << lines[0] << endl;
+		//cout << "pairs[1]: "  << pairs[1] << endl;
+		cout << "pairs[1][0]: "  << pairs[1][0] << endl;
+
+		myfile.close();
+	
+		cout << "number of keys = " << table.size() << endl;
+	} else cout << "Unable to open file";
+	
 	MPI_Finalize();
 
 	return EXIT_SUCCESS;
@@ -91,6 +133,7 @@ void reduce() {
 	int data[nlines][2];
 
 	//MPI_Recv(&data[0][0], NPAIRS*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
+	MPI_Recv(&data[0][0], nlines*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
 	MPI_Recv(&data[0][0], nlines*2, MPI_INT, 0, 1, MPI_COMM_WORLD, NULL);
 	//MPI_Recv(&b[0][0], 128*32, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD, NULL);
 	
@@ -155,10 +198,12 @@ void assign() {
 		cout << "pairs[begin + 1][0]: "  << pairs[begin + 1][0] << endl;
 
 		int nlines = end - begin + 1;
-		nlines = 20; // max lines: 16000
+		//nlines = 20; // max lines: 160375 (32760 integers)
+		nlines = 16375; // max lines: 16376 
 		MPI_Send(&nlines, 1, MPI_INT, i, 1, MPI_COMM_WORLD);
 		//MPI_Send(&a[0][0], 128*32, MPI_DOUBLE, i, 1, MPI_COMM_WORLD);
 		MPI_Send(&data[begin][0], nlines*2, MPI_INT, i, 1, MPI_COMM_WORLD);
+		MPI_Send(&data[begin + nlines][0], nlines*2, MPI_INT, i, 1, MPI_COMM_WORLD);
 		//MPI_Send(&data[begin + 1][0], NPAIRS*2, MPI_INT, i, 1, MPI_COMM_WORLD);
 		//MPI_Send(&pairs[begin + 1][0], NPAIRS*2, MPI_INT, i, 1, MPI_COMM_WORLD);
 		//MPI_Send(&pairs[begin][0], nlines*2, MPI_INT, i, 1, MPI_COMM_WORLD);

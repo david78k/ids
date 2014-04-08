@@ -17,6 +17,7 @@ implementation methods
 - unordered_map is used for hash tables.
 - too hard to send vector type: when sending key-value pair list to each processor, I had to convert
   the vector of key-value pairs to 2-dimensional int array.
+- maximum number of message (int array): 16375*2 = 32760 (integers)
 
 experimental settings
 -
