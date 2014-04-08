@@ -217,6 +217,14 @@ int main(int argc, char **argv) {
 	// write only my pairs into file
 	// need synchronization by taking turn
 	ofstream outfile;
+	ofstream outrank;
+	stringstream ss;
+	ss << myrank << ".log";
+	string filename; // = string("log") + myrank;
+	filename = ss.str();
+
+	cout << filename << endl;
+
 	// starting from rank 0 to increase by one for each processor
 	int turn = 0; 
 
@@ -235,24 +243,33 @@ int main(int argc, char **argv) {
 	while(turn < nprocs) {
 		MPI_Barrier(MPI_COMM_WORLD);
 		if(turn == myrank) {
+			cout << "[Proc" << myrank << "] turn = " << myrank << ": pratable.begin()->first = " << partable.begin()->second << endl;
+			cout << "[Proc" << myrank << "] turn = " << myrank << ": pratable[7488] = " << partable[7488] << endl;
 			outfile.open (OUTFILE, ios::app);
+			outrank.open (filename);
 		
 			for (auto it = partable.begin(); it != partable.end(); ++it) {
 				key = it->first;
 				value = it->second;
 
-				if (first <= key && key <= last)
+				if (first <= key && key <= last) {
 					outfile << key << '\t' << value << endl;
+			//		outrank << key << '\t' << value << endl;
+				}
 			}
 	
 			outfile.close();
+			outrank.close();
 		}
 		turn ++;
 		//MPI_Barrier(MPI_COMM_WORLD);
 	}
 
-	MPI_Gather(&partable[0][0], 1, &partable[0][0], 1, MPI_INT, 1, MPI_COMM_WORLD);
+	//int data[][2];
 
+	//MPI_Gather(&partable[0][0], 1, &partable[0][0], 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+	/*
 	if(myrank == 0) {
 		outfile.open (OUTFILE);
 		// write to file	
@@ -264,6 +281,7 @@ int main(int argc, char **argv) {
 				outfile << key << '\t' << value << endl;
 		}
 	}
+	*/
 
 	MPI_Finalize();
 
