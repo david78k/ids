@@ -126,7 +126,6 @@ int main(int argc, char **argv) {
 
 	// calculate the sum of pairs
 	// and split key range
-	int keyrange = range/nprocs;
 	int key, value;
 	//int results[nprocs][][2];
 	vector<int> results[nprocs];
@@ -145,8 +144,10 @@ int main(int argc, char **argv) {
 	// send the selective key-value pairs to corresponding processors
 	// and receive the messages from others
 	// split key range
-	//int keyrange = range/nprocs;
+	int keyrange = range/nprocs;
+
 	// map pairs to corresponding processor
+	// and insert into an arraylist (vector)
 	for (auto it = partable.begin(); it != partable.end(); ++it) {
 		key = it->first;
 		value = it->second;
@@ -154,7 +155,7 @@ int main(int argc, char **argv) {
 		for (j = 0; j < nprocs; j ++) {
 			int first = min + j * keyrange;
 			int last = first + keyrange - 1;
-			if (j == nprocs - 1) last = range - 1;
+			if (j == nprocs - 1) last = range;
 			if (first <= key && key <= last)
 				results[j].push_back(key);
 		}	
@@ -164,31 +165,51 @@ int main(int argc, char **argv) {
 		cout << "[Proc" << myrank << "] Map size for proc " << i << " = " << results[i].size() << endl;
 	}
 		
-/*
-	begin = min + myrank * keyrange;
-	end = begin + keyrange - 1;
-	if (myrank == nprocs - 1)
-		end = max;	
-	cout << "[Proc" << myrank << "] key range: " << begin << "-" << end << endl;		
-
-	// map pairs to corresponding processor
-	// and insert into an arraylist (vector)
-	int data[begin - min][2];
-	i = 0;
-	//for (j = min; j < begin; j ++) {
-	for (j = min; j < max; j ++) {
-		data[i][0] = pairs[j][0];
-		data[i][1] = pairs[j][1];
-		i ++;
-	}
-
 	// send pairs to corresponding processors
 	for (i = 0; i < nprocs; i ++) {
+		//if (i != myrank || i == myrank) {
 		if (i != myrank) {
-			//MPI_SendRecv();
+			// convert pairs into array
+			int size = results[i].size();
+		//	size = 10;
+			int data[size][2];
+			int recvsize;
+			j = 0;
+
+			for (auto it = results[i].begin(); it != results[i].end(); ++it) {
+				key = *it;
+				data[j][0] = key;	
+				data[j][1] = partable[key];	
+				j++;
+			}
+	
+			cout << "[Proc" << myrank << "] to proc " << i << ": data[0][0] = " << data[0][0] << 
+				", data[0][1] = " << data[0][1] << endl;
+
+			// to identify the incoming message size
+			MPI_Sendrecv(&size, 
+				1,
+				MPI_INT, i, 1,
+				&recvsize,
+				1,
+				MPI_INT, i, 1,
+				MPI_COMM_WORLD, NULL	
+			);
+
+			int recv[recvsize][2];
+
+			MPI_Sendrecv(&data[0][0], 
+				size * 2,
+				MPI_INT, i, 1,
+				&recv[0][0],
+				recvsize * 2,
+				MPI_INT, i, 1,
+				MPI_COMM_WORLD, NULL	
+			);
+	
 		}
 	}
-*/	
+	
 	// int MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest,
 	//     int tag, MPI_Comm comm)
 	//cout << "MPI_send " << lines[i] << endl;
