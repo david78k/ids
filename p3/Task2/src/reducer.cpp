@@ -4,7 +4,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <unordered_map>
 #include <sstream>
 #include <vector>
 #include <iterator>
@@ -16,25 +15,29 @@ using namespace std;
 #define OUTFILE "Output_Task2.txt"
 #define NPAIRS 10
 
-//unordered_map<int, int> table;
 map<int, int> table;
 vector<vector<int>> pairs; // key, value pairs
 vector<string> lines;
 int nprocs, myrank, blocksize; 
 
 int main(int argc, char **argv) {
-	
-	// MPI with multiprocessors
-	MPI_Status status;
-	MPI_Request req_recv, req_send;
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
 	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
 	cout << "nprocs = " << nprocs << ", myrank = " << myrank << endl;
 
 	/******************** INITIALIZE: read file and insert pairs into a table *****************/
-  	ifstream infile (INFILE);
+  	ifstream infile;
   	string line;
+
+	if(argc > 1) { 
+		cout << "argc = " << argc << endl;
+		for(int i = 0; i < argc; i++) 
+			cout << "argv[" << i << "] = " << argv[i] << endl; 
+		infile.open(argv[1]);		
+	} else {
+  		infile.open(INFILE);
+	}
 
   	if (!infile.is_open()) {
 		cout << "Unable to open file";
@@ -94,7 +97,6 @@ int main(int argc, char **argv) {
 	int i, j;
 
 	// partitioned table for each processor
-	//unordered_map<int, int> partable;
 	map<int, int> partable;
 
 	begin = myrank * blocksize;

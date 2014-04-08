@@ -5,6 +5,10 @@ Todo list
 
 
 How to compile and run
+- compile: make compile
+- run: make run
+- you can edit makefile to change the input file. The default input file is
+  100000_key-value_pairs.csv under the current working directory.
 - mpicc -foepnmp -std=c99 -o out file
 - mpirun [--nolocal] [-np 4] [-machinefile machinefile] out
 	where -np is the number of processors
