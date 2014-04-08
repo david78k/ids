@@ -119,8 +119,23 @@ int main(int argc, char **argv) {
 	cout << "pairs[begin][0]: "  << pairs[begin][0] << endl;
 
 	// calculate the sum of pairs
+	int keyrange = range/nprocs;
+	int key, value;
+	//int results[nprocs][][2];
+	vector<int> results[nprocs];
+
 	for(i = begin; i < end; i ++) {
-		partable[pairs[i][0]] += pairs[i][1];
+		key = pairs[i][0];
+		partable[key] += pairs[i][1];
+		
+		// map pairs to corresponding processor
+		for (j = 0; j < nprocs; j ++) {
+			begin = min + j * keyrange;
+			end = begin + keyrange - 1;
+			if (j == nprocs - 1) end = range - 1;
+			if (begin < key && key < end)
+				results[j].push_back(key);
+		}	
 	}
 
 	cout << "Paritioned table size = " << partable.size() << endl;
@@ -129,27 +144,32 @@ int main(int argc, char **argv) {
 	// send the selective key-value pairs to corresponding processors
 	// and receive the messages from others
 	// split key range
-	int keyrange = range/nprocs;
+	//int keyrange = range/nprocs;
 	begin = min + myrank * keyrange;
 	end = begin + keyrange - 1;
 	if (myrank == nprocs - 1)
 		end = max;	
 	cout << "Processor " << myrank << " key range: " << begin << "-" << end << endl;		
 
+/*
+	// map pairs to corresponding processor
+	// and insert into an arraylist (vector)
 	int data[begin - min][2];
 	i = 0;
-	for (j = min; j < begin; j ++) {
+	//for (j = min; j < begin; j ++) {
+	for (j = min; j < max; j ++) {
 		data[i][0] = pairs[j][0];
 		data[i][1] = pairs[j][1];
 		i ++;
 	}
 
+	// send pairs to corresponding processors
 	for (i = 0; i < nprocs; i ++) {
 		if (i != myrank) {
 			//MPI_SendRecv();
 		}
 	}
-	
+*/	
 	// int MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest,
 	//     int tag, MPI_Comm comm)
 	//cout << "MPI_send " << lines[i] << endl;
