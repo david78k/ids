@@ -112,7 +112,8 @@ int main(int argc, char **argv) {
 	unordered_map<int, int> partable;
 
 	begin = myrank * blocksize;
-	end = begin + blocksize - 1; 
+	//end = begin + blocksize - 1; 
+	end = begin + blocksize; 
 	// assign the rest to the last proc
 	if (myrank == nprocs - 1) {
 		end = N - 1;	
