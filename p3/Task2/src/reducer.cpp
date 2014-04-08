@@ -17,8 +17,6 @@ using namespace std;
 #define NPAIRS 10
 
 unordered_map<int, int> table;
-//int pairs[]; // key, value pairs
-//vector<int[2]> pairs; // key, value pairs
 vector<vector<int>> pairs; // key, value pairs
 vector<string> lines;
 int nprocs, myrank, blocksize; 
@@ -112,11 +110,10 @@ int main(int argc, char **argv) {
 	unordered_map<int, int> partable;
 
 	begin = myrank * blocksize;
-	//end = begin + blocksize - 1; 
 	end = begin + blocksize; 
 	// assign the rest to the last proc
 	if (myrank == nprocs - 1) {
-		end = N - 1;	
+		end = N;	
 	}
 	cout << "[Proc" << myrank << "] lines assigned: " << begin << "-" << end << endl;		
 	cout << "[Proc" << myrank << "] lines[0]: "  << lines[0] << endl;
@@ -128,7 +125,6 @@ int main(int argc, char **argv) {
 	// calculate the sum of pairs
 	// and split key range
 	int key, value;
-	//int results[nprocs][][2];
 	vector<int> results[nprocs];
 
 	for(i = begin; i < end; i ++) {
@@ -212,9 +208,8 @@ int main(int argc, char **argv) {
 				", recv[0][1] = " << recv[0][1] << endl;
 			
 			// merge the received pairs into the current table
-			for (j = 0; j < recvsize; j ++) {
+			for (j = 0; j < recvsize; j ++) 
 				partable[recv[j][0]] += recv[j][1];
-			}
 		}
 	}
 	
@@ -226,7 +221,7 @@ int main(int argc, char **argv) {
 	int turn = 0; 
 
 	// delete output file
-	if( remove( OUTFILE ) != 0 ) {
+	if(myrank == 0 && remove( OUTFILE ) != 0 ) {
 		perror( "Error deleting file" );
 	//	exit(1);
 	}
@@ -234,6 +229,7 @@ int main(int argc, char **argv) {
 	MPI_Barrier(MPI_COMM_WORLD);
 
 	while(turn < nprocs) {
+		MPI_Barrier(MPI_COMM_WORLD);
 		if(turn == myrank) {
 			outfile.open (OUTFILE, ios::app);
 		
@@ -251,7 +247,7 @@ int main(int argc, char **argv) {
 			outfile.close();
 		}
 		turn ++;
-		MPI_Barrier(MPI_COMM_WORLD);
+		//MPI_Barrier(MPI_COMM_WORLD);
 	}
 
 	MPI_Finalize();
