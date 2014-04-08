@@ -224,26 +224,36 @@ int main(int argc, char **argv) {
 	// starting from rank 0 to increase by one for each processor
 	int turn = 0; 
 
+	// delete output file
+	if( remove( OUTFILE ) != 0 ) {
+		perror( "Error deleting file" );
+	//	exit(1);
+	}
+
+	MPI_Barrier(MPI_COMM_WORLD);
+
 	while(turn < nprocs) {
 		if(turn == myrank) {
-	while(outfile.is_open()) {
-		sleep(10);
-	}
-	outfile.open (OUTFILE, ios::app);
+			/*
+			while(outfile.is_open()) {
+				sleep(10);
+			}
+			*/
+			outfile.open (OUTFILE, ios::app);
 		
-	for (auto it = partable.begin(); it != partable.end(); ++it) {
-		key = it->first;
-		value = it->second;
+			for (auto it = partable.begin(); it != partable.end(); ++it) {
+				key = it->first;
+				value = it->second;
 
-		int first = min + myrank * keyrange;
-		int last = first + keyrange - 1;
-		if (myrank == nprocs - 1) last = range;
-		if (first <= key && key <= last)
-			outfile << key << '\t' << value << endl;
-		//	results[myrank].push_back(key);
-	}
-
-	outfile.close();
+				int first = min + myrank * keyrange;
+				int last = first + keyrange - 1;
+				if (myrank == nprocs - 1) last = range;
+				if (first <= key && key <= last)
+					outfile << key << '\t' << value << endl;
+				//	results[myrank].push_back(key);
+			}
+	
+			outfile.close();
 		}
 		turn ++;
 		MPI_Barrier(MPI_COMM_WORLD);

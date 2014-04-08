@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-default: compile run
+default: compile run validate
 
 compile:
 	mpic++ -o reducer.o reducer.cpp -std=c++0x
@@ -12,5 +12,7 @@ run:
 	#time mpirun -np `nproc` ./reducer.o
 	#time mpirun ./reducer.o
 	#time ./reducer.o
+
 validate:
+	wc -l out
 	diff Output_Task2-single_processor.txt out
