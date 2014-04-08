@@ -56,6 +56,8 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
+	int min, max, range; // to calculate range of keys
+	max = 0;
 	char *token;
 	while ( getline (myfile,line) ) {
 		if (line.find("key,value") != string::npos) continue;
@@ -77,14 +79,20 @@ int main(int argc, char **argv) {
 		pair.push_back(value);
 		//cout << "pair: "  << pair[0] << ", " << pair[1] << endl;
 		pairs.push_back(pair);
+
+		if (key < min) min = key;
+		if (key > max) max = key;
 	}
 
 	myfile.close();
+	
+	range = max - min;
 	
 	if(myrank == 0) {
 	cout << "number of lines = " << lines.size() << endl;
 	cout << "number of keys = " << table.size() << endl;
 	cout << "number of pairs = " << pairs.size() << endl;
+	cout << "key range = " << range << " (" << min << ", " << max << ")" << endl;
 	}
 
 	/*********************** FIRST STEP: partition and local reduce on own table ***********************/
@@ -106,7 +114,7 @@ int main(int argc, char **argv) {
 	if (myrank == nprocs - 1) {
 		end = N - 1;	
 	}
-	cout << "Processor " << myrank << ": " << begin << "-" << end << endl;		
+	cout << "Processor " << myrank << " lines assigned: " << begin << "-" << end << endl;		
 	cout << "lines[0]: "  << lines[0] << endl;
 	cout << "pairs[begin][0]: "  << pairs[begin][0] << endl;
 
@@ -118,13 +126,23 @@ int main(int argc, char **argv) {
 	cout << "Paritioned table size = " << partable.size() << endl;
 
 	/********************** SECOND STEP: send the results of local reduction ********************/
-	// send the results to other processors
+	// send the selective key-value pairs to corresponding processors
+	// and receive the messages from others
+	// split key range
+	int keyrange = range/nprocs;
+	begin = min + myrank * keyrange;
+	end = begin + keyrange - 1;
+	if (myrank == nprocs - 1)
+		end = max;	
+	cout << "Processor " << myrank << " key range: " << begin << "-" << end << endl;		
+
+	//MPI_SendRecv();
 	
 	// int MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest,
 	//     int tag, MPI_Comm comm)
 	//cout << "MPI_send " << lines[i] << endl;
 
-	/********************** FINAL STEP: send the results of local reduction ********************/
+	/********************** FINAL STEP: second local reduction and write into file ********************/
 
 	MPI_Finalize();
 
