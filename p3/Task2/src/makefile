@@ -2,10 +2,6 @@ SHELL := /bin/bash
 
 default: compile run validate
 
-compile:
-	mpic++ -o reducer.o reducer.cpp -std=c++0x
-	#mpicc -std=c99 -o reducer.o reducer.cpp
-
 run:
 	#time mpirun -np 4 ./reducer.o 100000_key-value_pairs.csv
 	time mpirun -np 3 ./reducer.o
@@ -15,6 +11,10 @@ run:
 	#time mpirun -np `nproc` ./reducer.o
 	#time mpirun ./reducer.o
 	#time ./reducer.o
+
+compile:
+	mpic++ -o reducer.o reducer.cpp -std=c++0x
+	#mpicc -std=c99 -o reducer.o reducer.cpp
 
 validate:
 	wc -l out
