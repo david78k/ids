@@ -8,6 +8,10 @@ Todo list
 - sort the output
 
 How to compile and run
+- compile: make compile
+- run: make run
+- you can edit the makefile to change the input file. The default input file
+  is facebook_combined.txt under the current working directory.
 - files: pagerank.c, makefile
 	pagerank.c: all functions including main() function
 - type 'make' in the current directory
