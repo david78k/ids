@@ -16,7 +16,8 @@ using namespace std;
 #define OUTFILE "Output_Task2.txt"
 #define NPAIRS 10
 
-unordered_map<int, int> table;
+//unordered_map<int, int> table;
+map<int, int> table;
 vector<vector<int>> pairs; // key, value pairs
 vector<string> lines;
 int nprocs, myrank, blocksize; 
@@ -107,7 +108,8 @@ int main(int argc, char **argv) {
 	int i, j;
 
 	// partitioned table for each processor
-	unordered_map<int, int> partable;
+	//unordered_map<int, int> partable;
+	map<int, int> partable;
 
 	begin = myrank * blocksize;
 	end = begin + blocksize; 
@@ -223,7 +225,7 @@ int main(int argc, char **argv) {
 	string filename; // = string("log") + myrank;
 	filename = ss.str();
 
-	cout << filename << endl;
+	//cout << filename << endl;
 
 	// starting from rank 0 to increase by one for each processor
 	int turn = 0; 
@@ -239,14 +241,13 @@ int main(int argc, char **argv) {
 	int last = first + keyrange - 1;
 	if (myrank == nprocs - 1) last = range;
 
-	// does not gaurantee the order of keys
 	while(turn < nprocs) {
 		MPI_Barrier(MPI_COMM_WORLD);
 		if(turn == myrank) {
 			cout << "[Proc" << myrank << "] turn = " << myrank << ": pratable.begin()->first = " << partable.begin()->second << endl;
-			cout << "[Proc" << myrank << "] turn = " << myrank << ": pratable[7488] = " << partable[7488] << endl;
+	//		cout << "[Proc" << myrank << "] turn = " << myrank << ": pratable[7488] = " << partable[7488] << endl;
 			outfile.open (OUTFILE, ios::app);
-			outrank.open (filename);
+	//		outrank.open (filename);
 		
 			for (auto it = partable.begin(); it != partable.end(); ++it) {
 				key = it->first;
@@ -254,34 +255,16 @@ int main(int argc, char **argv) {
 
 				if (first <= key && key <= last) {
 					outfile << key << '\t' << value << endl;
-			//		outrank << key << '\t' << value << endl;
+	//				outrank << key << '\t' << value << endl;
 				}
 			}
 	
 			outfile.close();
-			outrank.close();
+	//		outrank.close();
 		}
 		turn ++;
 		//MPI_Barrier(MPI_COMM_WORLD);
 	}
-
-	//int data[][2];
-
-	//MPI_Gather(&partable[0][0], 1, &partable[0][0], 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-	/*
-	if(myrank == 0) {
-		outfile.open (OUTFILE);
-		// write to file	
-		for (auto it = partable.begin(); it != partable.end(); ++it) {
-			key = it->first;
-			value = it->second;
-
-			if (first <= key && key <= last)
-				outfile << key << '\t' << value << endl;
-		}
-	}
-	*/
 
 	MPI_Finalize();
 
