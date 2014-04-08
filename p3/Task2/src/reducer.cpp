@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
 	if (myrank == nprocs - 1) {
 		end = N - 1;	
 	}
-	cout << "[Proc" << myrank << "] Processor " << myrank << " lines assigned: " << begin << "-" << end << endl;		
+	cout << "[Proc" << myrank << "] lines assigned: " << begin << "-" << end << endl;		
 	cout << "[Proc" << myrank << "] lines[0]: "  << lines[0] << endl;
 	cout << "[Proc" << myrank << "] pairs[begin][0]: "  << pairs[begin][0] << endl;
 
@@ -134,21 +134,9 @@ int main(int argc, char **argv) {
 	for(i = begin; i < end; i ++) {
 		key = pairs[i][0];
 		partable[key] += pairs[i][1];
-		
-		// map pairs to corresponding processor
-		for (j = 0; j < nprocs; j ++) {
-			begin = min + j * keyrange;
-			end = begin + keyrange - 1;
-			if (j == nprocs - 1) end = range - 1;
-			if (begin < key && key < end)
-				results[j].push_back(key);
-		}	
 	}
 
 	cout << "[Proc" << myrank << "] Paritioned table size = " << partable.size() << endl;
-	for (i = 0; i < nprocs; i ++) {
-		cout << "[Proc" << myrank << "] Map size for proc " << i << " = " << results[i].size() << endl;
-	}
 
 	MPI_Barrier(MPI_COMM_WORLD);
 	cout << endl;
@@ -158,13 +146,31 @@ int main(int argc, char **argv) {
 	// and receive the messages from others
 	// split key range
 	//int keyrange = range/nprocs;
+	// map pairs to corresponding processor
+	for (auto it = partable.begin(); it != partable.end(); ++it) {
+		key = it->first;
+		value = it->second;
+
+		for (j = 0; j < nprocs; j ++) {
+			int first = min + j * keyrange;
+			int last = first + keyrange - 1;
+			if (j == nprocs - 1) last = range - 1;
+			if (first <= key && key <= last)
+				results[j].push_back(key);
+		}	
+	}
+
+	for (i = 0; i < nprocs; i ++) {
+		cout << "[Proc" << myrank << "] Map size for proc " << i << " = " << results[i].size() << endl;
+	}
+		
+/*
 	begin = min + myrank * keyrange;
 	end = begin + keyrange - 1;
 	if (myrank == nprocs - 1)
 		end = max;	
 	cout << "[Proc" << myrank << "] key range: " << begin << "-" << end << endl;		
 
-/*
 	// map pairs to corresponding processor
 	// and insert into an arraylist (vector)
 	int data[begin - min][2];
