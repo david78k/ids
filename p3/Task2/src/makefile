@@ -12,4 +12,5 @@ run:
 	#time mpirun -np `nproc` ./reducer.o
 	#time mpirun ./reducer.o
 	#time ./reducer.o
-
+validate:
+	diff Output_Task2-single_processor.txt out

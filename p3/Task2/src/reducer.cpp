@@ -48,10 +48,10 @@ int main(int argc, char **argv) {
 	//multiple(argc, argv);
 
 	/******************** INITIALIZE: read file and insert pairs into a table *****************/
-  	ifstream myfile (INFILE);
+  	ifstream infile (INFILE);
   	string line;
 
-  	if (!myfile.is_open()) {
+  	if (!infile.is_open()) {
 		cout << "Unable to open file";
 		exit(1);
 	}
@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
 	int min, max, range; // to calculate range of keys
 	max = 0;
 	char *token;
-	while ( getline (myfile,line) ) {
+	while ( getline (infile,line) ) {
 		if (line.find("key,value") != string::npos) continue;
 		lines.push_back(line);	
 
@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
 		if (key > max) max = key;
 	}
 
-	myfile.close();
+	infile.close();
 	
 	range = max - min;
 	
@@ -209,14 +209,45 @@ int main(int argc, char **argv) {
 				
 			cout << "[Proc" << myrank << "] from proc " << i << ": recv[0][0] = " << recv[0][0] << 
 				", recv[0][1] = " << recv[0][1] << endl;
+			
+			// merge the received pairs into the current table
+			for (j = 0; j < recvsize; j ++) {
+				partable[recv[j][0]] += recv[j][1];
+			}
 		}
 	}
 	
-	// int MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest,
-	//     int tag, MPI_Comm comm)
-	//cout << "MPI_send " << lines[i] << endl;
-
 	/********************** FINAL STEP: second local reduction and write into file ********************/
+	// write only my pairs into file
+	// need synchronization by taking turn
+	ofstream outfile;
+	// starting from rank 0 to increase by one for each processor
+	int turn = 0; 
+
+	while(turn < nprocs) {
+		if(turn == myrank) {
+	while(outfile.is_open()) {
+		sleep(10);
+	}
+	outfile.open (OUTFILE, ios::app);
+		
+	for (auto it = partable.begin(); it != partable.end(); ++it) {
+		key = it->first;
+		value = it->second;
+
+		int first = min + myrank * keyrange;
+		int last = first + keyrange - 1;
+		if (myrank == nprocs - 1) last = range;
+		if (first <= key && key <= last)
+			outfile << key << '\t' << value << endl;
+		//	results[myrank].push_back(key);
+	}
+
+	outfile.close();
+		}
+		turn ++;
+		MPI_Barrier(MPI_COMM_WORLD);
+	}
 
 	MPI_Finalize();
 
