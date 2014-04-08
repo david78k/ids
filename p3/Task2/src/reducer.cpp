@@ -89,12 +89,15 @@ int main(int argc, char **argv) {
 	range = max - min;
 	
 	if(myrank == 0) {
-	cout << "number of lines = " << lines.size() << endl;
-	cout << "number of keys = " << table.size() << endl;
-	cout << "number of pairs = " << pairs.size() << endl;
-	cout << "key range = " << range << " (" << min << ", " << max << ")" << endl;
+		cout << "number of lines = " << lines.size() << endl;
+		cout << "number of keys = " << table.size() << endl;
+		cout << "number of pairs = " << pairs.size() << endl;
+		cout << "key range = " << range << " (" << min << ", " << max << ")" << endl;
 	}
 
+	MPI_Barrier(MPI_COMM_WORLD);
+	cout << endl;
+	
 	/*********************** FIRST STEP: partition and local reduce on own table ***********************/
 	// partition lines for each processor
 	// 1-(n-1)th processors: N/n
@@ -114,11 +117,15 @@ int main(int argc, char **argv) {
 	if (myrank == nprocs - 1) {
 		end = N - 1;	
 	}
-	cout << "Processor " << myrank << " lines assigned: " << begin << "-" << end << endl;		
-	cout << "lines[0]: "  << lines[0] << endl;
-	cout << "pairs[begin][0]: "  << pairs[begin][0] << endl;
+	cout << "[Proc" << myrank << "] Processor " << myrank << " lines assigned: " << begin << "-" << end << endl;		
+	cout << "[Proc" << myrank << "] lines[0]: "  << lines[0] << endl;
+	cout << "[Proc" << myrank << "] pairs[begin][0]: "  << pairs[begin][0] << endl;
+
+	MPI_Barrier(MPI_COMM_WORLD);
+	cout << endl;
 
 	// calculate the sum of pairs
+	// and split key range
 	int keyrange = range/nprocs;
 	int key, value;
 	//int results[nprocs][][2];
@@ -138,7 +145,13 @@ int main(int argc, char **argv) {
 		}	
 	}
 
-	cout << "Paritioned table size = " << partable.size() << endl;
+	cout << "[Proc" << myrank << "] Paritioned table size = " << partable.size() << endl;
+	for (i = 0; i < nprocs; i ++) {
+		cout << "[Proc" << myrank << "] Map size for proc " << i << " = " << results[i].size() << endl;
+	}
+
+	MPI_Barrier(MPI_COMM_WORLD);
+	cout << endl;
 
 	/********************** SECOND STEP: send the results of local reduction ********************/
 	// send the selective key-value pairs to corresponding processors
@@ -149,7 +162,7 @@ int main(int argc, char **argv) {
 	end = begin + keyrange - 1;
 	if (myrank == nprocs - 1)
 		end = max;	
-	cout << "Processor " << myrank << " key range: " << begin << "-" << end << endl;		
+	cout << "[Proc" << myrank << "] key range: " << begin << "-" << end << endl;		
 
 /*
 	// map pairs to corresponding processor
