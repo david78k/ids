@@ -229,13 +229,6 @@ void init() {
 		//rowsum[i] += 1.0;
 		//rowsum[j] += 1.0;
 
-		/*
-		if (lineno == 1) {
-           		printf("[%d] Retrieved line of length %zu : ", lineno, read);
-           		printf("%s\n", line);
-	   		printf("row data = %d %d\n", source, dest);
-	   	}
-		*/
 	   	lineno ++;
        }
 	
@@ -320,14 +313,19 @@ void compute() {
 		for (i = 0; i < N; i ++) {
 			//R[i] = ((1 - d)/N + d*R[i])/totalsum;
 			R[i] = R[i]/totalsum;
-			l1sum += abs(R_prev[i] - R[i]);
+			l1sum += fabs(R_prev[i] - R[i]);
 			//squaresum += pow(R_prev[i] - R[i], 2);
+			//printf("R_prev[i] = %f, R[i] = %f\n", R_prev[i], R[i]);
 			R_prev[i] = R[i];
 		}
 
 		// check convergence
 	//	diff = sqrt(squaresum);
 		diff = l1sum;
+		// display info every 100 iterations
+		//if(iter%100 == 0) {
+		printf("iter = %d, diff = %f, l1sum = %f, epsilon = %f\n", iter, diff, l1sum, epsilon);
+		//}
 		if (diff < epsilon) {
 			FILE *fp;
 			fp=fopen("Output_Task1.txt", "wb");
@@ -341,13 +339,10 @@ void compute() {
 				fputs(x, fp);
 			}
 			fclose(fp);
-			printf("iter = %d, diff = %f, epsilon = %f\n", iter, diff, epsilon);
+		//	printf("iter = %d, diff = %f, l1sum = %f, epsilon = %f\n", iter, diff, l1sum, epsilon);
 			break;
 		}
-		// display info every 100 iterations
-		//if(iter%100 == 0) {
-			printf("iter = %d, diff = %f, epsilon = %f\n", iter, diff, epsilon);
-		//}
+		//printf("iter = %d, diff = %f, epsilon = %f\n", iter, diff, epsilon);
 		iter ++;
 	}
 }
