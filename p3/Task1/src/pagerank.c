@@ -180,6 +180,8 @@ void init() {
 	int i, j;
 	char x[100];
 	double R0 = 1.0/N;
+	double colsum[N];
+	double rowsum[N];
 
 	fp=fopen("R.vec", "wb");
 	for (i = 0; i < N; i++) {
@@ -192,6 +194,7 @@ void init() {
 		for (j = 0; j < N; j++) {
 			A[i][j] = 0;
 		}
+		colsum[i] = rowsum[i] = 0;
 	}
 	fclose(fp);
 
@@ -210,8 +213,6 @@ void init() {
 	
 	int source, dest;
 	char *token;
-	double colsum[N];
-	double rowsum[N];
 	
 	// insert link edge info into matrix and vector
        while ((read = getline(&line, &len, fp)) != -1) {
@@ -241,21 +242,28 @@ void init() {
 	fclose(fp);
 	
 	//char x[] ="nodeid\tpagerank\n";
-	fp=fopen("A.mat", "wb");
+	fp=fopen("A0.mat", "wb");
+	FILE *afp = fopen("A.mat", "wb");
 	// column stochastic: normalize columns
 	for (i = 0; i < N; i ++) {
 		sprintf(x, "%d,%f\t", i, colsum[i]);
 		fputs(x, fp);
+		//sprintf(x, "%d,%f\t", i, colsum[i]);
+		fputs(x, afp);
 		for (j = 0; j < N; j ++) {
 			if (A[i][j] > 0) {
 				A[i][j] /= colsum[j];
 				sprintf(x, " %d", j);
 				fputs(x, fp);
+				sprintf(x, " %f", A[i][j]);
+				fputs(x, afp);
 			}
 		}
 		fputs("\n", fp);
+		fputs("\n", afp);
 	}	
 	fclose(fp);
+	fclose(afp);
 }
 
 void compute() {
@@ -288,19 +296,19 @@ void compute() {
 			//#pragma omp critical 
 			//#pragma omp ordered 
 			{
-			// A*R
-			for (j = 0; j < N; j ++) {
-				//printf("A[i][j] = %f, R[i] = %f\n", A[i][j], R[i]);
+				// A*R
+				for (j = 0; j < N; j ++) {
+					//printf("A[i][j] = %f, R[i] = %f\n", A[i][j], R[i]);
+					//#pragma omp critical 
+					sum += A[i][j]*R_prev[j];
+					//sum += T[i][j]*R[j];
+				}
+				//#pragma omp atomic
 				//#pragma omp critical 
-				sum += A[i][j]*R_prev[j];
-				//sum += T[i][j]*R[j];
-			}
-			//#pragma omp atomic
-			//#pragma omp critical 
-			//{
-			//#pragma omp barrier
-			R[i] = (1 - d)/N + d*sum;
-			totalsum += R[i];
+				//{
+				//#pragma omp barrier
+				R[i] = (1 - d)/N + d*sum;
+				totalsum += R[i];
 			}
 			//printf("%f\t", R[i]);
 		}
@@ -337,9 +345,9 @@ void compute() {
 			break;
 		}
 		// display info every 100 iterations
-		if(iter%100 == 0) {
+		//if(iter%100 == 0) {
 			printf("iter = %d, diff = %f, epsilon = %f\n", iter, diff, epsilon);
-		}
+		//}
 		iter ++;
 	}
 }
