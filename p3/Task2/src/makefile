@@ -9,9 +9,9 @@ run:
 	#time mpirun -np 8 ./reducer.o
 	#time mpirun -np 9 ./reducer.o
 	#time mpirun -np 11 ./reducer.o
-	#time mpirun -np `nproc` ./reducer.o
+	time mpirun -np `nproc` ./reducer.o
 	#time mpirun ./reducer.o
-	time ./reducer.o
+	#time ./reducer.o
 
 compile:
 	mpic++ -o reducer.o reducer.cpp -std=c++0x
