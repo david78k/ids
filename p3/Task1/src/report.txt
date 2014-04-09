@@ -27,9 +27,12 @@ implementation methods
 
 experimental settings
 - damping factor = 0.85
-- varying conversion conditions: epsilon = 0.001-1e-8
+- varying conversion conditions: epsilon = 0.001-1e-7
 
 outputs and corresponding conclusions
+- vector norm (L1, L2) is important for running time. L1 norm takes 60 iterations
+  while L2 norm 40 iterations (epsilon = 1e-7).
+
 - weird results: without openmp and with openmp gave different results. Also, every
   time I run with openmp, different results come out.
   => This is because of roundoff errors and the order of computation.

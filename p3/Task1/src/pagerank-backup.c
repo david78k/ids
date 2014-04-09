@@ -10,7 +10,13 @@
 static double d = 0.85;
 //static double epsilon = 0.001; // 9-11 iter, 8 iter without omp
 static double epsilon = 1e-7; // K-K iter, 87 iter without omp
+//static double epsilon = 0.0005; // 20-30 iter, 11 iter without omp
+//static double epsilon = 0.0001; // 10K-30K iter, 21 iter without omp
+//static double epsilon = 0.00001; // K-K iter, 36 iter without omp
+//static double epsilon = 0.000001; // K-K iter, 53 iter without omp
+//static double epsilon = 1e-8; // K-K iter, 87 iter without omp
 
+//char *input = "data/facebook";
 char *input = "facebook_combined.txt";
 
 int **mat;
@@ -37,6 +43,23 @@ void print_list(void);
 void init();
 void compute();
 void sort();
+
+// test matrix 11x11
+double T[][11] = {
+   {0.09091,   0.00000,   0.00000,   0.50000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   1.00000,   0.50000,   0.33333,   0.50000,   0.50000,   0.50000,   0.50000,   0.00000 ,  0.00000},
+   {0.09091,   1.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.33333,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,  0.00000,    0.50000,   0.50000,   0.50000,   0.50000,  1.00000 ,  1.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.33333,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000},
+   {0.09091,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000,   0.00000}};
+
+double TR[] = {0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091 };
+//double *TR;
 
 void main(int argc, char **argv) {
 	// master reads files
@@ -80,16 +103,25 @@ void main(int argc, char **argv) {
 			ptr = search_in_list(src, NULL);
         		if(NULL == ptr)
         		{
+        			//printf("\n Search [val = %d] failed, no such element found\n",row[0]);
 		  		add_to_list(src, true);
 				size ++;
         		}
 			ptr = search_in_list(dest, NULL);
         		if(NULL == ptr)
         		{
+        			//printf("\n Search [val = %d] failed, no such element found\n",row[1]);
 		  		add_to_list(dest, true);
 				size ++;
 	        	}
 
+		/*
+		if (lineno == 1) {
+           		printf("[%d] Retrieved line of length %zu : ", lineno, read);
+           		printf("%s\n", line);
+	   		printf("row data = %d %d\n", row[0], row[1]);
+	   	}
+		*/
 	   		lineno ++;
        		}
 	
@@ -107,6 +139,16 @@ void main(int argc, char **argv) {
 }
 
 void pagerank() {
+	/*
+	// master reads files
+	// calculate the number of nodes N
+	#pragma omp master
+	{
+		readFiles();
+	}
+
+//	print_list();
+*/
 	// initialize to a normalized identity vector
 	init();	
 
@@ -139,10 +181,12 @@ void init() {
 	char x[100];
 	double R0 = 1.0/N;
 	double colsum[N];
+	double rowsum[N];
 
 	fp=fopen("R.vec", "wb");
 	for (i = 0; i < N; i++) {
 		R_prev[i] = R[i] = R0;
+		//TR[i] = R0;
 		sprintf(x, " %f\n", R[i]);
 		fputs(x, fp);
 
@@ -150,7 +194,7 @@ void init() {
 		for (j = 0; j < N; j++) {
 			A[i][j] = 0;
 		}
-		colsum[i] = 0;
+		colsum[i] = rowsum[i] = 0;
 	}
 	fclose(fp);
 
@@ -176,10 +220,14 @@ void init() {
 		i = atoi(token);
 		j = atoi(strtok(NULL, "\0"));
 	
+		//printf("i = %d, j = %d\n", i, j);
+		//printf("i = %d, j = %d, A[i][j] = %f\n", i, j, A[i][j]);
 		A[i][j] = 1.0;
 		A[j][i] = 1.0;
 		colsum[i] += A[j][i];
 		colsum[j] += A[i][j];
+		//rowsum[i] += 1.0;
+		//rowsum[j] += 1.0;
 
 	   	lineno ++;
        }
@@ -189,11 +237,11 @@ void init() {
 	//char x[] ="nodeid\tpagerank\n";
 	fp=fopen("A0.mat", "wb");
 	FILE *afp = fopen("A.mat", "wb");
-
 	// column stochastic: normalize columns
 	for (i = 0; i < N; i ++) {
 		sprintf(x, "%d,%f\t", i, colsum[i]);
 		fputs(x, fp);
+		//sprintf(x, "%d,%f\t", i, colsum[i]);
 		fputs(x, afp);
 		for (j = 0; j < N; j ++) {
 			if (A[i][j] > 0) {
@@ -211,7 +259,6 @@ void init() {
 	fclose(afp);
 }
 
-// perform pagerank iterations 
 void compute() {
 	int i, j; // row and column index
 	double sum;
@@ -219,16 +266,19 @@ void compute() {
 	double l1sum = 0; // sum of L1 norm
 	double squaresum = 0;
 	//N = 11;
+	//double R_prev[N];
 	int iter = 0;
 	double diff;
 
+	//A = T;
+
 	printf("\niterating ...\n");
 	// |Rn+1 - Rn| < epsilon
-	// fabs(R_prev[i] - R[i]) < epsilon
+	// abs(R_prev[i] - R[i]) < epsilon
 	while(1) {	
 		totalsum = 0;
 		l1sum = 0;
-		squaresum = 0;
+		//squaresum = 0;
 
 		// R = (1 - d)/N + d*A*R
 		//#pragma omp parallel for default(none) \
@@ -244,6 +294,7 @@ void compute() {
 					//printf("A[i][j] = %f, R[i] = %f\n", A[i][j], R[i]);
 					//#pragma omp critical 
 					sum += A[i][j]*R_prev[j];
+					//sum += T[i][j]*R[j];
 				}
 				//#pragma omp atomic
 				//#pragma omp critical 
@@ -256,27 +307,25 @@ void compute() {
 		}
 	
 		//#pragma omp barrier
-		printf ("iter = %d, sum of R[i] = %f, ", iter, totalsum);
+		printf ("iter = %d, sum of R[i] = %f, ", totalsum);
 
 		// normalize vector R
 		for (i = 0; i < N; i ++) {
 			//R[i] = ((1 - d)/N + d*R[i])/totalsum;
 			R[i] = R[i]/totalsum;
 			l1sum += fabs(R_prev[i] - R[i]);
-			squaresum += pow(R_prev[i] - R[i], 2);
+			//squaresum += pow(R_prev[i] - R[i], 2);
 			//printf("R_prev[i] = %f, R[i] = %f\n", R_prev[i], R[i]);
 			R_prev[i] = R[i];
 		}
 
 		// check convergence
-		diff = sqrt(squaresum);
-//		diff = l1sum;
-
+	//	diff = sqrt(squaresum);
+		diff = l1sum;
 		// display info every 100 iterations
 		//if(iter%100 == 0) {
-		printf("diff = %f, l1sum = %f, epsilon = %f\n", diff, l1sum, epsilon);
+		printf("diff = %f, l1sum = %f, epsilon = %f\n", iter, diff, l1sum, epsilon);
 		//}
-		
 		if (diff < epsilon) {
 			FILE *fp;
 			fp=fopen("Output_Task1.txt", "wb");
