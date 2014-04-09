@@ -269,8 +269,8 @@ void compute() {
 		}
 
 		// check convergence
-		diff = sqrt(squaresum);
-//		diff = l1sum;
+		diff = sqrt(squaresum); // L2 norm
+//		diff = l1sum; // L1 norm
 
 		// display info every 100 iterations
 		//if(iter%100 == 0) {
@@ -296,68 +296,6 @@ void compute() {
 		//printf("iter = %d, diff = %f, epsilon = %f\n", iter, diff, epsilon);
 		iter ++;
 	}
-}
-
-// read file while counting the number of lines
-// and the number of nodes
-// and create a linked list
-void readFiles() {
-	FILE * fp;
-       char * line = NULL;
-       size_t len = 0;
-       ssize_t read;
-	int lineno = 0;
-
-	printf("%s\n", input);
-
-       fp = fopen(input, "r");
-       if (fp == NULL)
-           exit(EXIT_FAILURE);
-
-	int data[lineno][2];	
-
-	lineno = 0;
-	int size = 0;
-	
-	struct number *ptr = NULL;
-	int row[2];
-	char *token;
-       while ((read = getline(&line, &len, fp)) != -1) {
-		token = strtok(line, " ");
-		row[0] = atoi(token);
-		row[1] = atoi(strtok(NULL, "\0"));
-
-		ptr = search_in_list(row[0], NULL);
-        	if(NULL == ptr)
-        	{
-        		//printf("\n Search [val = %d] failed, no such element found\n",row[0]);
-	  		add_to_list(row[0], true);
-			size ++;
-        	}
-		ptr = search_in_list(row[1], NULL);
-        	if(NULL == ptr)
-        	{
-        		//printf("\n Search [val = %d] failed, no such element found\n",row[1]);
-	  		add_to_list(row[1], true);
-			size ++;
-        	}
-
-		/*
-		if (lineno == 1) {
-           		printf("[%d] Retrieved line of length %zu : ", lineno, read);
-           		printf("%s\n", line);
-	   		printf("row data = %d %d\n", row[0], row[1]);
-	   	}
-		*/
-	   	lineno ++;
-       }
-	
-	fclose(fp);
-       if (line)
-           free(line);
-
-	N = size;
-	printf("total number of nodes = %d\n", N);
 }
 
 /*************************** Test functions *********************************/
