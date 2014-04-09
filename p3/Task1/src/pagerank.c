@@ -5,7 +5,7 @@
 #include <math.h>
 #include <omp.h>
 
-//#define OMP
+#define OMP
 #define NUM_THREADS 4
 
 static double d = 0.85;

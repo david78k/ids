@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
 	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
 	cout << "nprocs = " << nprocs << ", myrank = " << myrank << endl;
 
-	/******************** INITIALIZE: read file and insert pairs into a table *****************/
+	/******************** INITIALIZATION: read file and insert pairs into a table *****************/
   	ifstream infile;
   	string line;
 
