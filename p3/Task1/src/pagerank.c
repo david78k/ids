@@ -14,11 +14,11 @@ static double epsilon = 1e-7; // K-K iter, 87 iter without omp
 
 char *input = "facebook_combined.txt";
 
-int **mat;
+//int **mat;
 double **A;
 double *R;
 double *R_prev;
-int N = 0;
+int N = 0; // total number of nodes
 
 struct number {
 	int val;
@@ -113,12 +113,6 @@ void pagerank() {
 	// rank edges circles
 	// R = (1-d)/N + AR
 	compute();
-	
-	// sort
-	//sort();
-	
-	// write output to file
-	
 }
 
 void sort() {
@@ -152,7 +146,7 @@ void init() {
 		for (i = 0; i < N; i++) {
 			R_prev[i] = R[i] = R0;
 			sprintf(x, " %f\n", R[i]);
-			fputs(x, fp);
+	//		fputs(x, fp);
 
 			A[i] = malloc(N*sizeof(double));
 			for (j = 0; j < N; j++) {
@@ -167,8 +161,6 @@ void init() {
        	size_t len = 0;
        	ssize_t read;
 	int lineno = 0;
-
-	//printf("\n%s\n", input);
 
         fp = fopen(input, "r");
        	if (fp == NULL)
@@ -195,7 +187,6 @@ void init() {
 	
 	fclose(fp);
 	
-	//char x[] ="nodeid\tpagerank\n";
 	fp=fopen("A0.mat", "wb");
 	FILE *afp = fopen("A.mat", "wb");
 
@@ -204,19 +195,19 @@ void init() {
 		private(i, j, x) shared(N, A, colsum, fp, afp) 
 	for (i = 0; i < N; i ++) {
 		sprintf(x, "%d,%f\t", i, colsum[i]);
-		fputs(x, fp);
-		fputs(x, afp);
+	//	fputs(x, fp);
+	//	fputs(x, afp);
 		for (j = 0; j < N; j ++) {
 			if (A[i][j] > 0) {
 				A[i][j] /= colsum[j];
 				sprintf(x, " %d", j);
-				fputs(x, fp);
+	//			fputs(x, fp);
 				sprintf(x, " %f", A[i][j]);
-				fputs(x, afp);
+	//			fputs(x, afp);
 			}
 		}
-		fputs("\n", fp);
-		fputs("\n", afp);
+	//	fputs("\n", fp);
+	//	fputs("\n", afp);
 	}	
 	fclose(fp);
 	fclose(afp);
@@ -245,26 +236,17 @@ void compute() {
 		#pragma omp parallel for default(none) \
 			private(i,j,sum) shared(N, A, R, R_prev, d) reduction(+:totalsum)
 		for (i = 0; i < N; i ++) {
-			//printf("Number of threads: %d\n", omp_get_num_threads());
 			sum = 0.0;
-			//#pragma omp critical 
 			{
 				// A*R
 				for (j = 0; j < N; j ++) {
-					//printf("A[i][j] = %f, R[i] = %f\n", A[i][j], R[i]);
-					//#pragma omp critical 
 					sum += A[i][j]*R_prev[j];
 				}
-				//#pragma omp critical 
-				//{
-				//#pragma omp barrier
 				R[i] = (1 - d)/N + d*sum;
 				totalsum += R[i];
 			}
-			//printf("%f\t", R[i]);
 		}
 	
-		//#pragma omp barrier
 		printf ("iter = %d, sum of R[i] = %f, ", iter, totalsum);
 
 		// normalize vector R
@@ -291,7 +273,6 @@ void compute() {
 		if (diff < epsilon) {
 			FILE *fp;
 			fp=fopen("Output_Task1.txt", "wb");
-			//char x[20]="nodeid pagerank\n";
 			char x[] ="nodeid\tpagerank\n";
 			fputs(x, fp);
 
@@ -301,10 +282,8 @@ void compute() {
 				fputs(x, fp);
 			}
 			fclose(fp);
-		//	printf("iter = %d, diff = %f, l1sum = %f, epsilon = %f\n", iter, diff, l1sum, epsilon);
 			break;
 		}
-		//printf("iter = %d, diff = %f, epsilon = %f\n", iter, diff, epsilon);
 		iter ++;
 	}
 }
