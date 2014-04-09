@@ -24,6 +24,13 @@ conclusions
 
 implementation methods
 - Undirected Facebook graph is used. I consider the edge "a - b" as both "a -> b" and "b -> a" links.
+- functions: main(), pagerank(), init(), compute()
+  main(): read file
+  pagerank(): calls init() and compute() functions
+  init(): initialize matrix A and vector R
+  compute(): perform power method iterations to compute page ranks
+- abs vs. fabs: abs for int, fabs for double or float
+- An omp pragma directive is inserted for every "for loop".
 
 experimental settings
 - damping factor = 0.85
@@ -32,6 +39,38 @@ experimental settings
 outputs and corresponding conclusions
 - vector norm (L1, L2) is important for running time. L1 norm takes 60 iterations
   while L2 norm 40 iterations (epsilon = 1e-7).
+
+- (L2 norm) without OpenMP directives, it takes 6 seconds while it takes less
+  than 3 seconds with OpenMP directives. This comparison was done by turning on and off #define OMP in the source code pagerank.c. Everything else is the same. From the result of this experiment, we can observe the advantages of using parallel computing. 16 threads are used. The number of iterations is also decreased from 40 to 35-37. 
+  It looks that there is a linear relationship between the number of
+iterations and the running time. The smaller the number of iterations, the
+shorter running time. average, stdev, variance, covariance
+  with omp:
+  run1: 2.647s, iter = 37
+  run2: 2.649s, iter = 37
+  run3: 2.650s, iter = 37
+  run4: 2.642s, iter = 37
+  run5: 2.670s, iter = 37
+  run6: 2.614s, iter = 35
+  run7: 2.623s, iter = 36
+  run8: 2.639s, iter = 37
+  run9: 2.625s, iter = 36
+  run10: 2.631s, iter = 36 
+
+  without omp:
+  run1: 6.265s, iter = 40
+  run2: 6.261s, iter = 40
+  run3: 6.274s, iter = 40
+  run4: 6.265s, iter = 40
+  run5: 6.267s, iter = 40
+  run6: 6.258s, iter = 40
+  run7: 6.264s, iter = 40
+  run8: 6.259s, iter = 40
+  run9: 6.273s, iter = 40
+  run10: 6.275s, iter = 40 
+
+- # of threads impact: 2, 4, 6, 8, 10, 12, 14, 16
+
 
 - weird results: without openmp and with openmp gave different results. Also, every
   time I run with openmp, different results come out.

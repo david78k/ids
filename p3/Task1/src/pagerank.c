@@ -5,6 +5,7 @@
 #include <math.h>
 #include <omp.h>
 
+//#define OMP
 #define NUM_THREADS 4
 
 static double d = 0.85;
@@ -40,7 +41,9 @@ void print_list(void);
 void main(int argc, char **argv) {
 	// master reads files
 	// calculate the number of unique nodes N
+	#ifdef OMP
 	#pragma omp master
+	#endif
 	{
 		FILE * fp;
         	char * line = NULL;
@@ -129,14 +132,18 @@ void init() {
 	double colsum[N];
 
 	//fp=fopen("R.vec", "wb");
+	#ifdef OMP
 	#pragma omp parallel default(none) shared(N, A, colsum, fp, R, R_prev, R0) 
+	#endif
 	{
 		int ID = omp_get_thread_num();
 		int nthreads = omp_get_num_threads();
 		
 		printf("ID = %d, nthreads = %d\n", ID, nthreads);
 
+		#ifdef OMP
 		#pragma omp for private(i, j, x) 
+		#endif
 		for (i = 0; i < N; i++) {
 			R_prev[i] = R[i] = R0;
 	//		sprintf(x, " %f\n", R[i]);
@@ -185,9 +192,11 @@ void init() {
 	//FILE *afp = fopen("A.mat", "wb");
 
 	// column stochastic: normalize columns
+	#ifdef OMP
 	#pragma omp parallel for default(none) \
 		private(i, j, x) shared(N, A, colsum) 
 		//private(i, j, x) shared(N, A, colsum, fp, afp) 
+	#endif
 	for (i = 0; i < N; i ++) {
 	//	sprintf(x, "%d,%f\t", i, colsum[i]);
 	//	fputs(x, fp);
@@ -227,8 +236,10 @@ void compute() {
 		squaresum = 0;
 
 		// R = (1 - d)/N + d*A*R
+		#ifdef OMP
 		#pragma omp parallel for default(none) \
 			private(i,j,sum) shared(N, A, R, R_prev, d) reduction(+:totalsum)
+		#endif
 		for (i = 0; i < N; i ++) {
 			sum = 0.0;
 			{
@@ -244,8 +255,10 @@ void compute() {
 		printf ("iter = %d, sum of R[i] = %f, ", iter, totalsum);
 
 		// normalize vector R
+		#ifdef OMP
 		#pragma omp parallel for default(none) \
 			private(i, j) shared(N, A, R, R_prev, totalsum, l1sum, squaresum) 
+		#endif
 		for (i = 0; i < N; i ++) {
 			//R[i] = ((1 - d)/N + d*R[i])/totalsum;
 			R[i] = R[i]/totalsum;
@@ -286,6 +299,7 @@ void compute() {
 void test() {
 	static long num_steps = 100000;
 	int i; // global variable i
+	//int NUM_THREADS = 4;
 	double pi, sum[NUM_THREADS] = {0};
 	double delta = 1.0/num_steps;
 
