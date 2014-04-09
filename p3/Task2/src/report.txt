@@ -25,10 +25,40 @@ implementation methods
 - maximum number of message (int array): 16375*2 = 32760 (integers)
 
 experimental settings
+- IBM Blade HS22 8cores with 16threads (16 logical processors) with 24GB ram
 - output order messy without synchronization: needed barrier
 - compare single processor and multiprocessors
 
 outputs and corresponding conclusions
+- single processor
+  run1 0.666
+  run2 0.362
+  run3 0.354
+  run4 0.360
+  run5 0.356
+
+  multiple processors: np -4
+  run1 1.356
+  run2 1.341
+  run3 1.338
+  run4 1.349
+  run5 1.338
+  
+  np -8
+  run1 1.530
+  run2 1.482
+  run3 1.353
+  run4 1.357
+  run5 1.427
+
+  np -16
+  run1 1.959
+  run2 1.836
+  run3 1.771
+  run4 1.863
+  run5 1.589
+
+- output file: Output_Task2.txt
 - output format: key and sum of values are separated by a tab
 - single processor is faster than multiprocessors. this is because the dataset
   size is too small to take advantage of parallel processing. Rather,

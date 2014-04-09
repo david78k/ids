@@ -13,7 +13,7 @@ count:
 
 tar:
 	cp dropbox/Report.pdf ./
-	tar cvf Project3_Kang_TaeSeung.tar Report.pdf Task1/src/pagerank.c Task1/src/makefile Task1/src/facebook_combined.txt Task2/src/reducer.cpp Task2/src/makefile
+	tar cvf Project3_Kang_TaeSeung.tar Report.pdf Task1/src/pagerank.c Task1/src/makefile Task1/src/facebook_combined.txt Task2/src/reducer.cpp Task2/src/makefile Task2/src/100000_key-value_pairs.csv
 	cp Project3_Kang_TaeSeung.tar dropbox/
 
 upload:

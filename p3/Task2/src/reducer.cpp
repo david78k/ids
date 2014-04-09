@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
 		cout << "key range = " << range << " (" << min << ", " << max << ")" << endl;
 	}
 
-	MPI_Barrier(MPI_COMM_WORLD);
+//	MPI_Barrier(MPI_COMM_WORLD);
 	cout << endl;
 	
 	/*********************** FIRST STEP: partition and local reduce on own table ***********************/
@@ -109,7 +109,7 @@ int main(int argc, char **argv) {
 	cout << "[Proc" << myrank << "] lines[0]: "  << lines[0] << endl;
 	cout << "[Proc" << myrank << "] pairs[begin][0]: "  << pairs[begin][0] << endl;
 
-	MPI_Barrier(MPI_COMM_WORLD);
+//	MPI_Barrier(MPI_COMM_WORLD);
 	cout << endl;
 
 	// calculate the sum of pairs
@@ -124,7 +124,7 @@ int main(int argc, char **argv) {
 
 	cout << "[Proc" << myrank << "] Paritioned table size = " << partable.size() << endl;
 
-	MPI_Barrier(MPI_COMM_WORLD);
+//	MPI_Barrier(MPI_COMM_WORLD);
 	cout << endl;
 
 	/********************** SECOND STEP: send the results of local reduction ********************/
