@@ -10,6 +10,7 @@
 static double d = 0.85;
 //static double epsilon = 0.001; // 9-11 iter, 8 iter without omp
 static double epsilon = 1e-7; // K-K iter, 87 iter without omp
+//static double epsilon = 1e-8; // K-K iter, 87 iter without omp
 
 char *input = "facebook_combined.txt";
 
@@ -19,13 +20,15 @@ double *R;
 double *R_prev;
 int N = 0;
 
-void pagerank();
-void readFiles();
-
 struct number {
 	int val;
 	struct number *next;	
 };
+
+void pagerank();
+void init();
+void compute();
+void sort();
 
 struct number *head = NULL;
 struct number *curr = NULL;
@@ -34,9 +37,6 @@ struct number* add_to_list(int val, bool add_to_end);
 struct number* search_in_list(int val, struct number **prev);
 int delete_from_list(int val);
 void print_list(void);
-void init();
-void compute();
-void sort();
 
 void main(int argc, char **argv) {
 	// master reads files
@@ -141,16 +141,25 @@ void init() {
 	double colsum[N];
 
 	fp=fopen("R.vec", "wb");
-	for (i = 0; i < N; i++) {
-		R_prev[i] = R[i] = R0;
-		sprintf(x, " %f\n", R[i]);
-		fputs(x, fp);
+	#pragma omp parallel default(none) shared(N, A, colsum, fp, R, R_prev, R0) 
+	{
+		int ID = omp_get_thread_num();
+		int nthreads = omp_get_num_threads();
+		
+		printf("ID = %d, nthreads = %d\n", ID, nthreads);
 
-		A[i] = malloc(N*sizeof(double));
-		for (j = 0; j < N; j++) {
-			A[i][j] = 0;
+		#pragma omp for private(i, j, x) 
+		for (i = 0; i < N; i++) {
+			R_prev[i] = R[i] = R0;
+			sprintf(x, " %f\n", R[i]);
+			fputs(x, fp);
+
+			A[i] = malloc(N*sizeof(double));
+			for (j = 0; j < N; j++) {
+				A[i][j] = 0;
+			}
+			colsum[i] = 0;
 		}
-		colsum[i] = 0;
 	}
 	fclose(fp);
 
@@ -159,7 +168,7 @@ void init() {
        	ssize_t read;
 	int lineno = 0;
 
-	printf("%s\n", input);
+	//printf("\n%s\n", input);
 
         fp = fopen(input, "r");
        	if (fp == NULL)
@@ -191,6 +200,8 @@ void init() {
 	FILE *afp = fopen("A.mat", "wb");
 
 	// column stochastic: normalize columns
+	#pragma omp parallel for default(none) \
+		private(i, j, x) shared(N, A, colsum, fp, afp) 
 	for (i = 0; i < N; i ++) {
 		sprintf(x, "%d,%f\t", i, colsum[i]);
 		fputs(x, fp);
@@ -231,13 +242,12 @@ void compute() {
 		squaresum = 0;
 
 		// R = (1 - d)/N + d*A*R
-		//#pragma omp parallel for default(none) \
-			private(i,j,sum) shared(N, A, R, d, T) reduction(+:totalsum)
+		#pragma omp parallel for default(none) \
+			private(i,j,sum) shared(N, A, R, R_prev, d) reduction(+:totalsum)
 		for (i = 0; i < N; i ++) {
 			//printf("Number of threads: %d\n", omp_get_num_threads());
 			sum = 0.0;
 			//#pragma omp critical 
-			//#pragma omp ordered 
 			{
 				// A*R
 				for (j = 0; j < N; j ++) {
@@ -245,7 +255,6 @@ void compute() {
 					//#pragma omp critical 
 					sum += A[i][j]*R_prev[j];
 				}
-				//#pragma omp atomic
 				//#pragma omp critical 
 				//{
 				//#pragma omp barrier
@@ -259,6 +268,8 @@ void compute() {
 		printf ("iter = %d, sum of R[i] = %f, ", iter, totalsum);
 
 		// normalize vector R
+		#pragma omp parallel for default(none) \
+			private(i, j) shared(N, A, R, R_prev, totalsum, l1sum, squaresum) 
 		for (i = 0; i < N; i ++) {
 			//R[i] = ((1 - d)/N + d*R[i])/totalsum;
 			R[i] = R[i]/totalsum;
