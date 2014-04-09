@@ -14,12 +14,12 @@ static double epsilon = 1e-7; // K-K iter, 87 iter without omp
 
 char *input = "facebook_combined.txt";
 
-//int **mat;
-double **A;
-double *R;
-double *R_prev;
+double **A; // edge matrix A
+double *R;  // pagerank vector Rn
+double *R_prev; // previous pagerank vector Rn-1
 int N = 0; // total number of nodes
 
+// linked list entry
 struct number {
 	int val;
 	struct number *next;	
@@ -28,7 +28,6 @@ struct number {
 void pagerank();
 void init();
 void compute();
-void sort();
 
 struct number *head = NULL;
 struct number *curr = NULL;
@@ -68,7 +67,6 @@ void main(int argc, char **argv) {
 		int size = 0;
 	
 		struct number *ptr = NULL;
-		int row[2];
 		int src, dest; // source and destination node
 		char *token;
        		while ((read = getline(&line, &len, fp)) != -1) {
@@ -115,10 +113,6 @@ void pagerank() {
 	compute();
 }
 
-void sort() {
-	printf("\nsorting ...\n");
-}
-
 void init() {
 	printf("\ninitializing ...\n");
 
@@ -134,7 +128,7 @@ void init() {
 	double R0 = 1.0/N;
 	double colsum[N];
 
-	fp=fopen("R.vec", "wb");
+	//fp=fopen("R.vec", "wb");
 	#pragma omp parallel default(none) shared(N, A, colsum, fp, R, R_prev, R0) 
 	{
 		int ID = omp_get_thread_num();
@@ -145,7 +139,7 @@ void init() {
 		#pragma omp for private(i, j, x) 
 		for (i = 0; i < N; i++) {
 			R_prev[i] = R[i] = R0;
-			sprintf(x, " %f\n", R[i]);
+	//		sprintf(x, " %f\n", R[i]);
 	//		fputs(x, fp);
 
 			A[i] = malloc(N*sizeof(double));
@@ -155,7 +149,7 @@ void init() {
 			colsum[i] = 0;
 		}
 	}
-	fclose(fp);
+	//fclose(fp);
 
        	char * line = NULL;
        	size_t len = 0;
@@ -187,30 +181,31 @@ void init() {
 	
 	fclose(fp);
 	
-	fp=fopen("A0.mat", "wb");
-	FILE *afp = fopen("A.mat", "wb");
+	//fp=fopen("A0.mat", "wb");
+	//FILE *afp = fopen("A.mat", "wb");
 
 	// column stochastic: normalize columns
 	#pragma omp parallel for default(none) \
-		private(i, j, x) shared(N, A, colsum, fp, afp) 
+		private(i, j, x) shared(N, A, colsum) 
+		//private(i, j, x) shared(N, A, colsum, fp, afp) 
 	for (i = 0; i < N; i ++) {
-		sprintf(x, "%d,%f\t", i, colsum[i]);
+	//	sprintf(x, "%d,%f\t", i, colsum[i]);
 	//	fputs(x, fp);
 	//	fputs(x, afp);
 		for (j = 0; j < N; j ++) {
 			if (A[i][j] > 0) {
 				A[i][j] /= colsum[j];
-				sprintf(x, " %d", j);
+	//			sprintf(x, " %d", j);
 	//			fputs(x, fp);
-				sprintf(x, " %f", A[i][j]);
+	//			sprintf(x, " %f", A[i][j]);
 	//			fputs(x, afp);
 			}
 		}
 	//	fputs("\n", fp);
 	//	fputs("\n", afp);
 	}	
-	fclose(fp);
-	fclose(afp);
+	//fclose(fp);
+	//fclose(afp);
 }
 
 // perform pagerank iterations 
@@ -219,8 +214,7 @@ void compute() {
 	double sum;
 	double totalsum = 0;
 	double l1sum = 0; // sum of L1 norm
-	double squaresum = 0;
-	//N = 11;
+	double squaresum = 0; // sum of L2 norm
 	int iter = 0;
 	double diff;
 
