@@ -62,7 +62,7 @@ double TR[] = {0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.
 
 void main(int argc, char **argv) {
 	// master reads files
-	// calculate the number of nodes N
+	// calculate the number of unique nodes N
 	#pragma omp master
 	{
 		FILE * fp;
@@ -91,24 +91,26 @@ void main(int argc, char **argv) {
 	
 		struct number *ptr = NULL;
 		int row[2];
+		int src, dest; // source and destination node
 		char *token;
        		while ((read = getline(&line, &len, fp)) != -1) {
 			token = strtok(line, " ");
-			row[0] = atoi(token);
-			row[1] = atoi(strtok(NULL, "\0"));
+			src = atoi(token);
+			dest = atoi(strtok(NULL, "\0"));
 
-			ptr = search_in_list(row[0], NULL);
+			// calculate the number of unique nodes N
+			ptr = search_in_list(src, NULL);
         		if(NULL == ptr)
         		{
         			//printf("\n Search [val = %d] failed, no such element found\n",row[0]);
-		  		add_to_list(row[0], true);
+		  		add_to_list(src, true);
 				size ++;
         		}
-			ptr = search_in_list(row[1], NULL);
+			ptr = search_in_list(dest, NULL);
         		if(NULL == ptr)
         		{
         			//printf("\n Search [val = %d] failed, no such element found\n",row[1]);
-		  		add_to_list(row[1], true);
+		  		add_to_list(dest, true);
 				size ++;
 	        	}
 
@@ -168,32 +170,39 @@ void sort() {
 void init() {
 	printf("\ninitializing ...\n");
 
+	FILE * fp;
+
 	// iterate over the linked list 
 	// to initialize the matrix A and vector R
 	A = malloc(N*N*sizeof(double));
 	R = malloc(N*sizeof(double));
 	int i, j;
+	char x[100];
 	double R0 = 1.0/N;
 
+	fp=fopen("R.vec", "wb");
 	for (i = 0; i < N; i++) {
 		R[i] = R0;
 		//TR[i] = R0;
+		sprintf(x, " %f\n", R[i]);
+		fputs(x, fp);
+
 		A[i] = malloc(N*sizeof(double));
 		for (j = 0; j < N; j++) {
 			A[i][j] = 0;
 		}
 	}
+	fclose(fp);
 
-	FILE * fp;
-       char * line = NULL;
-       size_t len = 0;
-       ssize_t read;
+       	char * line = NULL;
+       	size_t len = 0;
+       	ssize_t read;
 	int lineno = 0;
 
 	printf("%s\n", input);
 
-       fp = fopen(input, "r");
-       if (fp == NULL)
+        fp = fopen(input, "r");
+       	if (fp == NULL)
            exit(EXIT_FAILURE);
 
 	int size = 0;
@@ -230,13 +239,22 @@ void init() {
 	
 	fclose(fp);
 	
+	//char x[] ="nodeid\tpagerank\n";
+	fp=fopen("A.mat", "wb");
 	// column stochastic: normalize columns
 	for (i = 0; i < N; i ++) {
-		
+		sprintf(x, "%d\t", i);
+		fputs(x, fp);
 		for (j = 0; j < N; j ++) {
-			A[i][j] /= colsum[i];
+			if (A[i][j] > 0) {
+				A[i][j] /= colsum[i];
+				sprintf(x, " %d", j);
+				fputs(x, fp);
+			}
 		}
+		fputs("\n", fp);
 	}	
+	fclose(fp);
 }
 
 void compute() {
