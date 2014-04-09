@@ -8,8 +8,8 @@
 #define NUM_THREADS 4
 
 static double d = 0.85;
-static double epsilon = 0.001; // 9-11 iter, 8 iter without omp
-//static double epsilon = 1e-7; // K-K iter, 87 iter without omp
+//static double epsilon = 0.001; // 9-11 iter, 8 iter without omp
+static double epsilon = 1e-7; // K-K iter, 87 iter without omp
 //static double epsilon = 0.0005; // 20-30 iter, 11 iter without omp
 //static double epsilon = 0.0001; // 10K-30K iter, 21 iter without omp
 //static double epsilon = 0.00001; // K-K iter, 36 iter without omp
@@ -22,6 +22,7 @@ char *input = "facebook_combined.txt";
 int **mat;
 double **A;
 double *R;
+double *R_prev;
 int N = 0;
 
 void pagerank();
@@ -134,7 +135,6 @@ void main(int argc, char **argv) {
 
 //	print_list();
 
-	// initialize to a normalized identity vector
 	pagerank();
 }
 
@@ -176,13 +176,14 @@ void init() {
 	// to initialize the matrix A and vector R
 	A = malloc(N*N*sizeof(double));
 	R = malloc(N*sizeof(double));
+	R_prev = malloc(N*sizeof(double));
 	int i, j;
 	char x[100];
 	double R0 = 1.0/N;
 
 	fp=fopen("R.vec", "wb");
 	for (i = 0; i < N; i++) {
-		R[i] = R0;
+		R_prev[i] = R[i] = R0;
 		//TR[i] = R0;
 		sprintf(x, " %f\n", R[i]);
 		fputs(x, fp);
@@ -222,8 +223,8 @@ void init() {
 		//printf("i = %d, j = %d, A[i][j] = %f\n", i, j, A[i][j]);
 		A[i][j] = 1.0;
 		A[j][i] = 1.0;
-		colsum[i] += A[i][j];
-		colsum[j] = colsum[i];
+		colsum[i] += A[j][i];
+		colsum[j] += A[i][j];
 		//rowsum[i] += 1.0;
 		//rowsum[j] += 1.0;
 
@@ -243,11 +244,11 @@ void init() {
 	fp=fopen("A.mat", "wb");
 	// column stochastic: normalize columns
 	for (i = 0; i < N; i ++) {
-		sprintf(x, "%d\t", i);
+		sprintf(x, "%d,%f\t", i, colsum[i]);
 		fputs(x, fp);
 		for (j = 0; j < N; j ++) {
 			if (A[i][j] > 0) {
-				A[i][j] /= colsum[i];
+				A[i][j] /= colsum[j];
 				sprintf(x, " %d", j);
 				fputs(x, fp);
 			}
@@ -261,9 +262,10 @@ void compute() {
 	int i, j; // row and column index
 	double sum;
 	double totalsum = 0;
+	double l1sum = 0; // sum of L1 norm
 	double squaresum = 0;
 	//N = 11;
-	double R_prev[N];
+	//double R_prev[N];
 	int iter = 0;
 	double diff;
 
@@ -274,7 +276,9 @@ void compute() {
 	// abs(R_prev[i] - R[i]) < epsilon
 	while(1) {	
 		totalsum = 0;
-		squaresum = 0;
+		l1sum = 0;
+		//squaresum = 0;
+
 		// R = (1 - d)/N + d*A*R
 		//#pragma omp parallel for default(none) \
 			private(i,j,sum) shared(N, A, R, d, T) reduction(+:totalsum)
@@ -284,10 +288,11 @@ void compute() {
 			//#pragma omp critical 
 			//#pragma omp ordered 
 			{
+			// A*R
 			for (j = 0; j < N; j ++) {
 				//printf("A[i][j] = %f, R[i] = %f\n", A[i][j], R[i]);
 				//#pragma omp critical 
-				sum += A[i][j]*R[j];
+				sum += A[i][j]*R_prev[j];
 				//sum += T[i][j]*R[j];
 			}
 			//#pragma omp atomic
@@ -301,18 +306,20 @@ void compute() {
 		}
 	
 		//#pragma omp barrier
-		//printf ("total sum = %f\n", totalsum);
+		printf ("total sum = %f\n", totalsum);
 
-		// normalize
+		// normalize vector R
 		for (i = 0; i < N; i ++) {
 			//R[i] = ((1 - d)/N + d*R[i])/totalsum;
 			R[i] = R[i]/totalsum;
-			squaresum += pow(R_prev[i] - R[i], 2);
+			l1sum += abs(R_prev[i] - R[i]);
+			//squaresum += pow(R_prev[i] - R[i], 2);
 			R_prev[i] = R[i];
 		}
 
 		// check convergence
-		diff = sqrt(squaresum);
+	//	diff = sqrt(squaresum);
+		diff = l1sum;
 		if (diff < epsilon) {
 			FILE *fp;
 			fp=fopen("Output_Task1.txt", "wb");

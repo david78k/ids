@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-default: compile run
+default: compile run validate
 
 run:
 	#time ./pagerank.o facebook_combined.txt
@@ -10,3 +10,6 @@ compile:
 	mpicc -fopenmp -o pagerank.o pagerank.c -lm
 	#gcc -fopenmp -o pagerank.o pagerank.c -lm
 
+validate:
+	cat answer.txt
+	head out
