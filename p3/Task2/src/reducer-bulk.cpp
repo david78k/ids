@@ -149,31 +149,51 @@ int main(int argc, char **argv) {
 	for (i = 0; i < nprocs; i ++) {
 		cout << "[Proc" << myrank << "] Map size for proc " << i << " = " << results[i].size() << endl;
 	}
-		
-	int myfirst = min + myrank * keyrange;
-	int mylast = myfirst + keyrange - 1;
-	if (myrank == nprocs - 1) mylast = range;
 
+	int recvsize = range;
+		
 	// send pairs to corresponding processors
-	for (i = 0; i < nprocs; i ++) {
+	//for (i = 0; i < nprocs; i ++) {
 		//if (i != myrank || i == myrank) {
-		if (i != myrank) {
+//		if (i != myrank) {
 			// convert pairs into array
-			int size = results[i].size();
+			//int size = results[i].size();
 		//	size = 10;
-			size = range;
-			int data[size][2];
-			int recvsize;
-			//j = 0;
+			int data[recvsize];
+			int recv[recvsize];
+			//int recvsize;
+			j = 0;
+			//j = min + myrank * keyrange;
+
+			// copy only values to sending data
+			// cause the data size is fixed
+			i = myrank;
 			for (auto it = results[i].begin(); it != results[i].end(); ++it) {
 				key = *it;
-				data[key][0] = key;	
-				data[key][1] = partable[key];	
-			//	j++;
+			//	data[key][0] = key;	
+				data[key] = partable[key];	
+				//j++;
 			}
 	
-			cout << "[Proc" << myrank << "] to proc " << i << ": data[0][0] = " << data[0][0] << 
-				", data[0][1] = " << data[0][1] << endl;
+			cout << "[Proc" << myrank << "] to all: data[0] = " << data[0] << endl;
+			cout << "[Proc" << myrank << "] to all: data[1] = " << data[1] << endl;
+
+	//recvsize = 350;
+	//recvsize = 2350;
+	//recvsize = 2354;
+	//recvsize = 2355;
+	//recvsize = 2356;
+	//recvsize = 2357;
+	//recvsize = 2358;
+
+			MPI_Alltoall(data, 
+				recvsize,
+				MPI_INT, 
+				recv,
+				recvsize,
+				MPI_INT, 
+				MPI_COMM_WORLD 
+			);
 
 			/*
 			// to identify the incoming message size
@@ -186,9 +206,8 @@ int main(int argc, char **argv) {
 				MPI_COMM_WORLD, NULL	
 			);
 			*/
-			recvsize = range;
-			int recv[recvsize][2];
 
+/*
 			MPI_Sendrecv(&data[0][0], 
 				size * 2,
 				MPI_INT, i, 1,
@@ -197,16 +216,19 @@ int main(int argc, char **argv) {
 				MPI_INT, i, 1,
 				MPI_COMM_WORLD, NULL	
 			);
-				
-			cout << "[Proc" << myrank << "] from proc " << i << ": recv[0][0] = " << recv[0][0] << 
-				", recv[0][1] = " << recv[0][1] << endl;
+*/				
+			cout << "[Proc" << myrank << "] from all: recv[0] = " << recv[0] << endl;
+			
 			
 			// merge the received pairs into the current table
-			//for (j = 0; j < recvsize; j ++) 
-			for (j = myfirst; j < mylast; j ++) 
-				partable[recv[j][0]] += recv[j][1];
-		}
-	}
+			int myfirst = min + myrank * keyrange;
+			int mylast = myfirst + keyrange - 1;
+			if (myrank == nprocs - 1) mylast = range;
+		//	for (j = myfirst; j < mylast; j ++) 
+		//		partable[j] += recv[j];
+			
+	//	}
+//	}
 	
 	/********************** FINAL STEP: second local reduction and write into file ********************/
 	// write only my pairs into file
@@ -221,6 +243,7 @@ int main(int argc, char **argv) {
 	// starting from rank 0 to increase by one for each processor
 	int turn = 0; 
 
+	/*
 	// delete output file
 	if(myrank == 0 && remove( OUTFILE ) != 0 ) {
 		perror( "Error deleting file" );
@@ -228,6 +251,9 @@ int main(int argc, char **argv) {
 	}
 
 	//MPI_Barrier(MPI_COMM_WORLD);
+	//int first = min + myrank * keyrange;
+	//int last = first + keyrange - 1;
+	//if (myrank == nprocs - 1) last = range;
 
 	while(turn < nprocs) {
 		MPI_Barrier(MPI_COMM_WORLD);
@@ -248,7 +274,7 @@ int main(int argc, char **argv) {
 		}
 		turn ++;
 	}
-
+*/
 	MPI_Finalize();
 
 	return EXIT_SUCCESS;
