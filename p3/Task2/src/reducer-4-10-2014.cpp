@@ -149,34 +149,28 @@ int main(int argc, char **argv) {
 	for (i = 0; i < nprocs; i ++) {
 		cout << "[Proc" << myrank << "] Map size for proc " << i << " = " << results[i].size() << endl;
 	}
-
-	int recvsize;
 		
 	// send pairs to corresponding processors
-	//for (i = 0; i < nprocs; i ++) {
+	for (i = 0; i < nprocs; i ++) {
 		//if (i != myrank || i == myrank) {
-//		if (i != myrank) {
+		if (i != myrank) {
 			// convert pairs into array
-			//int size = results[i].size();
+			int size = results[i].size();
 		//	size = 10;
-			int data[range];
-			//int recvsize;
+			int data[size][2];
+			int recvsize;
 			j = 0;
-			//j = min + myrank * keyrange;
 
-			// copy only values to sending data
-			// cause the data size is fixed
 			for (auto it = results[i].begin(); it != results[i].end(); ++it) {
 				key = *it;
-			//	data[key][0] = key;	
-				data[key] = partable[key];	
-				//j++;
+				data[j][0] = key;	
+				data[j][1] = partable[key];	
+				j++;
 			}
 	
-//			cout << "[Proc" << myrank << "] to proc " << i << ": data[0][0] = " << data[0][0] << 
-//				", data[0][1] = " << data[0][1] << endl;
+			cout << "[Proc" << myrank << "] to proc " << i << ": data[0][0] = " << data[0][0] << 
+				", data[0][1] = " << data[0][1] << endl;
 
-			/*
 			// to identify the incoming message size
 			MPI_Sendrecv(&size, 
 				1,
@@ -186,19 +180,9 @@ int main(int argc, char **argv) {
 				MPI_INT, i, 1,
 				MPI_COMM_WORLD, NULL	
 			);
-			*/
-			int recv[range];
 
-			MPI_Alltoall(&data[0][0], 
-				range * 2,
-				MPI_INT, 
-				&recv[0][0],
-				range * 2,
-				MPI_INT, 
-				MPI_COMM_WORLD 
-			);
-				
-/*
+			int recv[recvsize][2];
+
 			MPI_Sendrecv(&data[0][0], 
 				size * 2,
 				MPI_INT, i, 1,
@@ -207,15 +191,15 @@ int main(int argc, char **argv) {
 				MPI_INT, i, 1,
 				MPI_COMM_WORLD, NULL	
 			);
-*/				
+				
 			cout << "[Proc" << myrank << "] from proc " << i << ": recv[0][0] = " << recv[0][0] << 
 				", recv[0][1] = " << recv[0][1] << endl;
 			
 			// merge the received pairs into the current table
 			for (j = 0; j < recvsize; j ++) 
 				partable[recv[j][0]] += recv[j][1];
-	//	}
-//	}
+		}
+	}
 	
 	/********************** FINAL STEP: second local reduction and write into file ********************/
 	// write only my pairs into file
