@@ -154,57 +154,53 @@ int main(int argc, char **argv) {
 	int mylast = myfirst + keyrange - 1;
 	if (myrank == nprocs - 1) mylast = range;
 
+			// convert pairs into array
+			int size; // = results[i].size();
+		//	size = 10;
+			size = range + 1;
+			int data[size];
+			int recvsize;
+			recvsize = range + 1;
+			int recv[recvsize];
+
 	// send pairs to corresponding processors
 	for (i = 0; i < nprocs; i ++) {
-		//if (i != myrank || i == myrank) {
 		if (i != myrank) {
-			// convert pairs into array
-			int size = results[i].size();
-		//	size = 10;
-			size = range;
-			int data[size][2];
-			int recvsize;
-			//j = 0;
+
+			// initialize arrays
+			for (j = 0; j < size; j ++) { 
+				data[j] = 0;	
+				recv[j] = 0;
+			}
+
 			for (auto it = results[i].begin(); it != results[i].end(); ++it) {
 				key = *it;
-				data[key][0] = key;	
-				data[key][1] = partable[key];	
-			//	j++;
+				//data[key][0] = key;	
+				data[key] = partable[key];	
 			}
 	
-			cout << "[Proc" << myrank << "] to proc " << i << ": data[0][0] = " << data[0][0] << 
-				", data[0][1] = " << data[0][1] << endl;
+			cout << "[Proc" << myrank << "] to proc " << i << ": data[0] = " << data[0] << 
+				", data[1] = " << data[1] << endl;
 
-			/*
-			// to identify the incoming message size
-			MPI_Sendrecv(&size, 
-				1,
+			MPI_Sendrecv(data, 
+				size,
 				MPI_INT, i, 1,
-				&recvsize,
-				1,
-				MPI_INT, i, 1,
-				MPI_COMM_WORLD, NULL	
-			);
-			*/
-			recvsize = range;
-			int recv[recvsize][2];
-
-			MPI_Sendrecv(&data[0][0], 
-				size * 2,
-				MPI_INT, i, 1,
-				&recv[0][0],
-				recvsize * 2,
+				recv,
+				recvsize,
 				MPI_INT, i, 1,
 				MPI_COMM_WORLD, NULL	
 			);
 				
-			cout << "[Proc" << myrank << "] from proc " << i << ": recv[0][0] = " << recv[0][0] << 
-				", recv[0][1] = " << recv[0][1] << endl;
+			cout << "[Proc" << myrank << "] from proc " << i << ": recv[0] = " << recv[0] << 
+				", recv[1] = " << recv[1] << endl;
 			
 			// merge the received pairs into the current table
 			//for (j = 0; j < recvsize; j ++) 
-			for (j = myfirst; j < mylast; j ++) 
-				partable[recv[j][0]] += recv[j][1];
+			for (j = myfirst; j <= mylast; j ++) 
+			//for (j = myfirst; j < mylast; j ++) 
+				partable[j] += recv[j];
+				//partable[j] += recv[j];
+				//partable[recv[j][0]] += recv[j][1];
 		}
 	}
 	
@@ -227,12 +223,10 @@ int main(int argc, char **argv) {
 	//	exit(1);
 	}
 
-	//MPI_Barrier(MPI_COMM_WORLD);
-
 	while(turn < nprocs) {
 		MPI_Barrier(MPI_COMM_WORLD);
 		if(turn == myrank) {
-			cout << "[Proc" << myrank << "] turn = " << myrank << ": pratable.begin()->first = " << partable.begin()->second << endl;
+			cout << "[Proc" << myrank << "] turn = " << myrank << ": partable.begin()->first = " << partable.begin()->second << endl;
 			outfile.open (OUTFILE, ios::app);
 		
 			for (auto it = partable.begin(); it != partable.end(); ++it) {
