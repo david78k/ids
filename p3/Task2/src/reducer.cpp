@@ -81,7 +81,6 @@ int main(int argc, char **argv) {
 		cout << "key range = " << range << " (" << min << ", " << max << ")" << endl;
 	}
 
-//	MPI_Barrier(MPI_COMM_WORLD);
 	cout << endl;
 	
 	/*********************** FIRST STEP: partition and local reduce on own table ***********************/
@@ -107,7 +106,6 @@ int main(int argc, char **argv) {
 	cout << "[Proc" << myrank << "] lines[0]: "  << lines[0] << endl;
 	cout << "[Proc" << myrank << "] pairs[begin][0]: "  << pairs[begin][0] << endl;
 
-//	MPI_Barrier(MPI_COMM_WORLD);
 	cout << endl;
 
 	// calculate the sum of pairs
@@ -122,7 +120,6 @@ int main(int argc, char **argv) {
 
 	cout << "[Proc" << myrank << "] Paritioned table size = " << partable.size() << endl;
 
-//	MPI_Barrier(MPI_COMM_WORLD);
 	cout << endl;
 
 	/********************** SECOND STEP: send the results of local reduction ********************/
@@ -154,14 +151,11 @@ int main(int argc, char **argv) {
 	int mylast = myfirst + keyrange - 1;
 	if (myrank == nprocs - 1) mylast = range;
 
-			// convert pairs into array
-			int size; // = results[i].size();
-		//	size = 10;
-			size = range + 1;
-			int data[size];
-			int recvsize;
-			recvsize = range + 1;
-			int recv[recvsize];
+	// convert pairs into array
+	int size = range + 1;
+	int recvsize = range + 1;
+	int data[size];
+	int recv[recvsize];
 
 	// send pairs to corresponding processors
 	for (i = 0; i < nprocs; i ++) {
@@ -175,7 +169,6 @@ int main(int argc, char **argv) {
 
 			for (auto it = results[i].begin(); it != results[i].end(); ++it) {
 				key = *it;
-				//data[key][0] = key;	
 				data[key] = partable[key];	
 			}
 	
@@ -195,12 +188,8 @@ int main(int argc, char **argv) {
 				", recv[1] = " << recv[1] << endl;
 			
 			// merge the received pairs into the current table
-			//for (j = 0; j < recvsize; j ++) 
 			for (j = myfirst; j <= mylast; j ++) 
-			//for (j = myfirst; j < mylast; j ++) 
 				partable[j] += recv[j];
-				//partable[j] += recv[j];
-				//partable[recv[j][0]] += recv[j][1];
 		}
 	}
 	
