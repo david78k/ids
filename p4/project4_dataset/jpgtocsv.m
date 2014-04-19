@@ -1,4 +1,5 @@
 val = 'train' ;
+%val = 'test' ;
 dirPath = [val '/Class'] ;
 outDirPath = ['csvfiles/' dirPath] ;
 nClasses = 6 ;
@@ -7,8 +8,10 @@ for i = 1 : nClasses
     %outDirPath1 = [outDirPath,' ', num2str(i), '/'] 
     outDirPath1 = [outDirPath, num2str(i), '/'] 
     %mkdir(outDirPath1) 
+    cmd = ["rm -rf " outDirPath1]
+    system(cmd) ;
     cmd = ["mkdir -p " outDirPath1]
-    system(cmd) 
+    system(cmd) ;
     F = dir(dirPath1) ;
     for j =  1 : length(F)-2
         imgName = F(j+2).name ;
@@ -21,7 +24,8 @@ for i = 1 : nClasses
         imgNameWithoutExtension = splitImgName{1} ;
         fileName = [imgNameWithoutExtension '.csv'] ;
         fullFileName = [outDirPath1, fileName] ;
-        csvwrite(fullFileName, imgReshaped/16) ;
+        csvwrite(fullFileName, idivide(imgReshaped, 16, "floor")) ;
+        %csvwrite(fullFileName, floor(imgReshaped/16.0)) ;
         %csvwrite(fullFileName, imgReshaped) ;
     end
 end
