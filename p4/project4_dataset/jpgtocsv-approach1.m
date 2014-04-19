@@ -3,17 +3,27 @@
 val = 'train' ;
 %val = 'test' ;
 dirPath = [val '/Class'] ;
-outDirPath = ['csvfiles/' dirPath] ;
+basedir = ['csvfiles/'] ;
+outDirPath = [basedir, dirPath] ;
 nClasses = 6 ;
+
+fileName = [val '.csv'] ;
+fullFileName = [basedir, fileName] 
+
+cmd = ["rm -rf " basedir]
+system(cmd) ;
+cmd = ["mkdir -p " basedir]
+system(cmd) ;
+
 for i = 1 : nClasses
     dirPath1 = [dirPath,' ', num2str(i), '/'] 
     %outDirPath1 = [outDirPath,' ', num2str(i), '/'] 
-    outDirPath1 = [outDirPath, num2str(i), '/'] 
-    %mkdir(outDirPath1) 
-    cmd = ["rm -rf " outDirPath1]
-    system(cmd) ;
-    cmd = ["mkdir -p " outDirPath1]
-    system(cmd) ;
+    %outDirPath1 = [outDirPath, num2str(i), '/'] 
+    %mkdir(outDirPath1) % for matlab
+    %cmd = ["rm -rf " outDirPath1]
+    %system(cmd) ;
+    %cmd = ["mkdir -p " outDirPath1]
+    %system(cmd) ;
     F = dir(dirPath1) ;
     for j =  1 : length(F)-2
         imgName = F(j+2).name ;
@@ -21,13 +31,13 @@ for i = 1 : nClasses
         img = imread(fullImgName) ;
         [r, c, d] = size(img) ;
         imgReshaped = [img(:,:,1) ; img(:,:,2) ; img(:,:,3)] ;
-        %splitImgName = regexp(imgName, '\.', 'split') ;
-        splitImgName = strsplit(imgName, '\.') ;
-        imgNameWithoutExtension = splitImgName{1} ;
-        fileName = [imgNameWithoutExtension '.csv'] ;
-        fullFileName = [outDirPath1, fileName] ;
-        csvwrite(fullFileName, idivide(imgReshaped, 16, "floor")) ;
-        %csvwrite(fullFileName, floor(imgReshaped/16.0)) ;
+        %splitImgName = regexp(imgName, '\.', 'split') ; % for matlab
+        %splitImgName = strsplit(imgName, '\.') ; % for octave
+        %imgNameWithoutExtension = splitImgName{1} ;
+        %fileName = [imgNameWithoutExtension '.csv'] ;
+        %dmlwrite(fullFileName, idivide(imgReshaped, 16, "floor"), '-append') ; % for matlab
+        csvwrite(fullFileName, idivide(imgReshaped, 16, "floor"), '-append') ; % for octave
+        %csvwrite(fullFileName, idivide(imgReshaped, 16, "floor")) ;
         %csvwrite(fullFileName, imgReshaped) ;
     end
 end
