@@ -10,8 +10,8 @@ nClasses = 6 ;
 fileName = [val '.csv'] ;
 fullFileName = [basedir, fileName] 
 
-cmd = ["rm -rf " basedir]
-system(cmd) ;
+%cmd = ["rm -rf " basedir]
+%system(cmd) ;
 cmd = ["mkdir -p " basedir]
 system(cmd) ;
 
@@ -30,13 +30,25 @@ for i = 1 : nClasses
         fullImgName = strcat(dirPath1, imgName) ;
         img = imread(fullImgName) ;
         [r, c, d] = size(img) ;
-        imgReshaped = [img(:,:,1) ; img(:,:,2) ; img(:,:,3)] ;
+        %imgReshaped = [img(:,:,1) ; img(:,:,2) ; img(:,:,3)] ;
+        imgReshaped = [img(:,:,1)  img(:,:,2)  img(:,:,3)] ;
+	R = img(:,:,1);
+	G = img(:,:,2);
+	B = img(:,:,3);
+	%row = zeros(0, 3*length(R)^2)
+	row = zeros(0, 0);
+	for k = 1: r*c 
+		row = [row R(k) G(k) B(k)];
+        	%csvwrite(fullFileName, idivide(row, 16, "floor"), '-append') ; % for octave
+	end	
+        csvwrite(fullFileName, idivide(row, 16, "floor"), '-append') ; % for octave
+
         %splitImgName = regexp(imgName, '\.', 'split') ; % for matlab
         %splitImgName = strsplit(imgName, '\.') ; % for octave
         %imgNameWithoutExtension = splitImgName{1} ;
         %fileName = [imgNameWithoutExtension '.csv'] ;
         %dmlwrite(fullFileName, idivide(imgReshaped, 16, "floor"), '-append') ; % for matlab
-        csvwrite(fullFileName, idivide(imgReshaped, 16, "floor"), '-append') ; % for octave
+        %csvwrite(fullFileName, idivide(imgReshaped, 16, "floor"), '-append') ; % for octave
         %csvwrite(fullFileName, idivide(imgReshaped, 16, "floor")) ;
         %csvwrite(fullFileName, imgReshaped) ;
     end
