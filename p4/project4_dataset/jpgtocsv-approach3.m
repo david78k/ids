@@ -1,7 +1,7 @@
 % approach1: convert into a vector of size 300
 % and merge all the files into a single csv file
-%val = 'train' ;
-val = 'test' ;
+val = 'train' ;
+%val = 'test' ;
 dirPath = [val '/Class'] ;
 basedir = ['csvfiles/'] ;
 outDirPath = [basedir, dirPath] ;
